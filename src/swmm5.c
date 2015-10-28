@@ -29,9 +29,9 @@
 //  Leave only one of the following 3 lines un-commented,
 //  depending on the choice of compilation target
 //**********************************************************
-#define CLE     /* Compile as a command line executable */
+//#define CLE     /* Compile as a command line executable */
 //#define SOL     /* Compile as a shared object library */
-//#define DLL     /* Compile as a Windows DLL */
+#define DLL     /* Compile as a Windows DLL */
 
 // --- define WINDOWS
 #undef WINDOWS
@@ -62,7 +62,10 @@
 #endif
 ////
 
+#ifdef _WINDOWS
 #include <direct.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -169,6 +172,7 @@ int  main(int argc, char *argv[])
 
 	// --- initialize flags
 	Project* project = NULL;
+
 	//project->IsOpenFlag = FALSE;
 	//project->IsStartedFlag = FALSE;
 	//project->SaveResultsFlag = TRUE;
@@ -195,6 +199,7 @@ int  main(int argc, char *argv[])
 		// --- open the files & read input data
 		// int project->ErrorCode = 0;
 		project = swmm_open(inputFile, reportFile, binaryFile);
+
 		project->SaveResultsFlag = TRUE;
 
 		// --- run the simulation if input data OK
@@ -206,7 +211,7 @@ int  main(int argc, char *argv[])
 			// --- execute each time step until elapsed time is re-set to 0
 			if (!project->ErrorCode)
 			{
-				writecon("\n o  Simulating day: 0     hour:  0");
+				writecon("\n Simulating day: 0     hour:  0");
 				do
 				{
 					swmm_step(project, &elapsedTime);
@@ -258,6 +263,7 @@ int  main(int argc, char *argv[])
 		*/
 	if (project)
 		swmm_close(project);
+
 
 	return 0;
 }                                      /* End of main */
@@ -336,7 +342,9 @@ SDLLEXPORT Project* STDCALL swmm_open(char* f1, char* f2, char* f3)
 //
 {
 #ifdef DLL
+#ifdef _WINDOWS
 	_fpreset();
+#endif
 #endif
 
 	Project* project = NULL;
@@ -677,7 +685,7 @@ int DLLEXPORT swmm_close(Project* project)
 	project->IsOpenFlag = FALSE;
 	project->IsStartedFlag = FALSE;
 
-	FREE(project);
+	//FREE(project);
 
 	return 0;
 }

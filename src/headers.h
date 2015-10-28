@@ -10,6 +10,9 @@
 //
 //   DO NOT CHANGE THE ORDER OF THE #INCLUDE STATEMENTS
 //-----------------------------------------------------------------------------
+#ifndef HEADERS_H
+#define HEADERS_H
+
 #include <stdio.h>
 #include "consts.h"
 #include "macros.h"
@@ -23,3 +26,5 @@
 #define  EXTERN extern
 #include "globals.h"
 #include "swmmcomponent.h"
+
+#endif

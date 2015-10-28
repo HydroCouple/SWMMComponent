@@ -22,11 +22,13 @@ struct ExprNode
 };
 typedef struct ExprNode MathExpr;
 
+typedef struct Project Project;
+
 //  Creates a tokenized math expression from a string
-MathExpr* mathexpr_create(struct Project* project, char* s, int(*getVar) (struct Project*, char *));
+MathExpr* mathexpr_create(Project* project, char* s, int(*getVar) (struct Project*, char *));
 
 //  Evaluates a tokenized math expression
-double mathexpr_eval(struct Project* project, MathExpr* expr, double(*getVal) (struct Project* , int));
+double mathexpr_eval(Project* project, MathExpr* expr, double(*getVal) (struct Project* , int));
 
 //  Deletes a tokenized math expression
 void  mathexpr_delete(MathExpr* expr);

@@ -12,13 +12,14 @@
 
 #include <math.h>
 #include "findroot.h"
+#include "headers.h"
 
 #define SIGN(a,b) ((b) >= 0.0 ? fabs(a) : -fabs(a))
 #define MAXIT 60
 
 
-int findroot_Newton(struct Project* project, double x1, double x2, double* rts, double xacc,
-	void(*func) (struct Project* project, double x, double* f, double* df, void* p),
+int findroot_Newton(Project* project, double x1, double x2, double* rts, double xacc,
+	void(*func) (Project* project, double x, double* f, double* df, void* p),
 					void* p)
 //
 //  Using a combination of Newton-Raphson and bisection, find the root of a
@@ -88,8 +89,8 @@ int findroot_Newton(struct Project* project, double x1, double x2, double* rts, 
 };
 
 
-double findroot_Ridder(struct Project* project, double x1, double x2, double xacc,
-	double (*func)(struct Project*, double, void* p), void* p)
+double findroot_Ridder(Project* project, double x1, double x2, double xacc,
+        double (*func)(Project*, double, void* p), void* p)
 {
     int j;
     double ans, fhi, flo, fm, fnew, s, xhi, xlo, xm, xnew;

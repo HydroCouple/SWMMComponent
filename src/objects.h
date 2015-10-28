@@ -51,6 +51,30 @@
 #include "lid.h"
 
 
+/*
+**  alloc_hdr_t - Header for each block of memory.
+*/
+struct alloc_hdr_s
+{
+	struct alloc_hdr_s *next;   /* Next Block          */
+	char *block,  /* Start of block      */
+		*free,   /* Next free in block  */
+		*end;    /* block + block size  */
+};
+typedef struct alloc_hdr_s alloc_hdr_t;
+
+
+/*
+**  alloc_root_t - Header for the whole pool.
+*/
+
+struct alloc_root_s
+{
+	alloc_hdr_t *first,    /* First header in pool */
+		*current;  /* Current header       */
+};
+typedef struct alloc_root_s  alloc_root_t;
+
 //-----------------------------------------------------------------------------
 // Data Structures
 //-----------------------------------------------------------------------------

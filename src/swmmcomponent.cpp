@@ -4,9 +4,9 @@
 
 using namespace std;
 
-map<Project*, map<int, double>> NodeLateralInflows;
-map<Project*, map<int, double>> NodeDepths;
-map<Project*, map<int, double>> SubcatchRainfall;
+map<Project*, map<int, double> > NodeLateralInflows;
+map<Project*, map<int, double> > NodeDepths;
+map<Project*, map<int, double> > SubcatchRainfall;
 
 typedef struct OpenMIDataCache OpenMIDataCache;
 
@@ -18,7 +18,7 @@ void addNodeLateralInflow(Project* project, int index, double value)
 
 int containsNodeLateralInflow(Project* project, int index, double* const  value)
 {
-	map<Project*, map<int, double>>::iterator it = NodeLateralInflows.find(project);
+	map<Project*, map<int, double> >::iterator it = NodeLateralInflows.find(project);
 
 	if (it != NodeLateralInflows.end())
 	{
@@ -44,7 +44,7 @@ void addNodeDepth(Project* project, int index, double value)
 int containsNodeDepth(Project* project, int index, double* const value)
 {
 
-	map<Project*, map<int, double>>::iterator it = NodeDepths.find(project);
+	map<Project*, map<int, double> >::iterator it = NodeDepths.find(project);
 
 	if (it != NodeDepths.end())
 	{
@@ -70,7 +70,7 @@ void addSubcatchRain(Project* project, int index, double value)
 int containsSubcatchRain(Project* project, int index, double* const value)
 {
 
-	map<Project*, map<int, double>>::iterator it = SubcatchRainfall.find(project);
+	map<Project*, map<int, double> >::iterator it = SubcatchRainfall.find(project);
 
 	if (it != SubcatchRainfall.end())
 	{

@@ -13,6 +13,9 @@
 // General Constants
 //------------------
 
+#ifndef CONSTS_H
+#define CONSTS_H
+
 #define   VERSION            51000
 #define   MAGICNUMBER        516114522
 #define   EOFMARK            0x1A           // Use 0x04 for UNIX systems
@@ -92,3 +95,5 @@
 // Token separator characters
 //--------------------------- 
 #define   SEPSTR    " \t\n\r" 
+
+#endif

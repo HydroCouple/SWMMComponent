@@ -29,16 +29,16 @@
 #include "hash.h"
 #include <time.h>
 
+
 #ifdef __cplusplus
 "C" {
 #endif
 
+	//typedef struct alloc_root_s alloc_root_t;
 	//-----------------------------------------------------------------------------
 	//  Constants - moved from transect.c
 	//-----------------------------------------------------------------------------
 #define MAXSTATION 1500                // max. number of stations in a transect
-
-
 #define MAX_STATS 5
 #define REAL4 float
 #define INT4  int
@@ -185,7 +185,7 @@
 		//-----------------------------------------------------------------------------
 		HTtable* Htable[MAX_OBJ_TYPES]; // Hash tables for object ID names
 		char MemPoolAllocated;      // TRUE if memory pool allocated 
-
+		alloc_root_t * root;
 
 
 		//-----------------------------------------------------------------------------

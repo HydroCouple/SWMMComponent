@@ -43,7 +43,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <malloc.h>
+//#include <malloc.h>
 #include <math.h>                                                              //(5.1.008)
 #include <omp.h>                                                               //(5.1.008)
 #include "headers.h"
@@ -316,7 +316,7 @@ int   project_addObject(Project* project, int type, char *id, int n)
     // --- use memory from the hash tables' common memory pool to store
     //     a copy of the object's ID string
     len = strlen(id) + 1;
-    newID = (char *) Alloc(len*sizeof(char));
+    newID = (char *) Alloc(project,len*sizeof(char));
     strcpy(newID, id);
 
     // --- insert object's ID into the hash table for that type of object
@@ -742,6 +742,32 @@ void initPointers(Project* project)
     project->Aquifer    = NULL;
     project->UnitHyd    = NULL;
     project->Snowmelt   = NULL;
+	
+	//add to make sure FREE does not freak out
+	project->Rules = NULL;
+	project->ActionList = NULL;
+	project->Xnode = NULL;
+	project->HortInfil = NULL;
+	project->GAInfil = NULL;
+	project->CNInfil = NULL;
+	project->pXsect = NULL;
+	project->LidProcs = NULL;
+	project->LidGroups = NULL;
+	project->LoadingTotals = NULL;
+	project->QualTotals = NULL;
+	project->StepQualTotals = NULL;
+	project->SubcatchStats = NULL;
+	project->NodeStats = NULL;
+	project->LinkStats = NULL;
+	project->StorageStats = NULL;
+	project->OutfallStats = NULL;
+	project->PumpStats = NULL;
+	project->GW = NULL;
+	project->LatFlowExpr = NULL;
+	project->DeepFlowExpr = NULL;
+	project->UHGroup = NULL;
+	project->root = NULL;
+
     project->MemPoolAllocated = FALSE;
 }
 
@@ -1240,7 +1266,7 @@ void createHashTables(Project* project)
     }
 
     // --- initialize memory pool used to store object ID's
-    if ( AllocInit() == NULL ) report_writeErrorMsg(project,ERR_MEMORY, "");
+	if (AllocInit(project) == NULL) report_writeErrorMsg(project, ERR_MEMORY, "");
     else project->MemPoolAllocated = TRUE;
 }
 
@@ -1260,7 +1286,7 @@ void deleteHashTables(Project* project)
     }
 
     // --- free object ID memory pool
-    if ( project->MemPoolAllocated ) AllocFreePool();
+	if (project->MemPoolAllocated) AllocFreePool(project);
 }
 
 //=============================================================================

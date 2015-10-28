@@ -29,6 +29,8 @@
 //   - Potential evapotranspiration (PET) added as a system output variable.
 //
 //-----------------------------------------------------------------------------
+#ifndef ENUMS_H	
+#define ENUMS_H
 
 //-------------------------------------
 // Names of major object types
@@ -467,3 +469,5 @@ enum  NoneAllType {
       NONE,
       ALL,
       SOME};
+
+#endif

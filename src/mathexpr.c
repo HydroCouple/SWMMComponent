@@ -44,7 +44,8 @@
 #define _CRT_SECURE_NO_DEPRECATE
 
 #include <ctype.h>
-#include <malloc.h>
+#include <stdlib.h>
+//#include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
@@ -91,17 +92,17 @@ static void       getToken(void);
 static int        getMathFunc(void);
 static int        getVariable(struct Project* project);
 static int        getOperand(void);
-static int        getLex(struct Project* project);
+static int        getLex(Project* project);
 static double     getNumber(void);
 static ExprTree * newNode(void);
-static ExprTree * getSingleOp(struct Project* project, int *);
-static ExprTree * getOp(struct Project* project, int *);
-static ExprTree * getTree(struct Project* project);
+static ExprTree * getSingleOp(Project* project, int *);
+static ExprTree * getOp(Project* project, int *);
+static ExprTree * getTree(Project* project);
 static void       traverseTree(ExprTree *, MathExpr **);
 static void       deleteTree(ExprTree *);
 
 // Callback functions
-static int    (*getVariableIndex) (struct Project*, char *); // return index of named variable
+static int    (*getVariableIndex) (Project*, char *); // return index of named variable
 
 //=============================================================================
 
@@ -174,7 +175,7 @@ int getMathFunc()
 
 //=============================================================================
 
-int getVariable(struct Project* project)
+int getVariable(Project* project)
 {
     if ( !getVariableIndex ) return 0;
     Ivar = getVariableIndex(project,Token);
@@ -273,7 +274,7 @@ int getOperand()
 
 //=============================================================================
 
-int getLex(struct Project* project)
+int getLex(Project* project)
 {
     int n;
 
@@ -325,7 +326,7 @@ ExprTree * newNode()
 
 //=============================================================================
 
-ExprTree * getSingleOp(struct Project* project,int *lex)
+ExprTree * getSingleOp(Project* project,int *lex)
 {
     int bracket;
     int opcode;
@@ -416,7 +417,7 @@ ExprTree * getSingleOp(struct Project* project,int *lex)
 
 //=============================================================================
 
-ExprTree * getOp(struct Project* project, int *lex)
+ExprTree * getOp(Project* project, int *lex)
 {
     int opcode;
     ExprTree *left;
@@ -461,7 +462,7 @@ ExprTree * getOp(struct Project* project, int *lex)
 
 //=============================================================================
 
-ExprTree * getTree(struct Project* project)
+ExprTree * getTree(Project* project)
 {
     int      lex;
     int      opcode;
@@ -532,7 +533,7 @@ void deleteTree(ExprTree *tree)
 // Turn on "precise" floating point option                                     //(5.1.008)
 #pragma float_control(precise, on, push)                                       //(5.1.008)
 
-double mathexpr_eval(struct Project* project, MathExpr *expr, double(*getVariableValue) (struct Project*, int))
+double mathexpr_eval(Project* project, MathExpr *expr, double(*getVariableValue) (struct Project*, int))
 //  Mathematica expression evaluation using a stack
 {
     
@@ -749,7 +750,7 @@ void mathexpr_delete(MathExpr *expr)
 
 //=============================================================================
 
-MathExpr * mathexpr_create(struct Project*  project, char *formula, int(*getVar) (struct Project*, char *))
+MathExpr * mathexpr_create(Project*  project, char *formula, int(*getVar) (struct Project*, char *))
 {
     ExprTree *tree;
     MathExpr *expr = NULL;
