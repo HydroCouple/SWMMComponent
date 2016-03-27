@@ -415,7 +415,7 @@ void   stats_updateFlowStats(Project* project, double tStep, DateTime aDate, int
     project->SysOutfallFlow = 0.0;
 
     // --- update node & link stats
-#pragma omp parallel num_threads(NumThreads)                                   //(5.1.008)
+#pragma omp parallel num_threads(project->NumThreads)                                   //(5.1.008)
 {
     #pragma omp for                                                            //(5.1.008)
     for ( j=0; j<project->Nobjects[NODE]; j++ )

@@ -236,6 +236,7 @@ int dynwave_execute(Project* project, double tStep)
 			findBypassedLinks(project);
         }
     }
+
     if ( !converged ) project->NonConvergeCount++;
 
     //  --- identify any capacity-limited conduits
@@ -361,7 +362,7 @@ void findLinkFlows(Project* project, double dt)
     int i;
 
     // --- find new flow in each non-dummy conduit
-#pragma omp parallel num_threads(NumThreads)                                   //(5.1.008)
+#pragma omp parallel num_threads(project->NumThreads)                                   //(5.1.008)
 {
     #pragma omp for                                                            //(5.1.008)
     for ( i = 0; i < project->Nobjects[LINK]; i++)
@@ -575,7 +576,7 @@ int findNodeDepths(Project* project, double dt)
     // --- compute new depth for all non-outfall nodes and determine if
     //     depth change from previous iteration is below tolerance
     converged = TRUE;
-#pragma omp parallel num_threads(NumThreads)                                   //(5.1.008)
+#pragma omp parallel num_threads(project->NumThreads)                                   //(5.1.008)
 {
     #pragma omp for private(yOld)                                              //(5.1.008)
     for ( i = 0; i < project->Nobjects[NODE]; i++ )

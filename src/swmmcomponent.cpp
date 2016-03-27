@@ -22,12 +22,13 @@ int containsNodeLateralInflow(Project* project, int index, double* const  value)
 
 	if (it != NodeLateralInflows.end())
 	{
-		map<int, double > foundProject = NodeLateralInflows[project];
+		map<int, double > foundProject = (*it).second;
+
 		map<int, double > ::iterator it1 = foundProject.find(index);
 
 		if (it1 != foundProject.end())
 		{
-			*value = foundProject[index];
+			*value = (*it1).second;
 			return 1;
 		}
 	}
@@ -43,17 +44,17 @@ void addNodeDepth(Project* project, int index, double value)
 
 int containsNodeDepth(Project* project, int index, double* const value)
 {
-
 	map<Project*, map<int, double> >::iterator it = NodeDepths.find(project);
 
 	if (it != NodeDepths.end())
 	{
-		map<int, double > foundProject = NodeDepths[project];
+		map<int, double > foundProject = (*it).second;
+
 		map<int, double > ::iterator it1 = foundProject.find(index);
 
 		if (it1 != foundProject.end())
 		{
-			*value = foundProject[index];
+			*value = (*it1).second;
 			return 1;
 		}
 	}
@@ -74,12 +75,13 @@ int containsSubcatchRain(Project* project, int index, double* const value)
 
 	if (it != SubcatchRainfall.end())
 	{
-		map<int, double > foundProject = SubcatchRainfall[project];
+		map<int, double > foundProject = (*it).second;
+
 		map<int, double > ::iterator it1 = foundProject.find(index);
 
 		if (it1 != foundProject.end())
 		{
-			*value = foundProject[index];
+			*value = (*it1).second;
 			return 1;
 		}
 	}

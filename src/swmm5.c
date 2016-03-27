@@ -685,7 +685,7 @@ int DLLEXPORT swmm_close(Project* project)
 	project->IsOpenFlag = FALSE;
 	project->IsStartedFlag = FALSE;
 
-	//FREE(project);
+	FREE(project);
 
 	return 0;
 }
