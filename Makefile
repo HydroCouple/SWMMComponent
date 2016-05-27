@@ -48,66 +48,67 @@ OBJECTS_DIR   = build/debug/.obj/
 
 ####### Files
 
-SOURCES       = src/climate.c \
-		src/controls.c \
-		src/culvert.c \
-		src/datetime.c \
-		src/dwflow.c \
-		src/dynwave.c \
-		src/error.c \
-		src/exfil.c \
-		src/findroot.c \
-		src/flowrout.c \
-		src/forcmain.c \
-		src/gage.c \
-		src/gwater.c \
-		src/hash.c \
-		src/hotstart.c \
-		src/iface.c \
-		src/infil.c \
-		src/inflow.c \
-		src/input.c \
-		src/inputrpt.c \
-		src/keywords.c \
-		src/kinwave.c \
-		src/landuse.c \
-		src/lid.c \
-		src/lidproc.c \
-		src/link.c \
-		src/massbal.c \
-		src/mathexpr.c \
-		src/mempool.c \
-		src/node.c \
-		src/odesolve.c \
-		src/output.c \
-		src/project.c \
-		src/qualrout.c \
-		src/rain.c \
-		src/rdii.c \
-		src/report.c \
-		src/roadway.c \
-		src/routing.c \
-		src/runoff.c \
-		src/shape.c \
-		src/snow.c \
-		src/stats.c \
-		src/statsrpt.c \
-		src/stdafx.cpp \
-		src/subcatch.c \
-		src/surfqual.c \
-		src/swmm5.c \
-		src/swmmcomponent.cpp \
-		src/table.c \
-		src/toposort.c \
-		src/transect.c \
-		src/treatmnt.c \
-		src/xsect.c \
-		src/dataexchangecache.cpp \
-		src/swmmmodelcomponentinfo.cpp \
-		src/swmmtimeseriesexchangeitems.cpp build/debug/.moc/moc_swmmcomponent.cpp \
+SOURCES       = src/stdafx.cpp \
+		src/core/climate.c \
+		src/core/controls.c \
+		src/core/culvert.c \
+		src/core/datetime.c \
+		src/core/dwflow.c \
+		src/core/dynwave.c \
+		src/core/error.c \
+		src/core/exfil.c \
+		src/core/findroot.c \
+		src/core/flowrout.c \
+		src/core/forcmain.c \
+		src/core/gage.c \
+		src/core/gwater.c \
+		src/core/hash.c \
+		src/core/hotstart.c \
+		src/core/iface.c \
+		src/core/infil.c \
+		src/core/inflow.c \
+		src/core/input.c \
+		src/core/inputrpt.c \
+		src/core/keywords.c \
+		src/core/kinwave.c \
+		src/core/landuse.c \
+		src/core/lid.c \
+		src/core/lidproc.c \
+		src/core/link.c \
+		src/core/massbal.c \
+		src/core/mathexpr.c \
+		src/core/mempool.c \
+		src/core/node.c \
+		src/core/odesolve.c \
+		src/core/output.c \
+		src/core/project.c \
+		src/core/qualrout.c \
+		src/core/rain.c \
+		src/core/rdii.c \
+		src/core/report.c \
+		src/core/roadway.c \
+		src/core/routing.c \
+		src/core/runoff.c \
+		src/core/shape.c \
+		src/core/snow.c \
+		src/core/stats.c \
+		src/core/statsrpt.c \
+		src/core/subcatch.c \
+		src/core/surfqual.c \
+		src/core/swmm5.c \
+		src/core/table.c \
+		src/core/toposort.c \
+		src/core/transect.c \
+		src/core/treatmnt.c \
+		src/core/xsect.c \
+		src/core/dataexchangecache.cpp \
+		src/component/swmmcomponent.cpp \
+		src/component/swmmmodelcomponentinfo.cpp \
+		src/component/swmmtimeseriesexchangeitems.cpp build/debug/.moc/moc_swmmcomponent.cpp \
 		build/debug/.moc/moc_swmmmodelcomponentinfo.cpp \
 		build/debug/.moc/moc_swmmtimeseriesexchangeitems.cpp
-OBJECTS       = build/debug/.obj/climate.o \
+OBJECTS       = build/debug/.obj/stdafx.o \
+		build/debug/.obj/climate.o \
 		build/debug/.obj/controls.o \
 		build/debug/.obj/culvert.o \
 		build/debug/.obj/datetime.o \
@@ -151,17 +152,16 @@ OBJECTS       = build/debug/.obj/climate.o \
 		build/debug/.obj/snow.o \
 		build/debug/.obj/stats.o \
 		build/debug/.obj/statsrpt.o \
-		build/debug/.obj/stdafx.o \
 		build/debug/.obj/subcatch.o \
 		build/debug/.obj/surfqual.o \
 		build/debug/.obj/swmm5.o \
-		build/debug/.obj/swmmcomponent.o \
 		build/debug/.obj/table.o \
 		build/debug/.obj/toposort.o \
 		build/debug/.obj/transect.o \
 		build/debug/.obj/treatmnt.o \
 		build/debug/.obj/xsect.o \
 		build/debug/.obj/dataexchangecache.o \
+		build/debug/.obj/swmmcomponent.o \
 		build/debug/.obj/swmmmodelcomponentinfo.o \
 		build/debug/.obj/swmmtimeseriesexchangeitems.o \
 		build/debug/.obj/moc_swmmcomponent.o \
@@ -286,6 +286,7 @@ DIST          = ../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/qt_config.prf \
 		../../../../Qt5.6.0/5.6/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/default_pre.prf \
 		../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/mac/default_pre.prf \
@@ -305,89 +306,89 @@ DIST          = ../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/exceptions.prf \
 		../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/yacc.prf \
 		../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/lex.prf \
-		SWMMComponent.pro include/consts.h \
-		include/datetime.h \
-		include/enums.h \
-		include/error.h \
-		include/exfil.h \
-		include/findroot.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/headers.h \
-		include/infil.h \
-		include/keywords.h \
-		include/lid.h \
-		include/macros.h \
-		include/mathexpr.h \
-		include/mempool.h \
-		include/objects.h \
-		include/odesolve.h \
-		include/stdafx.h \
-		include/swmm5.h \
-		include/swmmcomponent.h \
+		SWMMComponent.pro include/stdafx.h \
 		include/swmmcomponent_global.h \
-		include/text.h \
-		include/swmmmodelcomponentinfo.h \
-		include/dataexchangecache.h \
-		include/swmmobjectitems.h \
-		include/swmmtimeseriesexchangeitems.h src/climate.c \
-		src/controls.c \
-		src/culvert.c \
-		src/datetime.c \
-		src/dwflow.c \
-		src/dynwave.c \
-		src/error.c \
-		src/exfil.c \
-		src/findroot.c \
-		src/flowrout.c \
-		src/forcmain.c \
-		src/gage.c \
-		src/gwater.c \
-		src/hash.c \
-		src/hotstart.c \
-		src/iface.c \
-		src/infil.c \
-		src/inflow.c \
-		src/input.c \
-		src/inputrpt.c \
-		src/keywords.c \
-		src/kinwave.c \
-		src/landuse.c \
-		src/lid.c \
-		src/lidproc.c \
-		src/link.c \
-		src/massbal.c \
-		src/mathexpr.c \
-		src/mempool.c \
-		src/node.c \
-		src/odesolve.c \
-		src/output.c \
-		src/project.c \
-		src/qualrout.c \
-		src/rain.c \
-		src/rdii.c \
-		src/report.c \
-		src/roadway.c \
-		src/routing.c \
-		src/runoff.c \
-		src/shape.c \
-		src/snow.c \
-		src/stats.c \
-		src/statsrpt.c \
-		src/stdafx.cpp \
-		src/subcatch.c \
-		src/surfqual.c \
-		src/swmm5.c \
-		src/swmmcomponent.cpp \
-		src/table.c \
-		src/toposort.c \
-		src/transect.c \
-		src/treatmnt.c \
-		src/xsect.c \
-		src/dataexchangecache.cpp \
-		src/swmmmodelcomponentinfo.cpp \
-		src/swmmtimeseriesexchangeitems.cpp
+		include/core/consts.h \
+		include/core/datetime.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/exfil.h \
+		include/core/findroot.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/headers.h \
+		include/core/infil.h \
+		include/core/keywords.h \
+		include/core/lid.h \
+		include/core/macros.h \
+		include/core/mathexpr.h \
+		include/core/mempool.h \
+		include/core/objects.h \
+		include/core/odesolve.h \
+		include/core/swmm5.h \
+		include/core/text.h \
+		include/core/dataexchangecache.h \
+		include/component/swmmcomponent.h \
+		include/component/swmmmodelcomponentinfo.h \
+		include/component/swmmobjectitems.h \
+		include/component/swmmtimeseriesexchangeitems.h src/stdafx.cpp \
+		src/core/climate.c \
+		src/core/controls.c \
+		src/core/culvert.c \
+		src/core/datetime.c \
+		src/core/dwflow.c \
+		src/core/dynwave.c \
+		src/core/error.c \
+		src/core/exfil.c \
+		src/core/findroot.c \
+		src/core/flowrout.c \
+		src/core/forcmain.c \
+		src/core/gage.c \
+		src/core/gwater.c \
+		src/core/hash.c \
+		src/core/hotstart.c \
+		src/core/iface.c \
+		src/core/infil.c \
+		src/core/inflow.c \
+		src/core/input.c \
+		src/core/inputrpt.c \
+		src/core/keywords.c \
+		src/core/kinwave.c \
+		src/core/landuse.c \
+		src/core/lid.c \
+		src/core/lidproc.c \
+		src/core/link.c \
+		src/core/massbal.c \
+		src/core/mathexpr.c \
+		src/core/mempool.c \
+		src/core/node.c \
+		src/core/odesolve.c \
+		src/core/output.c \
+		src/core/project.c \
+		src/core/qualrout.c \
+		src/core/rain.c \
+		src/core/rdii.c \
+		src/core/report.c \
+		src/core/roadway.c \
+		src/core/routing.c \
+		src/core/runoff.c \
+		src/core/shape.c \
+		src/core/snow.c \
+		src/core/stats.c \
+		src/core/statsrpt.c \
+		src/core/subcatch.c \
+		src/core/surfqual.c \
+		src/core/swmm5.c \
+		src/core/table.c \
+		src/core/toposort.c \
+		src/core/transect.c \
+		src/core/treatmnt.c \
+		src/core/xsect.c \
+		src/core/dataexchangecache.cpp \
+		src/component/swmmcomponent.cpp \
+		src/component/swmmmodelcomponentinfo.cpp \
+		src/component/swmmtimeseriesexchangeitems.cpp
 QMAKE_TARGET  = SWMMComponent
 DESTDIR       = build/debug/
 TARGET        = libSWMMComponent.1.0.0.dylib
@@ -545,6 +546,7 @@ Makefile: SWMMComponent.pro ../../../../Qt5.6.0/5.6/clang_64/mkspecs/macx-clang/
 		../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/qt_config.prf \
 		../../../../Qt5.6.0/5.6/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/default_pre.prf \
 		../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/mac/default_pre.prf \
@@ -687,6 +689,7 @@ Makefile: SWMMComponent.pro ../../../../Qt5.6.0/5.6/clang_64/mkspecs/macx-clang/
 ../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/qt_config.prf:
 ../../../../Qt5.6.0/5.6/clang_64/mkspecs/macx-clang/qmake.conf:
 ../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/exclusive_builds.prf:
 ../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/default_pre.prf:
 ../../../../Qt5.6.0/5.6/clang_64/mkspecs/features/mac/default_pre.prf:
@@ -723,8 +726,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents include/consts.h include/datetime.h include/enums.h include/error.h include/exfil.h include/findroot.h include/funcs.h include/globals.h include/hash.h include/headers.h include/infil.h include/keywords.h include/lid.h include/macros.h include/mathexpr.h include/mempool.h include/objects.h include/odesolve.h include/stdafx.h include/swmm5.h include/swmmcomponent.h include/swmmcomponent_global.h include/text.h include/swmmmodelcomponentinfo.h include/dataexchangecache.h include/swmmobjectitems.h include/swmmtimeseriesexchangeitems.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/climate.c src/controls.c src/culvert.c src/datetime.c src/dwflow.c src/dynwave.c src/error.c src/exfil.c src/findroot.c src/flowrout.c src/forcmain.c src/gage.c src/gwater.c src/hash.c src/hotstart.c src/iface.c src/infil.c src/inflow.c src/input.c src/inputrpt.c src/keywords.c src/kinwave.c src/landuse.c src/lid.c src/lidproc.c src/link.c src/massbal.c src/mathexpr.c src/mempool.c src/node.c src/odesolve.c src/output.c src/project.c src/qualrout.c src/rain.c src/rdii.c src/report.c src/roadway.c src/routing.c src/runoff.c src/shape.c src/snow.c src/stats.c src/statsrpt.c src/stdafx.cpp src/subcatch.c src/surfqual.c src/swmm5.c src/swmmcomponent.cpp src/table.c src/toposort.c src/transect.c src/treatmnt.c src/xsect.c src/dataexchangecache.cpp src/swmmmodelcomponentinfo.cpp src/swmmtimeseriesexchangeitems.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents include/stdafx.h include/swmmcomponent_global.h include/core/consts.h include/core/datetime.h include/core/enums.h include/core/error.h include/core/exfil.h include/core/findroot.h include/core/funcs.h include/core/globals.h include/core/hash.h include/core/headers.h include/core/infil.h include/core/keywords.h include/core/lid.h include/core/macros.h include/core/mathexpr.h include/core/mempool.h include/core/objects.h include/core/odesolve.h include/core/swmm5.h include/core/text.h include/core/dataexchangecache.h include/component/swmmcomponent.h include/component/swmmmodelcomponentinfo.h include/component/swmmobjectitems.h include/component/swmmtimeseriesexchangeitems.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/stdafx.cpp src/core/climate.c src/core/controls.c src/core/culvert.c src/core/datetime.c src/core/dwflow.c src/core/dynwave.c src/core/error.c src/core/exfil.c src/core/findroot.c src/core/flowrout.c src/core/forcmain.c src/core/gage.c src/core/gwater.c src/core/hash.c src/core/hotstart.c src/core/iface.c src/core/infil.c src/core/inflow.c src/core/input.c src/core/inputrpt.c src/core/keywords.c src/core/kinwave.c src/core/landuse.c src/core/lid.c src/core/lidproc.c src/core/link.c src/core/massbal.c src/core/mathexpr.c src/core/mempool.c src/core/node.c src/core/odesolve.c src/core/output.c src/core/project.c src/core/qualrout.c src/core/rain.c src/core/rdii.c src/core/report.c src/core/roadway.c src/core/routing.c src/core/runoff.c src/core/shape.c src/core/snow.c src/core/stats.c src/core/statsrpt.c src/core/subcatch.c src/core/surfqual.c src/core/swmm5.c src/core/table.c src/core/toposort.c src/core/transect.c src/core/treatmnt.c src/core/xsect.c src/core/dataexchangecache.cpp src/component/swmmcomponent.cpp src/component/swmmmodelcomponentinfo.cpp src/component/swmmtimeseriesexchangeitems.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -753,27 +756,27 @@ compiler_moc_header_make_all: build/debug/.moc/moc_swmmcomponent.cpp build/debug
 compiler_moc_header_clean:
 	-$(DEL_FILE) build/debug/.moc/moc_swmmcomponent.cpp build/debug/.moc/moc_swmmmodelcomponentinfo.cpp build/debug/.moc/moc_swmmtimeseriesexchangeitems.cpp
 build/debug/.moc/moc_swmmcomponent.cpp: include/swmmcomponent_global.h \
-		include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h \
-		include/swmm5.h \
-		../HydroCoupleSDK/include/abstractmodelcomponent.h \
-		../HydroCoupleSDK/include/identity.h \
-		../HydroCoupleSDK/include/description.h \
+		include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h \
+		include/core/swmm5.h \
+		../HydroCoupleSDK/include/core/abstractmodelcomponent.h \
+		../HydroCoupleSDK/include/core/identity.h \
+		../HydroCoupleSDK/include/core/description.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QObject \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qobject.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QVariant \
@@ -784,28 +787,28 @@ build/debug/.moc/moc_swmmcomponent.cpp: include/swmmcomponent_global.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qsharedpointer.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QMutex \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qmutex.h \
-		../HydroCoupleSDK/include/timedata.h \
+		../HydroCoupleSDK/include/core/idbasedargument.h \
+		../HydroCoupleSDK/include/core/abstractargument.h \
+		../HydroCoupleSDK/include/core/abstractcomponentdataitem.h \
+		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QXmlStreamReader \
+		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qxmlstream.h \
+		../HydroCoupleSDK/include/core/idbasedcomponentdataitem.h \
+		../HydroCoupleSDK/include/core/componentdataitem1d.h \
+		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QFileInfo \
+		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qfileinfo.h \
+		../HydroCoupleSDK/include/temporal/timedata.h \
 		../HydroCouple/include/hydrocoupletemporal.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QDateTime \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
-		../HydroCoupleSDK/include/idbasedargument.h \
-		../HydroCoupleSDK/include/abstractargument.h \
-		../HydroCoupleSDK/include/abstractcomponentdataitem.h \
-		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QXmlStreamReader \
-		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qxmlstream.h \
-		../HydroCoupleSDK/include/idbasedcomponentdataitem.h \
-		../HydroCoupleSDK/include/componentdataitem1d.h \
-		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QFileInfo \
-		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qfileinfo.h \
-		include/swmmcomponent.h
-	/Users/calebbuahin/Qt5.6.0/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/mkspecs/macx-clang -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent/include -I/Users/calebbuahin/Documents/Projects/HydroCouple/HydroCouple/include -I/Users/calebbuahin/Documents/Projects/HydroCouple/HydroCoupleSDK/include -I/usr/local/include -I/usr/local/include/libiomp -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers -F/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib include/swmmcomponent.h -o build/debug/.moc/moc_swmmcomponent.cpp
+		include/component/swmmcomponent.h
+	/Users/calebbuahin/Qt5.6.0/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/mkspecs/macx-clang -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent/include -I/Users/calebbuahin/Documents/Projects/HydroCouple/HydroCouple/include -I/Users/calebbuahin/Documents/Projects/HydroCouple/HydroCoupleSDK/include -I/usr/local/include -I/usr/local/include/libiomp -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers -F/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib include/component/swmmcomponent.h -o build/debug/.moc/moc_swmmcomponent.cpp
 
 build/debug/.moc/moc_swmmmodelcomponentinfo.cpp: include/swmmcomponent_global.h \
-		../HydroCoupleSDK/include/modelcomponentinfo.h \
+		../HydroCoupleSDK/include/core/modelcomponentinfo.h \
 		../HydroCoupleSDK/include/hydrocouplesdk.h \
-		../HydroCoupleSDK/include/componentinfo.h \
-		../HydroCoupleSDK/include/identity.h \
-		../HydroCoupleSDK/include/description.h \
+		../HydroCoupleSDK/include/core/componentinfo.h \
+		../HydroCoupleSDK/include/core/identity.h \
+		../HydroCoupleSDK/include/core/description.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QObject \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qobject.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QVariant \
@@ -813,50 +816,50 @@ build/debug/.moc/moc_swmmmodelcomponentinfo.cpp: include/swmmcomponent_global.h 
 		../HydroCouple/include/hydrocouple.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QSharedPointer \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qsharedpointer.h \
-		include/swmmmodelcomponentinfo.h
-	/Users/calebbuahin/Qt5.6.0/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/mkspecs/macx-clang -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent/include -I/Users/calebbuahin/Documents/Projects/HydroCouple/HydroCouple/include -I/Users/calebbuahin/Documents/Projects/HydroCouple/HydroCoupleSDK/include -I/usr/local/include -I/usr/local/include/libiomp -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers -F/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib include/swmmmodelcomponentinfo.h -o build/debug/.moc/moc_swmmmodelcomponentinfo.cpp
+		include/component/swmmmodelcomponentinfo.h
+	/Users/calebbuahin/Qt5.6.0/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/mkspecs/macx-clang -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent/include -I/Users/calebbuahin/Documents/Projects/HydroCouple/HydroCouple/include -I/Users/calebbuahin/Documents/Projects/HydroCouple/HydroCoupleSDK/include -I/usr/local/include -I/usr/local/include/libiomp -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers -F/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib include/component/swmmmodelcomponentinfo.h -o build/debug/.moc/moc_swmmmodelcomponentinfo.cpp
 
-build/debug/.moc/moc_swmmtimeseriesexchangeitems.cpp: include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h \
-		include/swmmcomponent_global.h \
-		../HydroCoupleSDK/include/timeseriesexchangeitem.h \
-		../HydroCoupleSDK/include/timeseriescomponentdataitem.h \
+build/debug/.moc/moc_swmmtimeseriesexchangeitems.cpp: include/swmmcomponent_global.h \
+		include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h \
+		../HydroCoupleSDK/include/temporal/timeseriesexchangeitem.h \
+		../HydroCoupleSDK/include/temporal/timeseriescomponentdataitem.h \
 		../HydroCouple/include/hydrocoupletemporal.h \
 		../HydroCouple/include/hydrocouple.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QVariant \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qvariant.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QSharedPointer \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qsharedpointer.h \
-		../HydroCoupleSDK/include/componentdataitem1d.h \
-		../HydroCoupleSDK/include/abstractcomponentdataitem.h \
-		../HydroCoupleSDK/include/identity.h \
-		../HydroCoupleSDK/include/description.h \
+		../HydroCoupleSDK/include/core/componentdataitem1d.h \
+		../HydroCoupleSDK/include/core/abstractcomponentdataitem.h \
+		../HydroCoupleSDK/include/core/identity.h \
+		../HydroCoupleSDK/include/core/description.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QObject \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qobject.h \
 		../HydroCoupleSDK/include/hydrocouplesdk.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QXmlStreamReader \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qxmlstream.h \
-		../HydroCoupleSDK/include/abstractinput.h \
-		../HydroCoupleSDK/include/abstractexchangeitem.h \
-		../HydroCoupleSDK/include/abstractoutput.h \
-		include/swmmobjectitems.h \
-		include/swmmtimeseriesexchangeitems.h
-	/Users/calebbuahin/Qt5.6.0/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/mkspecs/macx-clang -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent/include -I/Users/calebbuahin/Documents/Projects/HydroCouple/HydroCouple/include -I/Users/calebbuahin/Documents/Projects/HydroCouple/HydroCoupleSDK/include -I/usr/local/include -I/usr/local/include/libiomp -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers -F/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib include/swmmtimeseriesexchangeitems.h -o build/debug/.moc/moc_swmmtimeseriesexchangeitems.cpp
+		../HydroCoupleSDK/include/core/abstractinput.h \
+		../HydroCoupleSDK/include/core/abstractexchangeitem.h \
+		../HydroCoupleSDK/include/core/abstractoutput.h \
+		include/component/swmmobjectitems.h \
+		include/component/swmmtimeseriesexchangeitems.h
+	/Users/calebbuahin/Qt5.6.0/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/mkspecs/macx-clang -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent -I/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent/include -I/Users/calebbuahin/Documents/Projects/HydroCouple/HydroCouple/include -I/Users/calebbuahin/Documents/Projects/HydroCouple/HydroCoupleSDK/include -I/usr/local/include -I/usr/local/include/libiomp -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers -F/Users/calebbuahin/Qt5.6.0/5.6/clang_64/lib include/component/swmmtimeseriesexchangeitems.h -o build/debug/.moc/moc_swmmtimeseriesexchangeitems.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -872,840 +875,922 @@ compiler_clean: compiler_moc_header_clean
 
 ####### Compile
 
-build/debug/.obj/climate.o: src/climate.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/climate.o src/climate.c
-
-build/debug/.obj/controls.o: src/controls.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/controls.o src/controls.c
-
-build/debug/.obj/culvert.o: src/culvert.c include/findroot.h \
-		include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/culvert.o src/culvert.c
-
-build/debug/.obj/datetime.o: src/datetime.c include/datetime.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/datetime.o src/datetime.c
-
-build/debug/.obj/dwflow.o: src/dwflow.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/dwflow.o src/dwflow.c
-
-build/debug/.obj/dynwave.o: src/dynwave.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h \
-		/usr/local/include/libiomp/omp.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/dynwave.o src/dynwave.c
-
-build/debug/.obj/error.o: src/error.c include/error.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/error.o src/error.c
-
-build/debug/.obj/exfil.o: src/exfil.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/exfil.o src/exfil.c
-
-build/debug/.obj/findroot.o: src/findroot.c include/findroot.h \
-		include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/findroot.o src/findroot.c
-
-build/debug/.obj/flowrout.o: src/flowrout.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/flowrout.o src/flowrout.c
-
-build/debug/.obj/forcmain.o: src/forcmain.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/forcmain.o src/forcmain.c
-
-build/debug/.obj/gage.o: src/gage.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/gage.o src/gage.c
-
-build/debug/.obj/gwater.o: src/gwater.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h \
-		include/odesolve.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/gwater.o src/gwater.c
-
-build/debug/.obj/hash.o: src/hash.c include/hash.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/hash.o src/hash.c
-
-build/debug/.obj/hotstart.o: src/hotstart.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/hotstart.o src/hotstart.c
-
-build/debug/.obj/iface.o: src/iface.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/iface.o src/iface.c
-
-build/debug/.obj/infil.o: src/infil.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/infil.o src/infil.c
-
-build/debug/.obj/inflow.o: src/inflow.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/inflow.o src/inflow.c
-
-build/debug/.obj/input.o: src/input.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/input.o src/input.c
-
-build/debug/.obj/inputrpt.o: src/inputrpt.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/inputrpt.o src/inputrpt.c
-
-build/debug/.obj/keywords.o: src/keywords.c include/text.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/keywords.o src/keywords.c
-
-build/debug/.obj/kinwave.o: src/kinwave.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h \
-		include/findroot.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/kinwave.o src/kinwave.c
-
-build/debug/.obj/landuse.o: src/landuse.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/landuse.o src/landuse.c
-
-build/debug/.obj/lid.o: src/lid.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/lid.o src/lid.c
-
-build/debug/.obj/lidproc.o: src/lidproc.c include/lid.h \
-		include/infil.h \
-		include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/exfil.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/lidproc.o src/lidproc.c
-
-build/debug/.obj/link.o: src/link.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/link.o src/link.c
-
-build/debug/.obj/massbal.o: src/massbal.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/massbal.o src/massbal.c
-
-build/debug/.obj/mathexpr.o: src/mathexpr.c include/mathexpr.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/mathexpr.o src/mathexpr.c
-
-build/debug/.obj/mempool.o: src/mempool.c include/mempool.h \
-		include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/mempool.o src/mempool.c
-
-build/debug/.obj/node.o: src/node.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h \
-		include/findroot.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/node.o src/node.c
-
-build/debug/.obj/odesolve.o: src/odesolve.c include/odesolve.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/odesolve.o src/odesolve.c
-
-build/debug/.obj/output.o: src/output.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/output.o src/output.c
-
-build/debug/.obj/project.o: src/project.c /usr/local/include/libiomp/omp.h \
-		include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h \
-		include/mempool.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/project.o src/project.c
-
-build/debug/.obj/qualrout.o: src/qualrout.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/qualrout.o src/qualrout.c
-
-build/debug/.obj/rain.o: src/rain.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/rain.o src/rain.c
-
-build/debug/.obj/rdii.o: src/rdii.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/rdii.o src/rdii.c
-
-build/debug/.obj/report.o: src/report.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/report.o src/report.c
-
-build/debug/.obj/roadway.o: src/roadway.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/roadway.o src/roadway.c
-
-build/debug/.obj/routing.o: src/routing.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/routing.o src/routing.c
-
-build/debug/.obj/runoff.o: src/runoff.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h \
-		include/odesolve.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/runoff.o src/runoff.c
-
-build/debug/.obj/shape.o: src/shape.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/shape.o src/shape.c
-
-build/debug/.obj/snow.o: src/snow.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/snow.o src/snow.c
-
-build/debug/.obj/stats.o: src/stats.c /usr/local/include/libiomp/omp.h \
-		include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/stats.o src/stats.c
-
-build/debug/.obj/statsrpt.o: src/statsrpt.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/statsrpt.o src/statsrpt.c
-
 build/debug/.obj/stdafx.o: src/stdafx.cpp include/stdafx.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/.obj/stdafx.o src/stdafx.cpp
 
-build/debug/.obj/subcatch.o: src/subcatch.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h \
-		include/odesolve.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/subcatch.o src/subcatch.c
+build/debug/.obj/climate.o: src/core/climate.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/climate.o src/core/climate.c
 
-build/debug/.obj/surfqual.o: src/surfqual.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/surfqual.o src/surfqual.c
+build/debug/.obj/controls.o: src/core/controls.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/controls.o src/core/controls.c
 
-build/debug/.obj/swmm5.o: src/swmm5.c include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/swmm5.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/swmm5.o src/swmm5.c
+build/debug/.obj/culvert.o: src/core/culvert.c include/core/findroot.h \
+		include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/culvert.o src/core/culvert.c
 
-build/debug/.obj/swmmcomponent.o: src/swmmcomponent.cpp include/stdafx.h \
-		include/swmmcomponent.h \
-		include/swmmcomponent_global.h \
-		include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h \
-		include/swmm5.h \
-		../HydroCoupleSDK/include/abstractmodelcomponent.h \
-		../HydroCoupleSDK/include/identity.h \
-		../HydroCoupleSDK/include/description.h \
+build/debug/.obj/datetime.o: src/core/datetime.c include/core/datetime.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/datetime.o src/core/datetime.c
+
+build/debug/.obj/dwflow.o: src/core/dwflow.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/dwflow.o src/core/dwflow.c
+
+build/debug/.obj/dynwave.o: src/core/dynwave.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h \
+		/usr/local/include/libiomp/omp.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/dynwave.o src/core/dynwave.c
+
+build/debug/.obj/error.o: src/core/error.c include/core/error.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/error.o src/core/error.c
+
+build/debug/.obj/exfil.o: src/core/exfil.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/exfil.o src/core/exfil.c
+
+build/debug/.obj/findroot.o: src/core/findroot.c include/core/findroot.h \
+		include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/findroot.o src/core/findroot.c
+
+build/debug/.obj/flowrout.o: src/core/flowrout.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/flowrout.o src/core/flowrout.c
+
+build/debug/.obj/forcmain.o: src/core/forcmain.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/forcmain.o src/core/forcmain.c
+
+build/debug/.obj/gage.o: src/core/gage.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/gage.o src/core/gage.c
+
+build/debug/.obj/gwater.o: src/core/gwater.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h \
+		include/core/odesolve.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/gwater.o src/core/gwater.c
+
+build/debug/.obj/hash.o: src/core/hash.c include/core/hash.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/hash.o src/core/hash.c
+
+build/debug/.obj/hotstart.o: src/core/hotstart.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/hotstart.o src/core/hotstart.c
+
+build/debug/.obj/iface.o: src/core/iface.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/iface.o src/core/iface.c
+
+build/debug/.obj/infil.o: src/core/infil.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/infil.o src/core/infil.c
+
+build/debug/.obj/inflow.o: src/core/inflow.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/inflow.o src/core/inflow.c
+
+build/debug/.obj/input.o: src/core/input.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/input.o src/core/input.c
+
+build/debug/.obj/inputrpt.o: src/core/inputrpt.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/inputrpt.o src/core/inputrpt.c
+
+build/debug/.obj/keywords.o: src/core/keywords.c include/core/text.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/keywords.o src/core/keywords.c
+
+build/debug/.obj/kinwave.o: src/core/kinwave.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h \
+		include/core/findroot.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/kinwave.o src/core/kinwave.c
+
+build/debug/.obj/landuse.o: src/core/landuse.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/landuse.o src/core/landuse.c
+
+build/debug/.obj/lid.o: src/core/lid.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/lid.o src/core/lid.c
+
+build/debug/.obj/lidproc.o: src/core/lidproc.c include/core/lid.h \
+		include/core/infil.h \
+		include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/exfil.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/lidproc.o src/core/lidproc.c
+
+build/debug/.obj/link.o: src/core/link.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/link.o src/core/link.c
+
+build/debug/.obj/massbal.o: src/core/massbal.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/massbal.o src/core/massbal.c
+
+build/debug/.obj/mathexpr.o: src/core/mathexpr.c include/core/mathexpr.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/mathexpr.o src/core/mathexpr.c
+
+build/debug/.obj/mempool.o: src/core/mempool.c include/core/mempool.h \
+		include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/mempool.o src/core/mempool.c
+
+build/debug/.obj/node.o: src/core/node.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h \
+		include/core/findroot.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/node.o src/core/node.c
+
+build/debug/.obj/odesolve.o: src/core/odesolve.c include/core/odesolve.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/odesolve.o src/core/odesolve.c
+
+build/debug/.obj/output.o: src/core/output.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/output.o src/core/output.c
+
+build/debug/.obj/project.o: src/core/project.c /usr/local/include/libiomp/omp.h \
+		include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h \
+		include/core/mempool.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/project.o src/core/project.c
+
+build/debug/.obj/qualrout.o: src/core/qualrout.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/qualrout.o src/core/qualrout.c
+
+build/debug/.obj/rain.o: src/core/rain.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/rain.o src/core/rain.c
+
+build/debug/.obj/rdii.o: src/core/rdii.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/rdii.o src/core/rdii.c
+
+build/debug/.obj/report.o: src/core/report.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/report.o src/core/report.c
+
+build/debug/.obj/roadway.o: src/core/roadway.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/roadway.o src/core/roadway.c
+
+build/debug/.obj/routing.o: src/core/routing.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/routing.o src/core/routing.c
+
+build/debug/.obj/runoff.o: src/core/runoff.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h \
+		include/core/odesolve.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/runoff.o src/core/runoff.c
+
+build/debug/.obj/shape.o: src/core/shape.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/shape.o src/core/shape.c
+
+build/debug/.obj/snow.o: src/core/snow.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/snow.o src/core/snow.c
+
+build/debug/.obj/stats.o: src/core/stats.c /usr/local/include/libiomp/omp.h \
+		include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/stats.o src/core/stats.c
+
+build/debug/.obj/statsrpt.o: src/core/statsrpt.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/statsrpt.o src/core/statsrpt.c
+
+build/debug/.obj/subcatch.o: src/core/subcatch.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h \
+		include/core/odesolve.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/subcatch.o src/core/subcatch.c
+
+build/debug/.obj/surfqual.o: src/core/surfqual.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/surfqual.o src/core/surfqual.c
+
+build/debug/.obj/swmm5.o: src/core/swmm5.c include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/swmm5.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/swmm5.o src/core/swmm5.c
+
+build/debug/.obj/table.o: src/core/table.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/table.o src/core/table.c
+
+build/debug/.obj/toposort.o: src/core/toposort.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/toposort.o src/core/toposort.c
+
+build/debug/.obj/transect.o: src/core/transect.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/transect.o src/core/transect.c
+
+build/debug/.obj/treatmnt.o: src/core/treatmnt.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/treatmnt.o src/core/treatmnt.c
+
+build/debug/.obj/xsect.o: src/core/xsect.c include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h \
+		include/core/findroot.h \
+		src/core/xsect.dat
+	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/xsect.o src/core/xsect.c
+
+build/debug/.obj/dataexchangecache.o: src/core/dataexchangecache.cpp include/stdafx.h \
+		include/core/dataexchangecache.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/.obj/dataexchangecache.o src/core/dataexchangecache.cpp
+
+build/debug/.obj/swmmcomponent.o: src/component/swmmcomponent.cpp include/stdafx.h \
+		../HydroCoupleSDK/include/core/idbasedcomponentdataitem.h \
+		../HydroCoupleSDK/include/core/abstractcomponentdataitem.h \
+		../HydroCoupleSDK/include/core/identity.h \
+		../HydroCoupleSDK/include/core/description.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QObject \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qobject.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QVariant \
@@ -1714,150 +1799,68 @@ build/debug/.obj/swmmcomponent.o: src/swmmcomponent.cpp include/stdafx.h \
 		../HydroCouple/include/hydrocouple.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QSharedPointer \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qsharedpointer.h \
+		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QXmlStreamReader \
+		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qxmlstream.h \
+		../HydroCoupleSDK/include/core/componentdataitem1d.h \
+		../HydroCoupleSDK/include/core/dimension.h \
+		../HydroCoupleSDK/include/core/valuedefinition.h \
+		../HydroCoupleSDK/include/core/componentstatuschangeeventargs.h \
+		../HydroCoupleSDK/include/core/unit.h \
+		include/core/swmm5.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/enums.h \
+		include/core/consts.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/component/swmmcomponent.h \
+		include/swmmcomponent_global.h \
+		include/core/headers.h \
+		include/core/macros.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h \
+		../HydroCoupleSDK/include/core/abstractmodelcomponent.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QMutex \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qmutex.h \
-		../HydroCoupleSDK/include/timedata.h \
+		../HydroCoupleSDK/include/core/idbasedargument.h \
+		../HydroCoupleSDK/include/core/abstractargument.h \
+		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QFileInfo \
+		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qfileinfo.h \
+		../HydroCoupleSDK/include/temporal/timedata.h \
 		../HydroCouple/include/hydrocoupletemporal.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QDateTime \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
-		../HydroCoupleSDK/include/idbasedargument.h \
-		../HydroCoupleSDK/include/abstractargument.h \
-		../HydroCoupleSDK/include/abstractcomponentdataitem.h \
-		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QXmlStreamReader \
-		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qxmlstream.h \
-		../HydroCoupleSDK/include/idbasedcomponentdataitem.h \
-		../HydroCoupleSDK/include/componentdataitem1d.h \
-		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QFileInfo \
-		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qfileinfo.h \
-		include/swmmmodelcomponentinfo.h \
-		../HydroCoupleSDK/include/modelcomponentinfo.h \
-		../HydroCoupleSDK/include/componentinfo.h \
-		../HydroCoupleSDK/include/dimension.h \
-		../HydroCoupleSDK/include/valuedefinition.h \
-		../HydroCoupleSDK/include/unit.h \
-		include/swmmtimeseriesexchangeitems.h \
-		../HydroCoupleSDK/include/timeseriesexchangeitem.h \
-		../HydroCoupleSDK/include/timeseriescomponentdataitem.h \
-		../HydroCoupleSDK/include/abstractinput.h \
-		../HydroCoupleSDK/include/abstractexchangeitem.h \
-		../HydroCoupleSDK/include/abstractoutput.h \
-		include/swmmobjectitems.h \
-		../HydroCoupleSDK/include/componentstatuschangeeventargs.h \
+		include/component/swmmmodelcomponentinfo.h \
+		../HydroCoupleSDK/include/core/modelcomponentinfo.h \
+		../HydroCoupleSDK/include/core/componentinfo.h \
+		include/component/swmmtimeseriesexchangeitems.h \
+		../HydroCoupleSDK/include/temporal/timeseriesexchangeitem.h \
+		../HydroCoupleSDK/include/temporal/timeseriescomponentdataitem.h \
+		../HydroCoupleSDK/include/core/abstractinput.h \
+		../HydroCoupleSDK/include/core/abstractexchangeitem.h \
+		../HydroCoupleSDK/include/core/abstractoutput.h \
+		include/component/swmmobjectitems.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QDebug \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qdebug.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QDir \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qdir.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/.obj/swmmcomponent.o src/swmmcomponent.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/.obj/swmmcomponent.o src/component/swmmcomponent.cpp
 
-build/debug/.obj/table.o: src/table.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/table.o src/table.c
-
-build/debug/.obj/toposort.o: src/toposort.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/toposort.o src/toposort.c
-
-build/debug/.obj/transect.o: src/transect.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/transect.o src/transect.c
-
-build/debug/.obj/treatmnt.o: src/treatmnt.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/treatmnt.o src/treatmnt.c
-
-build/debug/.obj/xsect.o: src/xsect.c include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h \
-		include/findroot.h \
-		src/xsect.dat
-	$(CC) -c $(CFLAGS) $(INCPATH) -o build/debug/.obj/xsect.o src/xsect.c
-
-build/debug/.obj/dataexchangecache.o: src/dataexchangecache.cpp include/stdafx.h \
-		include/dataexchangecache.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/.obj/dataexchangecache.o src/dataexchangecache.cpp
-
-build/debug/.obj/swmmmodelcomponentinfo.o: src/swmmmodelcomponentinfo.cpp include/stdafx.h \
-		include/swmmmodelcomponentinfo.h \
+build/debug/.obj/swmmmodelcomponentinfo.o: src/component/swmmmodelcomponentinfo.cpp include/stdafx.h \
+		include/component/swmmmodelcomponentinfo.h \
 		include/swmmcomponent_global.h \
-		../HydroCoupleSDK/include/modelcomponentinfo.h \
+		../HydroCoupleSDK/include/core/modelcomponentinfo.h \
 		../HydroCoupleSDK/include/hydrocouplesdk.h \
-		../HydroCoupleSDK/include/componentinfo.h \
-		../HydroCoupleSDK/include/identity.h \
-		../HydroCoupleSDK/include/description.h \
+		../HydroCoupleSDK/include/core/componentinfo.h \
+		../HydroCoupleSDK/include/core/identity.h \
+		../HydroCoupleSDK/include/core/description.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QObject \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qobject.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QVariant \
@@ -1865,103 +1868,103 @@ build/debug/.obj/swmmmodelcomponentinfo.o: src/swmmmodelcomponentinfo.cpp includ
 		../HydroCouple/include/hydrocouple.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QSharedPointer \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qsharedpointer.h \
-		include/swmmcomponent.h \
-		include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h \
-		include/swmm5.h \
-		../HydroCoupleSDK/include/abstractmodelcomponent.h \
+		include/component/swmmcomponent.h \
+		include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h \
+		include/core/swmm5.h \
+		../HydroCoupleSDK/include/core/abstractmodelcomponent.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QMutex \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qmutex.h \
-		../HydroCoupleSDK/include/timedata.h \
+		../HydroCoupleSDK/include/core/idbasedargument.h \
+		../HydroCoupleSDK/include/core/abstractargument.h \
+		../HydroCoupleSDK/include/core/abstractcomponentdataitem.h \
+		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QXmlStreamReader \
+		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qxmlstream.h \
+		../HydroCoupleSDK/include/core/idbasedcomponentdataitem.h \
+		../HydroCoupleSDK/include/core/componentdataitem1d.h \
+		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QFileInfo \
+		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qfileinfo.h \
+		../HydroCoupleSDK/include/temporal/timedata.h \
 		../HydroCouple/include/hydrocoupletemporal.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QDateTime \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
-		../HydroCoupleSDK/include/idbasedargument.h \
-		../HydroCoupleSDK/include/abstractargument.h \
-		../HydroCoupleSDK/include/abstractcomponentdataitem.h \
-		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QXmlStreamReader \
-		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qxmlstream.h \
-		../HydroCoupleSDK/include/idbasedcomponentdataitem.h \
-		../HydroCoupleSDK/include/componentdataitem1d.h \
-		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QFileInfo \
-		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qfileinfo.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QUuid \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/quuid.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/.obj/swmmmodelcomponentinfo.o src/swmmmodelcomponentinfo.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/.obj/swmmmodelcomponentinfo.o src/component/swmmmodelcomponentinfo.cpp
 
-build/debug/.obj/swmmtimeseriesexchangeitems.o: src/swmmtimeseriesexchangeitems.cpp include/stdafx.h \
-		include/swmmtimeseriesexchangeitems.h \
-		include/headers.h \
-		include/consts.h \
-		include/macros.h \
-		include/enums.h \
-		include/error.h \
-		include/datetime.h \
-		include/objects.h \
-		include/mathexpr.h \
-		include/infil.h \
-		include/exfil.h \
-		include/lid.h \
-		include/funcs.h \
-		include/globals.h \
-		include/hash.h \
-		include/text.h \
-		include/keywords.h \
-		include/dataexchangecache.h \
+build/debug/.obj/swmmtimeseriesexchangeitems.o: src/component/swmmtimeseriesexchangeitems.cpp include/stdafx.h \
+		include/component/swmmtimeseriesexchangeitems.h \
 		include/swmmcomponent_global.h \
-		../HydroCoupleSDK/include/timeseriesexchangeitem.h \
-		../HydroCoupleSDK/include/timeseriescomponentdataitem.h \
+		include/core/headers.h \
+		include/core/consts.h \
+		include/core/macros.h \
+		include/core/enums.h \
+		include/core/error.h \
+		include/core/datetime.h \
+		include/core/objects.h \
+		include/core/mathexpr.h \
+		include/core/infil.h \
+		include/core/exfil.h \
+		include/core/lid.h \
+		include/core/funcs.h \
+		include/core/globals.h \
+		include/core/hash.h \
+		include/core/text.h \
+		include/core/keywords.h \
+		include/core/dataexchangecache.h \
+		../HydroCoupleSDK/include/temporal/timeseriesexchangeitem.h \
+		../HydroCoupleSDK/include/temporal/timeseriescomponentdataitem.h \
 		../HydroCouple/include/hydrocoupletemporal.h \
 		../HydroCouple/include/hydrocouple.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QVariant \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qvariant.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QSharedPointer \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qsharedpointer.h \
-		../HydroCoupleSDK/include/componentdataitem1d.h \
-		../HydroCoupleSDK/include/abstractcomponentdataitem.h \
-		../HydroCoupleSDK/include/identity.h \
-		../HydroCoupleSDK/include/description.h \
+		../HydroCoupleSDK/include/core/componentdataitem1d.h \
+		../HydroCoupleSDK/include/core/abstractcomponentdataitem.h \
+		../HydroCoupleSDK/include/core/identity.h \
+		../HydroCoupleSDK/include/core/description.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QObject \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qobject.h \
 		../HydroCoupleSDK/include/hydrocouplesdk.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QXmlStreamReader \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qxmlstream.h \
-		../HydroCoupleSDK/include/abstractinput.h \
-		../HydroCoupleSDK/include/abstractexchangeitem.h \
-		../HydroCoupleSDK/include/abstractoutput.h \
-		include/swmmobjectitems.h \
-		include/swmmcomponent.h \
-		include/swmm5.h \
-		../HydroCoupleSDK/include/abstractmodelcomponent.h \
+		../HydroCoupleSDK/include/core/abstractinput.h \
+		../HydroCoupleSDK/include/core/abstractexchangeitem.h \
+		../HydroCoupleSDK/include/core/abstractoutput.h \
+		include/component/swmmobjectitems.h \
+		include/component/swmmcomponent.h \
+		include/core/swmm5.h \
+		../HydroCoupleSDK/include/core/abstractmodelcomponent.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QMutex \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qmutex.h \
-		../HydroCoupleSDK/include/timedata.h \
-		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QDateTime \
-		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
-		../HydroCoupleSDK/include/idbasedargument.h \
-		../HydroCoupleSDK/include/abstractargument.h \
-		../HydroCoupleSDK/include/idbasedcomponentdataitem.h \
+		../HydroCoupleSDK/include/core/idbasedargument.h \
+		../HydroCoupleSDK/include/core/abstractargument.h \
+		../HydroCoupleSDK/include/core/idbasedcomponentdataitem.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QFileInfo \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qfileinfo.h \
-		../HydroCoupleSDK/include/dimension.h \
+		../HydroCoupleSDK/include/temporal/timedata.h \
+		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QDateTime \
+		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
+		../HydroCoupleSDK/include/core/dimension.h \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/QDebug \
 		../../../../Qt5.6.0/5.6/clang_64/lib/QtCore.framework/Headers/qdebug.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/.obj/swmmtimeseriesexchangeitems.o src/swmmtimeseriesexchangeitems.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/.obj/swmmtimeseriesexchangeitems.o src/component/swmmtimeseriesexchangeitems.cpp
 
 build/debug/.obj/moc_swmmcomponent.o: build/debug/.moc/moc_swmmcomponent.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/.obj/moc_swmmcomponent.o build/debug/.moc/moc_swmmcomponent.cpp

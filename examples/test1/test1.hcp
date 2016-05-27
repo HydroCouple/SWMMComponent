@@ -3,29 +3,31 @@
     <ModelComponents>
         <ModelComponent Name="SWMM Component 5.1.008" IsTrigger="True" ModelComponentLibrary="../../build/debug/libSWMMComponent.1.0.0.dylib" XPos="-731.298" YPos="141.353">
             <Arguments>
-                <Argument Id="LinkExchangeItems" ArgumentIOType="String">
-                    <IdBasedArgument Id="LinkExchangeItems" Caption="Link Exchange Items" IsOptional="False">
+                <Argument Id="NodeExchangeItems" ArgumentIOType="String">
+                    <Argument1D Id="NodeExchangeItems" Caption="Node Exchange Items" IsOptional="False">
     <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
         <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
     </ValueDefinition>
     <Dimensions>
-        <Dimension Id="LinksExchangeItemsDimension" Caption="" Length="1"/>
+        <Dimension Id="NodeExchangeItemsDimension" Caption="" Length="1"/>
     </Dimensions>
     <Values>
-        <Value Id="0">6</Value>
+        <Value>6</Value>
     </Values>
-</IdBasedArgument>
+</Argument1D>
                 </Argument>
-                <Argument Id="SubCatchmentsExchangeItems" ArgumentIOType="String">
-                    <IdBasedArgument Id="SubCatchmentsExchangeItems" Caption="SubCatchment Exchange Items" IsOptional="False">
+                <Argument Id="Identifiers" ArgumentIOType="String">
+                    <IdBasedArgument Id="Identifiers" Caption="Model Identifiers" IsOptional="False">
     <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
         <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
     </ValueDefinition>
     <Dimensions>
-        <Dimension Id="SubCatchmentsExchangeItemsDimension" Caption="" Length="1"/>
+        <Dimension Id="IdentifierDimension" Caption="" Length="3"/>
     </Dimensions>
     <Values>
-        <Value Id=""/>
+        <Value Id="Id">test1_split1</Value>
+        <Value Id="Caption">SWMM QA Test Problem 1 Split at node 6</Value>
+        <Value Id="Description"/>
     </Values>
 </IdBasedArgument>
                 </Argument>
@@ -44,8 +46,38 @@
     </Values>
 </IdBasedArgument>
                 </Argument>
+                <Argument Id="SubCatchmentsExchangeItems" ArgumentIOType="String">
+                    <Argument1D Id="SubCatchmentsExchangeItems" Caption="SubCatchment Exchange Items" IsOptional="False">
+    <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
+        <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
+    </ValueDefinition>
+    <Dimensions>
+        <Dimension Id="SubCatchmentsExchangeItemsDimension" Caption="" Length="1"/>
+    </Dimensions>
+    <Values>
+        <Value/>
+    </Values>
+</Argument1D>
+                </Argument>
+                <Argument Id="LinkExchangeItems" ArgumentIOType="String">
+                    <Argument1D Id="LinkExchangeItems" Caption="Link Exchange Items" IsOptional="False">
+    <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
+        <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
+    </ValueDefinition>
+    <Dimensions>
+        <Dimension Id="LinksExchangeItemsDimension" Caption="" Length="1"/>
+    </Dimensions>
+    <Values>
+        <Value>6</Value>
+    </Values>
+</Argument1D>
+                </Argument>
+            </Arguments>
+        </ModelComponent>
+        <ModelComponent Name="SWMM Component 5.1.008" ModelComponentLibrary="../../build/debug/libSWMMComponent.1.0.0.dylib" XPos="1039.12" YPos="147.094">
+            <Arguments>
                 <Argument Id="NodeExchangeItems" ArgumentIOType="String">
-                    <IdBasedArgument Id="NodeExchangeItems" Caption="Node Exchange Items" IsOptional="False">
+                    <Argument1D Id="NodeExchangeItems" Caption="Node Exchange Items" IsOptional="False">
     <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
         <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
     </ValueDefinition>
@@ -53,9 +85,9 @@
         <Dimension Id="NodeExchangeItemsDimension" Caption="" Length="1"/>
     </Dimensions>
     <Values>
-        <Value Id="0">6</Value>
+        <Value>6</Value>
     </Values>
-</IdBasedArgument>
+</Argument1D>
                 </Argument>
                 <Argument Id="Identifiers" ArgumentIOType="String">
                     <IdBasedArgument Id="Identifiers" Caption="Model Identifiers" IsOptional="False">
@@ -66,39 +98,9 @@
         <Dimension Id="IdentifierDimension" Caption="" Length="3"/>
     </Dimensions>
     <Values>
-        <Value Id="Id">test1_split1</Value>
+        <Value Id="Id">test1_split2</Value>
         <Value Id="Caption">SWMM QA Test Problem 1 Split at node 6</Value>
         <Value Id="Description"/>
-    </Values>
-</IdBasedArgument>
-                </Argument>
-            </Arguments>
-        </ModelComponent>
-        <ModelComponent Name="SWMM Component 5.1.008" ModelComponentLibrary="../../build/debug/libSWMMComponent.1.0.0.dylib" XPos="1039.12" YPos="147.094">
-            <Arguments>
-                <Argument Id="LinkExchangeItems" ArgumentIOType="String">
-                    <IdBasedArgument Id="LinkExchangeItems" Caption="Link Exchange Items" IsOptional="False">
-    <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
-        <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
-    </ValueDefinition>
-    <Dimensions>
-        <Dimension Id="LinksExchangeItemsDimension" Caption="" Length="1"/>
-    </Dimensions>
-    <Values>
-        <Value Id=""/>
-    </Values>
-</IdBasedArgument>
-                </Argument>
-                <Argument Id="SubCatchmentsExchangeItems" ArgumentIOType="String">
-                    <IdBasedArgument Id="SubCatchmentsExchangeItems" Caption="SubCatchment Exchange Items" IsOptional="False">
-    <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
-        <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
-    </ValueDefinition>
-    <Dimensions>
-        <Dimension Id="SubCatchmentsExchangeItemsDimension" Caption="" Length="1"/>
-    </Dimensions>
-    <Values>
-        <Value Id=""/>
     </Values>
 </IdBasedArgument>
                 </Argument>
@@ -117,33 +119,31 @@
     </Values>
 </IdBasedArgument>
                 </Argument>
-                <Argument Id="NodeExchangeItems" ArgumentIOType="String">
-                    <IdBasedArgument Id="NodeExchangeItems" Caption="Node Exchange Items" IsOptional="False">
+                <Argument Id="SubCatchmentsExchangeItems" ArgumentIOType="String">
+                    <Argument1D Id="SubCatchmentsExchangeItems" Caption="SubCatchment Exchange Items" IsOptional="False">
     <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
         <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
     </ValueDefinition>
     <Dimensions>
-        <Dimension Id="NodeExchangeItemsDimension" Caption="" Length="1"/>
+        <Dimension Id="SubCatchmentsExchangeItemsDimension" Caption="" Length="1"/>
     </Dimensions>
     <Values>
-        <Value Id="0">6</Value>
+        <Value/>
     </Values>
-</IdBasedArgument>
+</Argument1D>
                 </Argument>
-                <Argument Id="Identifiers" ArgumentIOType="String">
-                    <IdBasedArgument Id="Identifiers" Caption="Model Identifiers" IsOptional="False">
+                <Argument Id="LinkExchangeItems" ArgumentIOType="String">
+                    <Argument1D Id="LinkExchangeItems" Caption="Link Exchange Items" IsOptional="False">
     <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
         <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
     </ValueDefinition>
     <Dimensions>
-        <Dimension Id="IdentifierDimension" Caption="" Length="3"/>
+        <Dimension Id="LinksExchangeItemsDimension" Caption="" Length="1"/>
     </Dimensions>
     <Values>
-        <Value Id="Id">test1_split2</Value>
-        <Value Id="Caption">SWMM QA Test Problem 1 Split at node 6</Value>
-        <Value Id="Description"/>
+        <Value/>
     </Values>
-</IdBasedArgument>
+</Argument1D>
                 </Argument>
             </Arguments>
         </ModelComponent>
