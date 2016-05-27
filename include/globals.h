@@ -31,7 +31,7 @@
 
 
 #ifdef __cplusplus
-"C" {
+extern "C" {
 #endif
 
 	//typedef struct alloc_root_s alloc_root_t;
@@ -84,7 +84,7 @@
 		int	ForceMainEqn;             // Flow equation for force mains
 		int	LinkOffsets;              // Link offset convention
 		int	AllowPonding;             // Allow water to pond at nodes
-		int InertDamping;             // Degree of inertial damping
+		int     InertDamping;             // Degree of inertial damping
 		int	NormalFlowLtd;            // Normal flow limited
 		int	SlopeWeighting;           // Use slope weighting
 		int	Compatibility;            // SWMM 5/3/4 compatibility
@@ -533,7 +533,7 @@
 		double* Cin;                    // node inflow concentrations
 	};
 
-	typedef struct Project Project;
+	//typedef struct Project Project;
 
 #ifdef __cplusplus
 }

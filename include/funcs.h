@@ -32,9 +32,13 @@
 #ifndef FUNCS_H
 #define FUNCS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "globals.h"
 
-Project* project_open(char *f1, char *f2, char *f3);
+void     project_open(Project* project, char *f1, char *f2, char *f3);
 void     project_close(Project* project);
 
 void     project_readInput(Project* project);
@@ -525,5 +529,9 @@ void setCouplingNodeDepths(Project* project);
 
 void setCouplingLateralInflows(Project* project);
 //void setCouplingLateralInflow(Project* project, int index);
+
+#ifdef __cplusplus
+}   // matches the linkage specification from above */
+#endif
 
 #endif

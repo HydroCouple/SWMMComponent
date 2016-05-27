@@ -131,6 +131,7 @@ void  node_setParams(Project* project, int j, int type, int k, double x[])
     project->Node[j].surDepth   = 0.0;
     project->Node[j].pondedArea = 0.0;
     project->Node[j].degree     = 0;
+
     switch (type)
     {
       case JUNCTION:

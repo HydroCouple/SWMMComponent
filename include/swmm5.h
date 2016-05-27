@@ -74,8 +74,6 @@ SDLLEXPORT TSubcatch*  STDCALL getSubcatch(Project* project, int index);
 SDLLEXPORT TSubcatch* STDCALL getSubcatchById(Project* project, char* id);
 void DLLEXPORT setSubcatch(Project* project, char* subCatchId, char* propertyName, double value);
 
-
-
 #ifdef __cplusplus 
 }   // matches the linkage specification from above */ 
 #endif

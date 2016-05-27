@@ -25,6 +25,6 @@
 #include "keywords.h"
 #define  EXTERN extern
 #include "globals.h"
-#include "swmmcomponent.h"
+#include "dataexchangecache.h"
 
 #endif

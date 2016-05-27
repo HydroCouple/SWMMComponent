@@ -99,20 +99,20 @@
 //-----------------------------------------------------------------------------
 const double Ucf[10][2] =
 {//  US      SI
-	{ 43200.0, 1097280.0 },         // RAINFALL (in/hr, mm/hr --> ft/sec)
-	{ 12.0, 304.8 },         // RAINDEPTH (in, mm --> ft)
-	{ 1036800.0, 26334720.0 },         // EVAPRATE (in/day, mm/day --> ft/sec)
-	{ 1.0, 0.3048 },         // LENGTH (ft, m --> ft)
-	{ 2.2956e-5, 0.92903e-5 },         // LANDAREA (ac, ha --> ft2)
-	{ 1.0, 0.02832 },         // VOLUME (ft3, m3 --> ft3)
-	{ 1.0, 1.608 },         // WINDSPEED (mph, km/hr --> mph)
-	{ 1.0, 1.8 },         // TEMPERATURE (deg F, deg C --> deg F)
-	{ 2.203e-6, 1.0e-6 },         // MASS (lb, kg --> mg)
-	{ 43560.0, 3048.0 }          // GWFLOW (cfs/ac, cms/ha --> ft/sec)
+ { 43200.0, 1097280.0 },         // RAINFALL (in/hr, mm/hr --> ft/sec)
+ { 12.0, 304.8 },         // RAINDEPTH (in, mm --> ft)
+ { 1036800.0, 26334720.0 },         // EVAPRATE (in/day, mm/day --> ft/sec)
+ { 1.0, 0.3048 },         // LENGTH (ft, m --> ft)
+ { 2.2956e-5, 0.92903e-5 },         // LANDAREA (ac, ha --> ft2)
+ { 1.0, 0.02832 },         // VOLUME (ft3, m3 --> ft3)
+ { 1.0, 1.608 },         // WINDSPEED (mph, km/hr --> mph)
+ { 1.0, 1.8 },         // TEMPERATURE (deg F, deg C --> deg F)
+ { 2.203e-6, 1.0e-6 },         // MASS (lb, kg --> mg)
+ { 43560.0, 3048.0 }          // GWFLOW (cfs/ac, cms/ha --> ft/sec)
 };
 const double Qcf[6] =                  // Flow Conversion Factors:
 { 1.0, 448.831, 0.64632,     // cfs, gpm, mgd --> cfs
-0.02832, 28.317, 2.4466 };    // cms, lps, mld --> cfs
+      0.02832, 28.317, 2.4466};    // cms, lps, mld --> cfs
 
 ////-----------------------------------------------------------------------------
 ////  Shared variables
@@ -163,109 +163,104 @@ int  main(int argc, char *argv[])
 //  f3 = name of binary output file if saved (or blank if not saved).
 //
 {
-	char *inputFile;
-	char *reportFile;
-	char *binaryFile;
-	char blank[] = "";
-	time_t start;
-	double runTime;
+   char *inputFile;
+   char *reportFile;
+   char *binaryFile;
+   char blank[] = "";
+   time_t start;
+   double runTime;
 
-	// --- initialize flags
-	Project* project = NULL;
+   // --- initialize flags
+   Project* project = NULL;
 
-	//project->IsOpenFlag = FALSE;
-	//project->IsStartedFlag = FALSE;
-	//project->SaveResultsFlag = TRUE;
+   //project->IsOpenFlag = FALSE;
+   //project->IsStartedFlag = FALSE;
+   //project->SaveResultsFlag = TRUE;
 
-	// --- check for proper number of command line arguments
-	start = time(0);
-	if (argc < 3) writecon(FMT01);
-	else
-	{
-		// --- extract file names from command line arguments
-		inputFile = argv[1];
-		reportFile = argv[2];
-		if (argc > 3) binaryFile = argv[3];
-		else          binaryFile = blank;
-		writecon(FMT02);
+   // --- check for proper number of command line arguments
+   start = time(0);
+   if (argc < 3) writecon(FMT01);
+   else
+   {
+      // --- extract file names from command line arguments
+      inputFile = argv[1];
+      reportFile = argv[2];
+      if (argc > 3) binaryFile = argv[3];
+      else          binaryFile = blank;
+      writecon(FMT02);
 
-		// --- run SWMM
-		//swmm_run(inputFile, reportFile, binaryFile);
+      // --- run SWMM
+      //swmm_run(inputFile, reportFile, binaryFile);
 
-		long newHour, oldHour = 0;
-		long theDay, theHour;
-		DateTime elapsedTime = 0.0;
+      long newHour, oldHour = 0;
+      long theDay, theHour;
+      DateTime elapsedTime = 0.0;
 
-		// --- open the files & read input data
-		// int project->ErrorCode = 0;
-		project = swmm_open(inputFile, reportFile, binaryFile);
+      // --- open the files & read input data
+      // int project->ErrorCode = 0;
+      project = swmm_open(inputFile, reportFile, binaryFile);
 
-		project->SaveResultsFlag = TRUE;
+      project->SaveResultsFlag = TRUE;
 
-		// --- run the simulation if input data OK
-		if (!project->ErrorCode)
-		{
-			// --- initialize values
-			swmm_start(project, TRUE);
+      // --- run the simulation if input data OK
+      if (!project->ErrorCode)
+      {
+         // --- initialize values
+         swmm_start(project, TRUE);
 
-			// --- execute each time step until elapsed time is re-set to 0
-			if (!project->ErrorCode)
-			{
-				writecon("\n Simulating day: 0     hour:  0");
-				do
-				{
-					swmm_step(project, &elapsedTime);
-					newHour = (long)(elapsedTime * 24.0);
-					if (newHour > oldHour)
-					{
-						theDay = (long)elapsedTime;
-						theHour = (long)((elapsedTime - floor(elapsedTime)) * 24.0);
-						writecon("\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
-						sprintf(project->Msg, "%-5d hour: %-2d", theDay, theHour);
-						writecon(project->Msg);
-						oldHour = newHour;
-					}
-				} while (elapsedTime > 0.0 && !project->ErrorCode);
-				writecon("\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
-					"\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
-				writecon("Simulation complete           ");
-			}
+         // --- execute each time step until elapsed time is re-set to 0
+         if (!project->ErrorCode)
+         {
+            writecon("\n Simulating day: 0     hour:  0");
+            do
+            {
+               swmm_step(project, &elapsedTime);
+               newHour = (long)(elapsedTime * 24.0);
+               if (newHour > oldHour)
+               {
+                  theDay = (long)elapsedTime;
+                  theHour = (long)((elapsedTime - floor(elapsedTime)) * 24.0);
+                  writecon("\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+                  sprintf(project->Msg, "%-5d hour: %-2d", theDay, theHour);
+                  writecon(project->Msg);
+                  oldHour = newHour;
+               }
+            } while (elapsedTime > 0.0 && !project->ErrorCode);
+            writecon("\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+                     "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+            writecon("Simulation complete           ");
+         }
 
-			// --- clean up
-			swmm_end(project);
-		}
+         // --- clean up
+         swmm_end(project);
+      }
 
-		// --- report results
-		if (project->Fout.mode == SCRATCH_FILE) swmm_report(project);
+      // --- report results
+      if (project->Fout.mode == SCRATCH_FILE) swmm_report(project);
 
-		// --- close the system
-		//swmm_close(project);
-		//return project->ErrorCode;
+      // --- close the system
+      //swmm_close(project);
+      //return project->ErrorCode;
 
+      // Display closing status on console
+      runTime = difftime(time(0), start);
+      sprintf(project->Msg, "\n\n... EPA-SWMM completed in %.2f seconds.", runTime);
+      writecon(project->Msg);
+      if (project->ErrorCode) writecon(FMT03);
+      else if (project->WarningCode) writecon(FMT04);
+      else                    writecon(FMT05);
+   }
 
-
-
-
-
-		// Display closing status on console
-		runTime = difftime(time(0), start);
-		sprintf(project->Msg, "\n\n... EPA-SWMM completed in %.2f seconds.", runTime);
-		writecon(project->Msg);
-		if (project->ErrorCode) writecon(FMT03);
-		else if (project->WarningCode) writecon(FMT04);
-		else                    writecon(FMT05);
-	}
-
-	// --- Use the code below if you need to keep the console window visible
-	/*
-		writecon("    Press Enter to continue...");
-		getchar();
-		*/
-	if (project)
-		swmm_close(project);
+   // --- Use the code below if you need to keep the console window visible
+   /*
+                writecon("    Press Enter to continue...");
+                getchar();
+                */
+   if (project)
+      swmm_close(project);
 
 
-	return 0;
+   return 0;
 }                                      /* End of main */
 #endif
 
@@ -280,54 +275,54 @@ int DLLEXPORT  swmm_run(char* f1, char* f2, char* f3)
 //  Purpose: runs a SWMM simulation.
 //
 {
-	long newHour, oldHour = 0;
-	long theDay, theHour;
-	DateTime elapsedTime = 0.0;
+   long newHour, oldHour = 0;
+   long theDay, theHour;
+   DateTime elapsedTime = 0.0;
 
-	// --- open the files & read input data
-	// int project->ErrorCode = 0;
-	Project* project = swmm_open(f1, f2, f3);
+   // --- open the files & read input data
+   // int project->ErrorCode = 0;
+   Project* project = swmm_open(f1, f2, f3);
 
-	// --- run the simulation if input data OK
-	if (!project->ErrorCode)
-	{
-		// --- initialize values
-		swmm_start(project, TRUE);
+   // --- run the simulation if input data OK
+   if (!project->ErrorCode)
+   {
+      // --- initialize values
+      swmm_start(project, TRUE);
 
-		// --- execute each time step until elapsed time is re-set to 0
-		if (!project->ErrorCode)
-		{
-			writecon("\n o  Simulating day: 0     hour:  0");
-			do
-			{
-				swmm_step(project, &elapsedTime);
-				newHour = (long)(elapsedTime * 24.0);
-				if (newHour > oldHour)
-				{
-					theDay = (long)elapsedTime;
-					theHour = (long)((elapsedTime - floor(elapsedTime)) * 24.0);
-					writecon("\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
-					sprintf(project->Msg, "%-5d hour: %-2d", theDay, theHour);
-					writecon(project->Msg);
-					oldHour = newHour;
-				}
-			} while (elapsedTime > 0.0 && !project->ErrorCode);
-			writecon("\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
-				"\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
-			writecon("Simulation complete           ");
-		}
+      // --- execute each time step until elapsed time is re-set to 0
+      if (!project->ErrorCode)
+      {
+         writecon("\n o  Simulating day: 0     hour:  0");
+         do
+         {
+            swmm_step(project, &elapsedTime);
+            newHour = (long)(elapsedTime * 24.0);
+            if (newHour > oldHour)
+            {
+               theDay = (long)elapsedTime;
+               theHour = (long)((elapsedTime - floor(elapsedTime)) * 24.0);
+               writecon("\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+               sprintf(project->Msg, "%-5d hour: %-2d", theDay, theHour);
+               writecon(project->Msg);
+               oldHour = newHour;
+            }
+         } while (elapsedTime > 0.0 && !project->ErrorCode);
+         writecon("\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+                  "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+         writecon("Simulation complete           ");
+      }
 
-		// --- clean up
-		swmm_end(project);
-	}
+      // --- clean up
+      swmm_end(project);
+   }
 
-	// --- report results
-	if (project->Fout.mode == SCRATCH_FILE) swmm_report(project);
+   // --- report results
+   if (project->Fout.mode == SCRATCH_FILE) swmm_report(project);
 
-	// --- close the system
-	//swmm_close(project);
-	//return project->ErrorCode;
-	return swmm_close(project);
+   // --- close the system
+   //swmm_close(project);
+   //return project->ErrorCode;
+   return swmm_close(project);
 }
 
 //=============================================================================
@@ -343,54 +338,57 @@ SDLLEXPORT Project* STDCALL swmm_open(char* f1, char* f2, char* f3)
 {
 #ifdef DLL
 #ifdef _WINDOWS
-	_fpreset();
+   _fpreset();
 #endif
 #endif
 
-	Project* project = NULL;
-#ifdef WINDOWS
-	// --- begin exception handling here
-	__try
-#endif
-	{
-		// --- initialize error & warning codes
-		datetime_setDateFormat(M_D_Y);
-		//project->ErrorCode = 0;
-		//WarningCode = 0;
-		//project->IsOpenFlag = FALSE;
-		//project->IsStartedFlag = FALSE;
-		//project->ExceptionCount = 0;
-
-		// --- open a SWMM project
-		project = project_open(f1, f2, f3);
-		if (project->ErrorCode)
-			return project;
-
-		project->IsOpenFlag = TRUE;
-		report_writeLogo(project);
-		writecon(FMT06);
-
-		// --- retrieve project data from input file
-		project_readInput(project);
-		if (project->ErrorCode)
-			return project;
-
-		// --- write project title to report file & validate data
-		report_writeTitle(project);
-		project_validate(project);
-
-		// --- write input summary to report file if requested
-		if (project->RptFlags.input) inputrpt_writeInput(project);
-	}
+   Project *project = calloc(1,sizeof(Project));
 
 #ifdef WINDOWS
-	// --- end of try loop; handle exception here
-	__except (xfilter(project, GetExceptionCode(), 0.0, 0))
-	{
-		project->ErrorCode = ERR_SYSTEM;
-	}
+   // --- begin exception handling here
+   __try
+      #endif
+   {
+      // --- initialize error & warning codes
+      datetime_setDateFormat(M_D_Y);
+
+      project->ErrorCode = 0;
+      project->WarningCode = 0;
+      project->IsOpenFlag = FALSE;
+      project->IsStartedFlag = FALSE;
+      project->ExceptionCount = 0;
+
+      // --- open a SWMM project
+      project_open(project, f1, f2, f3);
+
+      if (project->ErrorCode)
+         return project;
+
+      project->IsOpenFlag = TRUE;
+      report_writeLogo(project);
+      writecon(FMT06);
+
+      // --- retrieve project data from input file
+      project_readInput(project);
+      if (project->ErrorCode)
+         return project;
+
+      // --- write project title to report file & validate data
+      report_writeTitle(project);
+      project_validate(project);
+
+      // --- write input summary to report file if requested
+      if (project->RptFlags.input) inputrpt_writeInput(project);
+   }
+#ifdef WINDOWS
+   // --- end of try loop; handle exception here
+   __except (xfilter(project, GetExceptionCode(), 0.0, 0))
+   {
+      project->ErrorCode = ERR_SYSTEM;
+   }
 #endif
-	return project;
+
+   return project;
 }
 
 //=============================================================================
@@ -402,83 +400,85 @@ int DLLEXPORT swmm_start(Project* project, int saveResults)
 //  Purpose: starts a SWMM simulation.
 //
 {
-	// --- check that a project is open & no run started
-	if (project->ErrorCode) return project->ErrorCode;
-	if (!project->IsOpenFlag || project->IsStartedFlag)
-	{
-		report_writeErrorMsg(project, ERR_NOT_OPEN, "");
-		return project->ErrorCode;
-	}
-	project->ExceptionCount = 0;
+   // --- check that a project is open & no run started
+   if (project->ErrorCode) return project->ErrorCode;
+   if (!project->IsOpenFlag || project->IsStartedFlag)
+   {
+      report_writeErrorMsg(project, ERR_NOT_OPEN, "");
+      return project->ErrorCode;
+   }
+   project->ExceptionCount = 0;
 
 #ifdef WINDOWS
-	// --- begin exception handling loop here
-	__try
-#endif
-	{
-		// --- initialize runoff, routing & reporting time (in milliseconds)
-		project->NewRunoffTime = 0.0;
-		project->NewRoutingTime = 0.0;
-		project->ReportTime = (double)(1000 * project->ReportStep);
-		project->StepCount = 0;
-		project->NonConvergeCount = 0;
-		project->IsStartedFlag = TRUE;
+   // --- begin exception handling loop here
+   __try
+      #endif
+   {
+      // --- initialize runoff, routing & reporting time (in milliseconds)
+      project->NewRunoffTime = 0.0;
+      project->NewRoutingTime = 0.0;
+      project->ReportTime = (double)(1000 * project->ReportStep);
+      project->StepCount = 0;
+      project->NonConvergeCount = 0;
+      project->IsStartedFlag = TRUE;
 
-		// --- initialize global continuity errors
-		project->RunoffError = 0.0;
-		project->GwaterError = 0.0;
-		project->FlowError = 0.0;
-		project->QualError = 0.0;
+      // --- initialize global continuity errors
+      project->RunoffError = 0.0;
+      project->GwaterError = 0.0;
+      project->FlowError = 0.0;
+      project->QualError = 0.0;
 
-		// --- open rainfall processor (creates/opens a rainfall
-		//     interface file and generates any RDII flows)
-		if (!project->IgnoreRainfall) rain_open(project);
-		if (project->ErrorCode) return project->ErrorCode;
+      // --- open rainfall processor (creates/opens a rainfall
+      //     interface file and generates any RDII flows)
+      if (!project->IgnoreRainfall) rain_open(project);
+      if (project->ErrorCode) return project->ErrorCode;
 
-		// --- initialize state of each major system component
-		project_init(project);
+      // --- initialize state of each major system component
+      project_init(project);
 
-		// --- see if runoff & routing needs to be computed
-		if (project->Nobjects[SUBCATCH] > 0) project->DoRunoff = TRUE;
-		else project->DoRunoff = FALSE;
-		if (project->Nobjects[NODE] > 0 && !project->IgnoreRouting) project->DoRouting = TRUE;
-		else project->DoRouting = FALSE;
+      // --- see if runoff & routing needs to be computed
+      if (project->Nobjects[SUBCATCH] > 0) project->DoRunoff = TRUE;
+      else project->DoRunoff = FALSE;
+      if (project->Nobjects[NODE] > 0 && !project->IgnoreRouting) project->DoRouting = TRUE;
+      else project->DoRouting = FALSE;
 
-		////  Following section modified for release 5.1.008.  ////                    //(5.1.008)
-		////
-		// --- open binary output file
-		output_open(project);
+      ////  Following section modified for release 5.1.008.  ////                    //(5.1.008)
+      ////
+      // --- open binary output file
+      output_open(project);
 
-		// --- open runoff processor
-		if (project->DoRunoff) runoff_open(project);
+      // --- open runoff processor
+      if (project->DoRunoff)
+         runoff_open(project);
 
-		// --- open & read hot start file if present
-		if (!hotstart_open(project)) return project->ErrorCode;
+      // --- open & read hot start file if present
+      if (!hotstart_open(project)) return project->ErrorCode;
 
-		// --- open routing processor
-		if (project->DoRouting) routing_open(project);
+      // --- open routing processor
+      if (project->DoRouting) routing_open(project);
 
-		// --- open mass balance and statistics processors
-		massbal_open(project);
-		stats_open(project);
+      // --- open mass balance and statistics processors
+      massbal_open(project);
+      stats_open(project);
 
-		// --- write project options to report file 
-		report_writeOptions(project);
-		if (project->RptFlags.controls) report_writeControlActionsHeading(project);
-		////
-	}
+      // --- write project options to report file
+      report_writeOptions(project);
+      if (project->RptFlags.controls)
+         report_writeControlActionsHeading(project);
+      ////
+   }
 
 #ifdef WINDOWS
-	// --- end of try loop; handle exception here
-	__except (xfilter(project, GetExceptionCode(), 0.0, 0))
-	{
-		project->ErrorCode = ERR_SYSTEM;
-	}
+   // --- end of try loop; handle exception here
+   __except (xfilter(project, GetExceptionCode(), 0.0, 0))
+   {
+      project->ErrorCode = ERR_SYSTEM;
+   }
 #endif
 
-	// --- save saveResults flag to global variable
-	project->SaveResultsFlag = saveResults;
-	return project->ErrorCode;
+   // --- save saveResults flag to global variable
+   project->SaveResultsFlag = saveResults;
+   return project->ErrorCode;
 }
 //=============================================================================
 
@@ -490,53 +490,53 @@ int DLLEXPORT swmm_step(Project* project, DateTime* elapsedTime)
 //  Purpose: advances the simulation by one routing time step.
 //
 {
-	// --- check that simulation can proceed
-	if (project->ErrorCode) return project->ErrorCode;
-	if (!project->IsOpenFlag || !project->IsStartedFlag)
-	{
-		report_writeErrorMsg(project, ERR_NOT_OPEN, "");
-		return project->ErrorCode;
-	}
+   // --- check that simulation can proceed
+   if (project->ErrorCode) return project->ErrorCode;
+   if (!project->IsOpenFlag || !project->IsStartedFlag)
+   {
+      report_writeErrorMsg(project, ERR_NOT_OPEN, "");
+      return project->ErrorCode;
+   }
 
 #ifdef WINDOWS
-	// --- begin exception handling loop here
-	__try
-#endif
-	{
-		// --- if routing time has not exceeded total duration
-		if (project->NewRoutingTime < project->TotalDuration)
-		{
-			// --- route flow & WQ through drainage system
-			//     (runoff will be calculated as needed)
-			//     (project->NewRoutingTime is updated)
-			execRouting(project, *elapsedTime);
-		}
+   // --- begin exception handling loop here
+   __try
+      #endif
+   {
+      // --- if routing time has not exceeded total duration
+      if (project->NewRoutingTime < project->TotalDuration)
+      {
+         // --- route flow & WQ through drainage system
+         //     (runoff will be calculated as needed)
+         //     (project->NewRoutingTime is updated)
+         execRouting(project, *elapsedTime);
+      }
 
-		// --- save results at next reporting time
-		if (project->NewRoutingTime >= project->ReportTime)
-		{
-			if (project->SaveResultsFlag) output_saveResults(project, project->ReportTime);
-			project->ReportTime = project->ReportTime + (double)(1000 * project->ReportStep);
-		}
+      // --- save results at next reporting time
+      if (project->NewRoutingTime >= project->ReportTime)
+      {
+         if (project->SaveResultsFlag) output_saveResults(project, project->ReportTime);
+         project->ReportTime = project->ReportTime + (double)(1000 * project->ReportStep);
+      }
 
-		// --- update elapsed time (days)
-		if (project->NewRoutingTime < project->TotalDuration)
-		{
-			*elapsedTime = project->NewRoutingTime / MSECperDAY;
-		}
+      // --- update elapsed time (days)
+      if (project->NewRoutingTime < project->TotalDuration)
+      {
+         *elapsedTime = project->NewRoutingTime / MSECperDAY;
+      }
 
-		// --- otherwise end the simulation
-		else *elapsedTime = 0.0;
-	}
+      // --- otherwise end the simulation
+      else *elapsedTime = 0.0;
+   }
 
 #ifdef WINDOWS
-	// --- end of try loop; handle exception here
-	__except (xfilter(project, GetExceptionCode(), *elapsedTime, project->StepCount))
-	{
-		project->ErrorCode = ERR_SYSTEM;
-	}
+   // --- end of try loop; handle exception here
+   __except (xfilter(project, GetExceptionCode(), *elapsedTime, project->StepCount))
+   {
+      project->ErrorCode = ERR_SYSTEM;
+   }
 #endif
-	return project->ErrorCode;
+   return project->ErrorCode;
 }
 
 //=============================================================================
@@ -548,59 +548,69 @@ void execRouting(Project* project, DateTime elapsedTime)
 //  Purpose: routes flow & WQ through drainage system over a single time step.
 //
 {
-	double   nextRoutingTime;          // updated elapsed routing time (msec)
-	double   routingStep;              // routing time step (sec)
+   double   nextRoutingTime;          // updated elapsed routing time (msec)
+   double   routingStep;              // routing time step (sec)
 
 #ifdef WINDOWS
-	// --- begin exception handling loop here
-	__try
-#endif
-	{
-		// --- determine when next routing time occurs
-		project->StepCount++;
-		if (!project->DoRouting) routingStep = MIN(project->WetStep, project->ReportStep);
-		else routingStep = routing_getRoutingStep(project, project->RouteModel, project->RouteStep);
-		if (routingStep <= 0.0)
-		{
-			project->ErrorCode = ERR_TIMESTEP;
-			return;
-		}
-		nextRoutingTime = project->NewRoutingTime + 1000.0 * routingStep;
+   // --- begin exception handling loop here
+   __try
+      #endif
+   {
+      // --- determine when next routing time occurs
+      project->StepCount++;
 
-		////  Following section added to release 5.1.008.  ////                        //(5.1.008)
-		////
-		// --- adjust routing step so that total duration not exceeded
-		if (nextRoutingTime > project->TotalDuration)
-		{
-			routingStep = (project->TotalDuration - project->NewRoutingTime) / 1000.0;
-			routingStep = MAX(routingStep, 1. / 1000.0);
-			nextRoutingTime = project->TotalDuration;
-		}
-		////
+      if (!project->DoRouting)
+         routingStep = MIN(project->WetStep, project->ReportStep);
+      else
+         routingStep = routing_getRoutingStep(project, project->RouteModel, project->RouteStep);
 
-		// --- compute runoff until next routing time reached or exceeded
-		if (project->DoRunoff) while (project->NewRunoffTime < nextRoutingTime)
-		{
-			runoff_execute(project);
-			if (project->ErrorCode) return;
-		}
+      if (routingStep <= 0.0)
+      {
+         project->ErrorCode = ERR_TIMESTEP;
+         return;
+      }
 
-		// --- if no runoff analysis, update climate state (for evaporation)
-		else climate_setState(project, getDateTime(project, project->NewRoutingTime));
+      nextRoutingTime = project->NewRoutingTime + 1000.0 * routingStep;
 
-		// --- route flows & pollutants through drainage system                //(5.1.008)
-		//     (while updating project->NewRoutingTime)                                 //(5.1.008)
-		if (project->DoRouting) routing_execute(project, project->RouteModel, routingStep);
-		else project->NewRoutingTime = nextRoutingTime;
-	}
+      ////  Following section added to release 5.1.008.  ////                        //(5.1.008)
+      ////
+      // --- adjust routing step so that total duration not exceeded
+      if (nextRoutingTime > project->TotalDuration)
+      {
+         routingStep = (project->TotalDuration - project->NewRoutingTime) / 1000.0;
+         routingStep = MAX(routingStep, 1. / 1000.0);
+         nextRoutingTime = project->TotalDuration;
+      }
+      ////
+
+      // --- compute runoff until next routing time reached or exceeded
+      if (project->DoRunoff)
+      {
+         while (project->NewRunoffTime < nextRoutingTime)
+         {
+            runoff_execute(project);
+            if (project->ErrorCode) return;
+         }
+      }
+      // --- if no runoff analysis, update climate state (for evaporation)
+      else
+      {
+         climate_setState(project, getDateTime(project, project->NewRoutingTime));
+      }
+
+      // --- route flows & pollutants through drainage system                //(5.1.008)
+      //     (while updating project->NewRoutingTime)                                 //(5.1.008)
+      if (project->DoRouting) routing_execute(project, project->RouteModel, routingStep);
+      else project->NewRoutingTime = nextRoutingTime;
+   }
 
 #ifdef WINDOWS
-	// --- end of try loop; handle exception here
-	__except (xfilter(project, GetExceptionCode(), elapsedTime, project->StepCount))
-	{
-		project->ErrorCode = ERR_SYSTEM;
-		return;
-	}
+   // --- end of try loop; handle exception here
+   __except (xfilter(project, GetExceptionCode(), elapsedTime, project->StepCount))
+   {
+      project->ErrorCode = ERR_SYSTEM;
+      return;
+   }
 #endif
 }
 
@@ -613,35 +623,35 @@ int DLLEXPORT swmm_end(Project* project)
 //  Purpose: ends a SWMM simulation.
 //
 {
-	// --- check that project opened and run started
-	if (!project->IsOpenFlag)
-	{
-		report_writeErrorMsg(project, ERR_NOT_OPEN, "");
-		return project->ErrorCode;
-	}
+   // --- check that project opened and run started
+   if (!project->IsOpenFlag)
+   {
+      report_writeErrorMsg(project, ERR_NOT_OPEN, "");
+      return project->ErrorCode;
+   }
 
-	if (project->IsStartedFlag)
-	{
-		// --- write ending records to binary output file
-		if (project->Fout.file) output_end(project);
+   if (project->IsStartedFlag)
+   {
+      // --- write ending records to binary output file
+      if (project->Fout.file) output_end(project);
 
-		// --- report mass balance results and system statistics
-		if (!project->ErrorCode)
-		{
-			massbal_report(project);
-			stats_report(project);
-		}
+      // --- report mass balance results and system statistics
+      if (!project->ErrorCode)
+      {
+         massbal_report(project);
+         stats_report(project);
+      }
 
-		// --- close all computing systems
-		stats_close(project);
-		massbal_close(project);
-		if (!project->IgnoreRainfall) rain_close(project);
-		if (project->DoRunoff) runoff_close(project);
-		if (project->DoRouting) routing_close(project, project->RouteModel);
-		hotstart_close(project);
-		project->IsStartedFlag = FALSE;
-	}
-	return project->ErrorCode;
+      // --- close all computing systems
+      stats_close(project);
+      massbal_close(project);
+      if (!project->IgnoreRainfall) rain_close(project);
+      if (project->DoRunoff) runoff_close(project);
+      if (project->DoRouting) routing_close(project, project->RouteModel);
+      hotstart_close(project);
+      project->IsStartedFlag = FALSE;
+   }
+   return project->ErrorCode;
 }
 
 //=============================================================================
@@ -653,14 +663,14 @@ int DLLEXPORT swmm_report(Project* project)
 //  Purpose: writes simulation results to report file.
 //
 {
-	if (project->Fout.mode == SCRATCH_FILE) output_checkFileSize(project);
-	if (project->ErrorCode) report_writeErrorCode(project);
-	else
-	{
-		writecon(FMT07);
-		report_writeReport(project);
-	}
-	return project->ErrorCode;
+   if (project->Fout.mode == SCRATCH_FILE) output_checkFileSize(project);
+   if (project->ErrorCode) report_writeErrorCode(project);
+   else
+   {
+      writecon(FMT07);
+      report_writeReport(project);
+   }
+   return project->ErrorCode;
 }
 
 //=============================================================================
@@ -672,48 +682,48 @@ int DLLEXPORT swmm_close(Project* project)
 //  Purpose: closes a SWMM project.
 //
 {
-	if (project->Fout.file) output_close(project);
-	if (project->IsOpenFlag) project_close(project);
-	report_writeSysTime(project);
-	if (project->Finp.file != NULL) fclose(project->Finp.file);
-	if (project->Frpt.file != NULL) fclose(project->Frpt.file);
-	if (project->Fout.file != NULL)
-	{
-		fclose(project->Fout.file);
-		if (project->Fout.mode == SCRATCH_FILE) remove(project->Fout.name);
-	}
-	project->IsOpenFlag = FALSE;
-	project->IsStartedFlag = FALSE;
+   if (project->Fout.file) output_close(project);
+   if (project->IsOpenFlag) project_close(project);
+   report_writeSysTime(project);
+   if (project->Finp.file != NULL) fclose(project->Finp.file);
+   if (project->Frpt.file != NULL) fclose(project->Frpt.file);
+   if (project->Fout.file != NULL)
+   {
+      fclose(project->Fout.file);
+      if (project->Fout.mode == SCRATCH_FILE) remove(project->Fout.name);
+   }
+   project->IsOpenFlag = FALSE;
+   project->IsStartedFlag = FALSE;
 
-	FREE(project);
+   FREE(project);
 
-	return 0;
+   return 0;
 }
 
 //=============================================================================
 
 int  DLLEXPORT swmm_getMassBalErr(Project* project, float* runoffErr, float* flowErr,
-	float* qualErr)
-	//
-	//  Input:   none
-	//  Output:  runoffErr = runoff mass balance error (percent)
-	//           flowErr   = flow routing mass balance error (percent)
-	//           qualErr   = quality routing mass balance error (percent)
-	//           returns an error code
-	//  Purpose: reports a simulation's mass balance errors.
-	//
+                                  float* qualErr)
+//
+//  Input:   none
+//  Output:  runoffErr = runoff mass balance error (percent)
+//           flowErr   = flow routing mass balance error (percent)
+//           qualErr   = quality routing mass balance error (percent)
+//           returns an error code
+//  Purpose: reports a simulation's mass balance errors.
+//
 {
-	*runoffErr = 0.0;
-	*flowErr = 0.0;
-	*qualErr = 0.0;
+   *runoffErr = 0.0;
+   *flowErr = 0.0;
+   *qualErr = 0.0;
 
-	if (project->IsOpenFlag && !project->IsStartedFlag)
-	{
-		*runoffErr = (float)project->RunoffError;
-		*flowErr = (float)project->FlowError;
-		*qualErr = (float)project->QualError;
-	}
-	return 0;
+   if (project->IsOpenFlag && !project->IsStartedFlag)
+   {
+      *runoffErr = (float)project->RunoffError;
+      *flowErr = (float)project->FlowError;
+      *qualErr = (float)project->QualError;
+   }
+   return 0;
 }
 
 //=============================================================================
@@ -727,7 +737,7 @@ int  DLLEXPORT swmm_getVersion(void)
 //           y = minor version number, and zzz = build number.
 //
 {
-	return VERSION;
+   return VERSION;
 }
 
 //=============================================================================
@@ -743,169 +753,169 @@ int  DLLEXPORT swmm_getErrorCode(Project* project)
 //           y = minor version number, and zzz = build number.
 //
 {
-	return project->ErrorCode;
+   return project->ErrorCode;
 }
 
 double DLLEXPORT swmm_getDateTime(Project* project, char* beginorend)
 {
-	if (strcomp(beginorend, "begin"))
-	{
-		return project->StartDateTime;
-	}
-	else
-	{
-		return project->EndDateTime;
-	}
+   if (strcomp(beginorend, "begin"))
+   {
+      return project->StartDateTime;
+   }
+   else
+   {
+      return project->EndDateTime;
+   }
 }
 
 void DLLEXPORT datetime_decodeDateTime(DateTime date, int* y, int* m, int* d, int* h, int* mm, int* s)
 {
-	datetime_decodeDate(date, y, m, d);
-	datetime_decodeTime(date, h, mm, s);
+   datetime_decodeDate(date, y, m, d);
+   datetime_decodeTime(date, h, mm, s);
 }
 
-SDLLEXPORT char * getErrorMsg(int i)
+SDLLEXPORT char* getErrorMsg(int i)
 {
-	return error_getMsg(i);
+   return error_getMsg(i);
 }
 
 int DLLEXPORT getObjectTypeCount(Project* project, int type)
 {
-	return project->Nobjects[type];
+   return project->Nobjects[type];
 }
 
 SDLLEXPORT TNode* STDCALL  getNode(Project* project, int index)
 {
-	return &project->Node[index];
+   return &project->Node[index];
 }
 
 SDLLEXPORT TNode* STDCALL  getNodeById(Project* project, char* id)
 {
-	int index = project_findObject(project, NODE, id);
-	return &project->Node[index];
+   int index = project_findObject(project, NODE, id);
+   return &project->Node[index];
 }
 
 void DLLEXPORT setNode(Project* project, char* nodeId, char* propertyName, double value)
 {
-	int index = project_findObject(project, NODE, nodeId);
-	TNode* n1 = &project->Node[index];
+   int index = project_findObject(project, NODE, nodeId);
+   TNode* n1 = &project->Node[index];
 
-	if (strcomp(propertyName, "invertElev"))
-	{
-		n1->invertElev = value;
-	}
-	else if (strcomp(propertyName, "crownElev"))
-	{
-		n1->crownElev = value;
-	}
-	else if (strcomp(propertyName, "initDepth"))
-	{
-		n1->initDepth = value;
-	}
-	else if (strcomp(propertyName, "surDepth"))
-	{
-		n1->surDepth = value;
-	}
-	else if (strcomp(propertyName, "newDepth"))
-	{
-		//to be applied later
-		addNodeDepth(project, index, value);
-	}
-	else if (strcomp(propertyName, "pondedArea"))
-	{
-		n1->pondedArea = value;
-	}
-	else if (strcomp(propertyName, "inflow"))
-	{
-		n1->inflow = value;
-	}
-	else if (strcomp(propertyName, "outflow"))
-	{
-		n1->outflow = value;
-	}
-	else if (strcomp(propertyName, "newLatFlow"))
-	{
-		//to be applied later
-		addNodeLateralInflow(project, index, value);
-	}
+   if (strcomp(propertyName, "invertElev"))
+   {
+      n1->invertElev = value;
+   }
+   else if (strcomp(propertyName, "crownElev"))
+   {
+      n1->crownElev = value;
+   }
+   else if (strcomp(propertyName, "initDepth"))
+   {
+      n1->initDepth = value;
+   }
+   else if (strcomp(propertyName, "surDepth"))
+   {
+      n1->surDepth = value;
+   }
+   else if (strcomp(propertyName, "newDepth"))
+   {
+      //to be applied later
+      addNodeDepth(project, index, value);
+   }
+   else if (strcomp(propertyName, "pondedArea"))
+   {
+      n1->pondedArea = value;
+   }
+   else if (strcomp(propertyName, "inflow"))
+   {
+      n1->inflow = value;
+   }
+   else if (strcomp(propertyName, "outflow"))
+   {
+      n1->outflow = value;
+   }
+   else if (strcomp(propertyName, "newLatFlow"))
+   {
+      //to be applied later
+      addNodeLateralInflow(project, index, value);
+   }
 
 }
 
 SDLLEXPORT TLink* STDCALL getLink(Project* project, int index)
 {
-	return &project->Link[index];
+   return &project->Link[index];
 }
 
 SDLLEXPORT TLink* STDCALL  getLinkById(Project* project, char* id)
 {
-	int index = project_findObject(project, LINK, id);
-	return &project->Link[index];
+   int index = project_findObject(project, LINK, id);
+   return &project->Link[index];
 }
 
 void DLLEXPORT setLink(Project* project, char* linkId, char* propertyName, double value)
 {
 
-	TLink* l = &project->Link[project_findObject(project, LINK, linkId)];
+   TLink* l = &project->Link[project_findObject(project, LINK, linkId)];
 
-	if (strcomp(propertyName, "offset1"))
-	{
-		l->offset1 = value;
-	}
-	else if (strcomp(propertyName, "offset2"))
-	{
-		l->offset2 = value;
-	}
-	else if (strcomp(propertyName, "q0"))
-	{
-		l->q0 = value;
-	}
-	else if (strcomp(propertyName, "cLossInlet"))
-	{
-		l->cLossInlet = value;
-	}
-	else if (strcomp(propertyName, "cLossOutlet"))
-	{
-		l->cLossOutlet = value;
-	}
-	else if (strcomp(propertyName, "cLossAvg"))
-	{
-		l->cLossAvg = value;
-	}
-	else if (strcomp(propertyName, "seepRate"))
-	{
-		l->seepRate = value;
-	}
-	else if (strcomp(propertyName, "newFlow"))
-	{
-		l->newFlow = value;
-	}
+   if (strcomp(propertyName, "offset1"))
+   {
+      l->offset1 = value;
+   }
+   else if (strcomp(propertyName, "offset2"))
+   {
+      l->offset2 = value;
+   }
+   else if (strcomp(propertyName, "q0"))
+   {
+      l->q0 = value;
+   }
+   else if (strcomp(propertyName, "cLossInlet"))
+   {
+      l->cLossInlet = value;
+   }
+   else if (strcomp(propertyName, "cLossOutlet"))
+   {
+      l->cLossOutlet = value;
+   }
+   else if (strcomp(propertyName, "cLossAvg"))
+   {
+      l->cLossAvg = value;
+   }
+   else if (strcomp(propertyName, "seepRate"))
+   {
+      l->seepRate = value;
+   }
+   else if (strcomp(propertyName, "newFlow"))
+   {
+      l->newFlow = value;
+   }
 
 }
 
 SDLLEXPORT TSubcatch*  STDCALL getSubcatch(Project* project, int index)
 {
-	return &project->Subcatch[index];
+   return &project->Subcatch[index];
 }
 
 SDLLEXPORT TSubcatch* STDCALL getSubcatchById(Project* project, char* id)
 {
-	int index = project_findObject(project, SUBCATCH, id);
-	return &project->Subcatch[index];
+   int index = project_findObject(project, SUBCATCH, id);
+   return &project->Subcatch[index];
 }
 
 void DLLEXPORT setSubcatch(Project* project, char* subCatchId, char* propertyName, double value)
 {
-	int index = project_findObject(project, SUBCATCH, subCatchId);
-	TSubcatch* subcatch = &project->Subcatch[index];
+   int index = project_findObject(project, SUBCATCH, subCatchId);
+   TSubcatch* subcatch = &project->Subcatch[index];
 
-	if (strcomp(propertyName, "newRunoff"))
-	{
-		subcatch->newRunoff = value;
-	}
-	else if (strcomp(propertyName, "rainfall"))
-	{
-		addSubcatchRain(project, index, value);
-	}
+   if (strcomp(propertyName, "newRunoff"))
+   {
+      subcatch->newRunoff = value;
+   }
+   else if (strcomp(propertyName, "rainfall"))
+   {
+      addSubcatchRain(project, index, value);
+   }
 }
 
 //=============================================================================
@@ -922,8 +932,10 @@ double UCF(Project* project, int u)
 //           units to user's units
 //
 {
-	if (u < FLOW) return Ucf[u][project->UnitSystem];
-	else            return Qcf[project->FlowUnits];
+   if (u < FLOW)
+      return Ucf[u][project->UnitSystem];
+   else
+      return Qcf[project->FlowUnits];
 }
 
 //=============================================================================
@@ -937,9 +949,9 @@ char* sstrncpy(char *dest, const char *src, size_t maxlen)
 //  Purpose: safe version of standard strncpy function
 //
 {
-	strncpy(dest, src, maxlen);
-	dest[maxlen] = '\0';
-	return dest;
+   strncpy(dest, src, maxlen);
+   dest[maxlen] = '\0';
+   return dest;
 }
 
 //=============================================================================
@@ -952,12 +964,12 @@ int  strcomp(char *s1, char *s2)
 //  Purpose: does a case insensitive comparison of two strings.
 //
 {
-	int i;
-	for (i = 0; UCHAR(s1[i]) == UCHAR(s2[i]); i++)
-	{
-		if (!s1[i + 1] && !s2[i + 1]) return(1);
-	}
-	return(0);
+   int i;
+   for (i = 0; UCHAR(s1[i]) == UCHAR(s2[i]); i++)
+   {
+      if (!s1[i + 1] && !s2[i + 1]) return(1);
+   }
+   return(0);
 }
 
 //=============================================================================
@@ -969,40 +981,40 @@ char* getTempFileName(Project* project, char* fname)
 //  Purpose: creates a temporary file name with path prepended to it.
 //
 {
-	// For Windows systems:
+   // For Windows systems:
 #ifdef WINDOWS
 
-	char* name = NULL;
-	char* dir = NULL;
+   char* name = NULL;
+   char* dir = NULL;
 
-	// --- set dir to user's choice of a temporary directory
-	if (strlen(project->TempDir) > 0)
-	{
-		_mkdir(project->TempDir);
-		dir = project->TempDir;
-	}
+   // --- set dir to user's choice of a temporary directory
+   if (strlen(project->TempDir) > 0)
+   {
+      _mkdir(project->TempDir);
+      dir = project->TempDir;
+   }
 
-	// --- use _tempnam to get a pointer to an unused file name
-	name = _tempnam(dir, "swmm");
-	if (name == NULL) return NULL;
+   // --- use _tempnam to get a pointer to an unused file name
+   name = _tempnam(dir, "swmm");
+   if (name == NULL) return NULL;
 
-	// --- copy the file name to fname
-	if (strlen(name) < MAXFNAME) strncpy(fname, name, MAXFNAME);
-	else fname = NULL;
+   // --- copy the file name to fname
+   if (strlen(name) < MAXFNAME) strncpy(fname, name, MAXFNAME);
+   else fname = NULL;
 
-	// --- free the pointer returned by _tempnam
-	free(name);
+   // --- free the pointer returned by _tempnam
+   free(name);
 
-	// --- return the new contents of fname
-	return fname;
+   // --- return the new contents of fname
+   return fname;
 
-	// For non-Windows systems:
+   // For non-Windows systems:
 #else
 
-	// --- use system function mkstemp() to create a temporary file name
-	strcpy(fname, "swmmXXXXXX");
-	mkstemp(fname);
-	return fname;
+   // --- use system function mkstemp() to create a temporary file name
+   strcpy(fname, "swmmXXXXXX");
+   mkstemp(fname);
+   return fname;
 
 #endif
 }
@@ -1016,20 +1028,20 @@ void getElapsedTime(Project* project, DateTime aDate, int* days, int* hrs, int* 
 //  Purpose: finds elapsed simulation time for a given calendar date
 //
 {
-	DateTime x;
-	int secs;
-	x = aDate - project->StartDateTime;
-	if (x <= 0.0)
-	{
-		*days = 0;
-		*hrs = 0;
-		*mins = 0;
-	}
-	else
-	{
-		*days = (int)x;
-		datetime_decodeTime(x, hrs, mins, &secs);
-	}
+   DateTime x;
+   int secs;
+   x = aDate - project->StartDateTime;
+   if (x <= 0.0)
+   {
+      *days = 0;
+      *hrs = 0;
+      *mins = 0;
+   }
+   else
+   {
+      *days = (int)x;
+      datetime_decodeTime(x, hrs, mins, &secs);
+   }
 }
 
 //=============================================================================
@@ -1042,7 +1054,7 @@ DateTime getDateTime(Project* project, double elapsedMsec)
 //           simulation time.
 //
 {
-	return datetime_addSeconds(project->StartDateTime, (elapsedMsec + 1.0) / 1000.0);
+   return datetime_addSeconds(project->StartDateTime, (elapsedMsec + 1.0) / 1000.0);
 }
 
 //=============================================================================
@@ -1055,8 +1067,8 @@ void  writecon(char *s)
 //
 {
 #ifdef CLE 
-	fprintf(stdout, s);
-	fflush(stdout);
+   fprintf(stdout, s);
+   fflush(stdout);
 #endif
 }
 
@@ -1073,62 +1085,62 @@ int xfilter(Project* project, int xc, DateTime elapsedTime, long step)
 //           under Windows.
 //
 {
-	int  rc;                           // result code
-	long hour;                         // current hour of simulation
-	char msg[40];                      // exception type text
-	char xmsg[120];                    // error message text
-	switch (xc)
-	{
-	case EXCEPTION_ACCESS_VIOLATION:
-		sprintf(msg, "\n  Access violation ");
-		rc = EXCEPTION_EXECUTE_HANDLER;
-		break;
-	case EXCEPTION_FLT_DENORMAL_OPERAND:
-		sprintf(msg, "\n  Illegal floating point operand ");
-		rc = EXCEPTION_CONTINUE_EXECUTION;
-		break;
-	case EXCEPTION_FLT_DIVIDE_BY_ZERO:
-		sprintf(msg, "\n  Floating point divide by zero ");
-		rc = EXCEPTION_CONTINUE_EXECUTION;
-		break;
-	case EXCEPTION_FLT_INVALID_OPERATION:
-		sprintf(msg, "\n  Illegal floating point operation ");
-		rc = EXCEPTION_CONTINUE_EXECUTION;
-		break;
-	case EXCEPTION_FLT_OVERFLOW:
-		sprintf(msg, "\n  Floating point overflow ");
-		rc = EXCEPTION_CONTINUE_EXECUTION;
-		break;
-	case EXCEPTION_FLT_STACK_CHECK:
-		sprintf(msg, "\n  Floating point stack violation ");
-		rc = EXCEPTION_EXECUTE_HANDLER;
-		break;
-	case EXCEPTION_FLT_UNDERFLOW:
-		sprintf(msg, "\n  Floating point underflow ");
-		rc = EXCEPTION_CONTINUE_EXECUTION;
-		break;
-	case EXCEPTION_INT_DIVIDE_BY_ZERO:
-		sprintf(msg, "\n  Integer divide by zero ");
-		rc = EXCEPTION_CONTINUE_EXECUTION;
-		break;
-	case EXCEPTION_INT_OVERFLOW:
-		sprintf(msg, "\n  Integer overflow ");
-		rc = EXCEPTION_CONTINUE_EXECUTION;
-		break;
-	default:
-		sprintf(msg, "\n  Exception %d", xc);
-		rc = EXCEPTION_EXECUTE_HANDLER;
-	}
-	hour = (long)(elapsedTime / 1000.0 / 3600.0);
-	sprintf(xmsg, "%s at step %d, hour %d", msg, step, hour);
-	if (rc == EXCEPTION_EXECUTE_HANDLER ||
-		++project->ExceptionCount >= MAX_EXCEPTIONS)
-	{
-		strcat(xmsg, " --- execution halted.");
-		rc = EXCEPTION_EXECUTE_HANDLER;
-	}
-	report_writeLine(project, xmsg);
-	return rc;
+   int  rc;                           // result code
+   long hour;                         // current hour of simulation
+   char msg[40];                      // exception type text
+   char xmsg[120];                    // error message text
+   switch (xc)
+   {
+      case EXCEPTION_ACCESS_VIOLATION:
+         sprintf(msg, "\n  Access violation ");
+         rc = EXCEPTION_EXECUTE_HANDLER;
+         break;
+      case EXCEPTION_FLT_DENORMAL_OPERAND:
+         sprintf(msg, "\n  Illegal floating point operand ");
+         rc = EXCEPTION_CONTINUE_EXECUTION;
+         break;
+      case EXCEPTION_FLT_DIVIDE_BY_ZERO:
+         sprintf(msg, "\n  Floating point divide by zero ");
+         rc = EXCEPTION_CONTINUE_EXECUTION;
+         break;
+      case EXCEPTION_FLT_INVALID_OPERATION:
+         sprintf(msg, "\n  Illegal floating point operation ");
+         rc = EXCEPTION_CONTINUE_EXECUTION;
+         break;
+      case EXCEPTION_FLT_OVERFLOW:
+         sprintf(msg, "\n  Floating point overflow ");
+         rc = EXCEPTION_CONTINUE_EXECUTION;
+         break;
+      case EXCEPTION_FLT_STACK_CHECK:
+         sprintf(msg, "\n  Floating point stack violation ");
+         rc = EXCEPTION_EXECUTE_HANDLER;
+         break;
+      case EXCEPTION_FLT_UNDERFLOW:
+         sprintf(msg, "\n  Floating point underflow ");
+         rc = EXCEPTION_CONTINUE_EXECUTION;
+         break;
+      case EXCEPTION_INT_DIVIDE_BY_ZERO:
+         sprintf(msg, "\n  Integer divide by zero ");
+         rc = EXCEPTION_CONTINUE_EXECUTION;
+         break;
+      case EXCEPTION_INT_OVERFLOW:
+         sprintf(msg, "\n  Integer overflow ");
+         rc = EXCEPTION_CONTINUE_EXECUTION;
+         break;
+      default:
+         sprintf(msg, "\n  Exception %d", xc);
+         rc = EXCEPTION_EXECUTE_HANDLER;
+   }
+   hour = (long)(elapsedTime / 1000.0 / 3600.0);
+   sprintf(xmsg, "%s at step %d, hour %d", msg, step, hour);
+   if (rc == EXCEPTION_EXECUTE_HANDLER ||
+       ++project->ExceptionCount >= MAX_EXCEPTIONS)
+   {
+      strcat(xmsg, " --- execution halted.");
+      rc = EXCEPTION_EXECUTE_HANDLER;
+   }
+   report_writeLine(project, xmsg);
+   return rc;
 }
 #endif
 

@@ -92,24 +92,23 @@ typedef struct
  //struct Project;
  //struct TGrnAmpt;
 
-//-----------------------------------------------------------------------------
+//------------------s-----------------------------------------------------------
 //   Infiltration Methods
 //-----------------------------------------------------------------------------
 
-typedef struct Project Project;
 
-void    infil_create(Project* project, int subcatchCount, int model);
-void    infil_delete(Project* project);
-int     infil_readParams(Project* project, int model, char* tok[], int ntoks);
-void    infil_initState(Project* project, int area, int model);
-void    infil_getState(Project* project, int j, int m, double x[]);
-void    infil_setState(Project* project, int j, int m, double x[]);
-double  infil_getInfil(Project* project, int area, int model, double tstep, double rainfall,
+void    infil_create(struct Project* project, int subcatchCount, int model);
+void    infil_delete(struct Project* project);
+int     infil_readParams(struct Project* project, int model, char* tok[], int ntoks);
+void    infil_initState(struct Project* project, int area, int model);
+void    infil_getState(struct Project* project, int j, int m, double x[]);
+void    infil_setState(struct Project* project, int j, int m, double x[]);
+double  infil_getInfil(struct Project* project, int area, int model, double tstep, double rainfall,
         double runon, double depth);
 
-int     grnampt_setParams(Project* project, TGrnAmpt *infil, double p[]);
+int     grnampt_setParams(struct Project* project, TGrnAmpt *infil, double p[]);
 void    grnampt_initState(TGrnAmpt *infil);
-double  grnampt_getInfil(Project* project, TGrnAmpt *infil, double tstep, double irate,
+double  grnampt_getInfil(struct Project* project, TGrnAmpt *infil, double tstep, double irate,
         double depth, int modelType);                                          //(5.1.010)
 
 #endif
