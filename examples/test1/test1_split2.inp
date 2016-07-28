@@ -17,7 +17,7 @@ START_DATE           02/02/2002
 START_TIME           00:00:00
 REPORT_START_DATE    02/02/2002
 REPORT_START_TIME    00:00:00
-END_DATE             02/02/2002
+END_DATE             02/06/2002
 END_TIME             05:00:00
 SWEEP_START          01/01
 SWEEP_END            12/31
@@ -70,10 +70,10 @@ DRY_ONLY         NO
 [XSECTIONS]
 ;;Link           Shape        Geom1            Geom2      Geom3      Geom4      Barrels    Culvert   
 ;;-------------- ------------ ---------------- ---------- ---------- ---------- ---------- ----------
-7                CIRCULAR     4                0          0          0          1                    
-8                CIRCULAR     4                0          0          0          1                    
-9                CIRCULAR     4                0          0          0          1                    
-10               CIRCULAR     4                0          0          0          1                    
+7                RECT_OPEN    4                4          0          0          1                    
+8                RECT_OPEN    4                4          0          0          1                    
+9                RECT_OPEN    4                4          0          0          1                    
+10               RECT_OPEN    4                4          0          0          1                    
 
 [TIMESERIES]
 ;;Name           Date       Time       Value     

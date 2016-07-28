@@ -31,6 +31,8 @@ class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractModelComponent
 
       void createArguments();
 
+      void createAdaptedOutputFactories();
+
       void initialize() override;
 
       void initializeSWMMProject();
@@ -39,11 +41,11 @@ class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractModelComponent
 
       Project* SWMMProject() const;
       
-      Temporal::Time* startDateTime() const;
+      SDKTemporal::Time* startDateTime() const;
       
-      Temporal::Time* endDateTime() const;
+      SDKTemporal::Time* endDateTime() const;
       
-      Temporal::Time* currentDateTime() const;
+      SDKTemporal::Time* currentDateTime() const;
 
       bool initializeArguments(QString &message);
 
@@ -87,7 +89,7 @@ class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractModelComponent
       Argument1DString *m_usedNodesArgument, *m_usedLinksArgument,*m_usedSubCatchmentsArgument;
       Project* m_SWMMProject;
       QHash<QString,QFileInfo> m_inputFiles;
-      Temporal::Time *m_startDateTime, *m_endDateTime, *m_currentDateTime;
+      SDKTemporal::Time *m_startDateTime, *m_endDateTime, *m_currentDateTime;
       bool m_initialized, m_prepared;
       int m_currentProgress;
 

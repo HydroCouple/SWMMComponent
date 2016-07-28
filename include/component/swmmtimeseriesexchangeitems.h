@@ -2,86 +2,110 @@
 #define SWMMNODETIMESERIESEXCHANGEITEM
 
 #include "swmmcomponent_global.h"
+#include "swmmobjectitems.h"
 #include "core/headers.h"
 #include "temporal/timeseriesexchangeitem.h"
-#include "swmmobjectitems.h"
 
 class SWMMComponent ;
+class Dimension;
 
-
-class SWMMCOMPONENT_EXPORT SWMMNodeWSETimeSeriesOutput : public Temporal::TimeSeriesOutputDouble , public virtual SWMMOutputObjectItem
+class SWMMCOMPONENT_EXPORT SWMMNodeWSETimeSeriesOutput : public TimeSeriesOutputDouble,
+    public virtual SWMMOutputObjectItem
 {
-      Q_OBJECT
+    Q_OBJECT
 
-   public:
+  public:
 
-      SWMMNodeWSETimeSeriesOutput(TNode* node, ValueDefinition *valueDefinition, SWMMComponent *component);
+    SWMMNodeWSETimeSeriesOutput(TNode* node,
+                                Dimension* dimension,
+                                const QList<SDKTemporal::Time*>& times,
+                                ValueDefinition* valueDefinition,
+                                SWMMComponent* component);
 
-      ~SWMMNodeWSETimeSeriesOutput();
+    virtual ~SWMMNodeWSETimeSeriesOutput();
 
-      void update(HydroCouple::IInput *querySpecifier) override;
+    void update(HydroCouple::IInput *querySpecifier) override;
 
-      void retrieveDataFromModel() override;
+    void retrieveDataFromModel() override;
 
-   private:
-      TNode *m_node;
-      SWMMComponent *m_component;
+  private:
+    TNode *m_node;
+    SWMMComponent *m_component;
 
 };
 
-class SWMMCOMPONENT_EXPORT SWMMNodeWSETimeSeriesInput : public Temporal::TimeSeriesInputDouble, public virtual SWMMInputObjectItem
+class SWMMCOMPONENT_EXPORT SWMMNodeWSETimeSeriesInput : public TimeSeriesInputDouble,
+    public virtual SWMMInputObjectItem
 {
-      Q_OBJECT
+    Q_OBJECT
 
-   public:
+  public:
 
-      SWMMNodeWSETimeSeriesInput(TNode* node, ValueDefinition *valueDefinition, SWMMComponent *component);
+    SWMMNodeWSETimeSeriesInput(TNode* node,
+                               Dimension *dimension,
+                               const QList<SDKTemporal::Time*>& times,
+                               ValueDefinition* valueDefinition,
+                               SWMMComponent *component);
 
-      ~SWMMNodeWSETimeSeriesInput();
+    virtual ~SWMMNodeWSETimeSeriesInput();
 
-      void retrieveOuputItemData() override;
+    bool canConsume(HydroCouple::IOutput* provider, QString &message) const override;
 
-   private:
-      TNode *m_node;
-      SWMMComponent *m_component;
+    void retrieveOuputItemData() override;
+
+  private:
+    TNode *m_node;
+    SWMMComponent *m_component;
 
 };
 
-class SWMMCOMPONENT_EXPORT SWMMNodeLatInflowTimeSeriesInput : public Temporal::TimeSeriesMultiInputDouble, public virtual SWMMInputObjectItem
+class SWMMCOMPONENT_EXPORT SWMMNodeLatInflowTimeSeriesInput : public TimeSeriesMultiInputDouble,
+    public virtual SWMMInputObjectItem
 {
-     Q_OBJECT
+    Q_OBJECT
 
-   public:
+  public:
 
-      SWMMNodeLatInflowTimeSeriesInput(TNode* node, ValueDefinition *valueDefinition, SWMMComponent *component);
+    SWMMNodeLatInflowTimeSeriesInput(TNode* node,
+                                     Dimension *dimension,
+                                     const QList<SDKTemporal::Time*>& times,
+                                     ValueDefinition *valueDefinition,
+                                     SWMMComponent *component);
 
-      ~SWMMNodeLatInflowTimeSeriesInput();
+    virtual ~SWMMNodeLatInflowTimeSeriesInput();
 
-      void retrieveOuputItemData() override;
+    bool canConsume(HydroCouple::IOutput* provider, QString &message) const override;
 
-   private:
-      TNode *m_node;
-      SWMMComponent *m_component;
+    void retrieveOuputItemData() override;
+
+  private:
+    TNode *m_node;
+    SWMMComponent *m_component;
 };
 
 
-class SWMMCOMPONENT_EXPORT SWMMLinkDischargeTimeSeriesOutput : public Temporal::TimeSeriesOutputDouble, public virtual SWMMOutputObjectItem
+class SWMMCOMPONENT_EXPORT SWMMLinkDischargeTimeSeriesOutput : public TimeSeriesOutputDouble,
+    public virtual SWMMOutputObjectItem
 {
-      Q_OBJECT
+    Q_OBJECT
 
-   public:
+  public:
 
-      SWMMLinkDischargeTimeSeriesOutput(TLink* link, ValueDefinition *valueDefinition, SWMMComponent *component);
+    SWMMLinkDischargeTimeSeriesOutput(TLink* link,
+                                      Dimension *dimension,
+                                      const QList<SDKTemporal::Time*>& times,
+                                      ValueDefinition *valueDefinition,
+                                      SWMMComponent *component);
 
-      ~SWMMLinkDischargeTimeSeriesOutput();
+    virtual ~SWMMLinkDischargeTimeSeriesOutput();
 
-      void update(HydroCouple::IInput *querySpecifier) override;
+    void update(HydroCouple::IInput *querySpecifier) override;
 
-      void retrieveDataFromModel() override;
+    void retrieveDataFromModel() override;
 
-   private:
-      TLink *m_link;
-      SWMMComponent *m_component;
+  private:
+    TLink *m_link;
+    SWMMComponent *m_component;
 };
 
 

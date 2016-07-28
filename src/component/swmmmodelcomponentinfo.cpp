@@ -6,8 +6,7 @@
 SWMMModelComponentInfo::SWMMModelComponentInfo(QObject *parent)
    :ModelComponentInfo(parent)
 {
-   setId("SWMM_HydroCouple_Component_Build_5.1.008");
-   setName("SWMM Component 5.1.008");
+   setId("SWMM Component 5.1.008");
    setCaption("EPA Stormwater Management Model");
    setIconFilePath("./Epaswmm5_Icon7.ico");
    setDescription("EPA SWMM Model Component Library developed from the SWMM Version 5.1.010 with Low Impact Development(LID) controls");

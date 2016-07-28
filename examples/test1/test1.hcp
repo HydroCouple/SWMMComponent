@@ -3,6 +3,19 @@
     <ModelComponents>
         <ModelComponent Name="SWMM Component 5.1.008" IsTrigger="True" ModelComponentLibrary="../../build/debug/libSWMMComponent.1.0.0.dylib" XPos="-731.298" YPos="141.353">
             <Arguments>
+                <Argument Id="SubCatchmentsExchangeItems" ArgumentIOType="String">
+                    <Argument1D Id="SubCatchmentsExchangeItems" Caption="SubCatchment Exchange Items" IsOptional="False">
+    <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
+        <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
+    </ValueDefinition>
+    <Dimensions>
+        <Dimension Id="SubCatchmentsExchangeItemsDimension" Caption="" Length="1"/>
+    </Dimensions>
+    <Values>
+        <Value/>
+    </Values>
+</Argument1D>
+                </Argument>
                 <Argument Id="NodeExchangeItems" ArgumentIOType="String">
                     <Argument1D Id="NodeExchangeItems" Caption="Node Exchange Items" IsOptional="False">
     <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
@@ -31,6 +44,19 @@
     </Values>
 </IdBasedArgument>
                 </Argument>
+                <Argument Id="LinkExchangeItems" ArgumentIOType="String">
+                    <Argument1D Id="LinkExchangeItems" Caption="Link Exchange Items" IsOptional="False">
+    <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
+        <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
+    </ValueDefinition>
+    <Dimensions>
+        <Dimension Id="LinksExchangeItemsDimension" Caption="" Length="1"/>
+    </Dimensions>
+    <Values>
+        <Value>6</Value>
+    </Values>
+</Argument1D>
+                </Argument>
                 <Argument Id="InputFiles" ArgumentIOType="String">
                     <IdBasedArgument Id="InputFiles" Caption="Model Input Files" IsOptional="False">
     <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
@@ -46,6 +72,10 @@
     </Values>
 </IdBasedArgument>
                 </Argument>
+            </Arguments>
+        </ModelComponent>
+        <ModelComponent Name="SWMM Component 5.1.008" ModelComponentLibrary="../../build/debug/libSWMMComponent.1.0.0.dylib" XPos="1039.12" YPos="147.094">
+            <Arguments>
                 <Argument Id="SubCatchmentsExchangeItems" ArgumentIOType="String">
                     <Argument1D Id="SubCatchmentsExchangeItems" Caption="SubCatchment Exchange Items" IsOptional="False">
     <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
@@ -59,23 +89,6 @@
     </Values>
 </Argument1D>
                 </Argument>
-                <Argument Id="LinkExchangeItems" ArgumentIOType="String">
-                    <Argument1D Id="LinkExchangeItems" Caption="Link Exchange Items" IsOptional="False">
-    <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
-        <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
-    </ValueDefinition>
-    <Dimensions>
-        <Dimension Id="LinksExchangeItemsDimension" Caption="" Length="1"/>
-    </Dimensions>
-    <Values>
-        <Value>6</Value>
-    </Values>
-</Argument1D>
-                </Argument>
-            </Arguments>
-        </ModelComponent>
-        <ModelComponent Name="SWMM Component 5.1.008" ModelComponentLibrary="../../build/debug/libSWMMComponent.1.0.0.dylib" XPos="1039.12" YPos="147.094">
-            <Arguments>
                 <Argument Id="NodeExchangeItems" ArgumentIOType="String">
                     <Argument1D Id="NodeExchangeItems" Caption="Node Exchange Items" IsOptional="False">
     <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
@@ -104,6 +117,19 @@
     </Values>
 </IdBasedArgument>
                 </Argument>
+                <Argument Id="LinkExchangeItems" ArgumentIOType="String">
+                    <Argument1D Id="LinkExchangeItems" Caption="Link Exchange Items" IsOptional="False">
+    <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
+        <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
+    </ValueDefinition>
+    <Dimensions>
+        <Dimension Id="LinksExchangeItemsDimension" Caption="" Length="1"/>
+    </Dimensions>
+    <Values>
+        <Value/>
+    </Values>
+</Argument1D>
+                </Argument>
                 <Argument Id="InputFiles" ArgumentIOType="String">
                     <IdBasedArgument Id="InputFiles" Caption="Model Input Files" IsOptional="False">
     <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
@@ -118,32 +144,6 @@
         <Value Id="Report File">/Users/calebbuahin/Documents/Projects/HydroCouple/SWMMComponent/examples/test1/test1_split2.rpt</Value>
     </Values>
 </IdBasedArgument>
-                </Argument>
-                <Argument Id="SubCatchmentsExchangeItems" ArgumentIOType="String">
-                    <Argument1D Id="SubCatchmentsExchangeItems" Caption="SubCatchment Exchange Items" IsOptional="False">
-    <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
-        <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
-    </ValueDefinition>
-    <Dimensions>
-        <Dimension Id="SubCatchmentsExchangeItemsDimension" Caption="" Length="1"/>
-    </Dimensions>
-    <Values>
-        <Value/>
-    </Values>
-</Argument1D>
-                </Argument>
-                <Argument Id="LinkExchangeItems" ArgumentIOType="String">
-                    <Argument1D Id="LinkExchangeItems" Caption="Link Exchange Items" IsOptional="False">
-    <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
-        <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
-    </ValueDefinition>
-    <Dimensions>
-        <Dimension Id="LinksExchangeItemsDimension" Caption="" Length="1"/>
-    </Dimensions>
-    <Values>
-        <Value/>
-    </Values>
-</Argument1D>
                 </Argument>
             </Arguments>
         </ModelComponent>
