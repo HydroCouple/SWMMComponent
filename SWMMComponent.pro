@@ -123,6 +123,15 @@ macx{
     LIBS += -L/usr/local/lib/ -liomp5
  }
 
+ linux{
+
+#    INCLUDEPATH += /usr/include \
+#                   /usr/local/include/libiomp
+
+    LIBS += -L/usr/lib/x86_64-linux-gnu -lgomp
+
+}
+
 CONFIG(debug, debug|release) {
 
    DESTDIR = ./build/debug
@@ -134,6 +143,11 @@ CONFIG(debug, debug|release) {
    macx{
     LIBS += -L./../HydroCoupleSDK/build/debug -lHydroCoupleSDK.1.0.0
    }
+
+   linux{
+    LIBS += -L./../HydroCoupleSDK/build/debug -lHydroCoupleSDK
+   }
+
 }
 
 CONFIG(release, debug|release) {
@@ -148,4 +162,9 @@ CONFIG(release, debug|release) {
    macx{
     LIBS += -L./../HydroCoupleSDK/lib -lHydroCoupleSDK.1.0.0
    }
+
+   linux{
+    LIBS += -L./../HydroCoupleSDK/lib -lHydroCoupleSDK
+   }
+
 }   

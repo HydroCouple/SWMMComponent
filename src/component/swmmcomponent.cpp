@@ -14,6 +14,7 @@
 
 #include <QDebug>
 #include <QDir>
+#include <cstring>
 
 using namespace SDKTemporal;
 
@@ -307,7 +308,7 @@ bool SWMMComponent::initializeArguments(QString &message)
     {
       QString inputFilePath;
       m_inputFilesArgument->getValues(&index, &stride, &inputFilePath);
-      QFileInfo inputFile(inputFilePath);
+      QFileInfo inputFile(inputFilePath.trimmed());
 
       if(!inputFile.exists())
       {
@@ -330,7 +331,7 @@ bool SWMMComponent::initializeArguments(QString &message)
     {
       QString outputFilePath;
       m_inputFilesArgument->getValues(&index, &stride, &outputFilePath);
-      QFileInfo outputFile(outputFilePath);
+      QFileInfo outputFile(outputFilePath.trimmed());
 
       if(!outputFile.absoluteDir().exists())
       {
@@ -353,7 +354,7 @@ bool SWMMComponent::initializeArguments(QString &message)
     {
       QString reportFilePath;
       m_inputFilesArgument->getValues(&index, &stride, &reportFilePath);
-      QFileInfo reportFile(reportFilePath);
+      QFileInfo reportFile(reportFilePath.trimmed());
 
       if(!reportFile.absoluteDir().exists())
       {
