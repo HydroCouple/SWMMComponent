@@ -154,7 +154,7 @@
                 <Connections>
                     <AdaptedOutputExchangeItem AdaptedOutputExchangeItemId="TimeSeriesInterpolator" AdaptedOutputExchangeCaption="Time Series Interpolator" AdaptedOutputFactoryId="TemporalInterpolationFactory" AdaptedOutputFactoryCaption="Temporal Interpolation Factory" InputExchangeItemModelComponentIndex="1" InputExchangeItemId="6-N-Lat-Inf" XPos="-1326.87" YPos="-213.59">
                         <Arguments>
-                            <Argument ArgumentId="PolynomialOrder" ArgumentIOType="String">
+                            <Argument Id="PolynomialOrder" ArgumentIOType="String">
                                 <IdBasedArgument Id="PolynomialOrder" Caption="Interpolation polynomial order" IsOptional="False">
     <ValueDefinition Type="Quantity" ValueType="int" MissingValue="" DefaultValue="">
         <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
@@ -171,7 +171,7 @@
                         <Connections>
                             <AdaptedOutputExchangeItem AdaptedOutputExchangeItemId="TimeSeriesInterpolator" AdaptedOutputExchangeCaption="Time Series Interpolator" AdaptedOutputFactoryId="TemporalInterpolationFactory" AdaptedOutputFactoryCaption="Temporal Interpolation Factory" InputExchangeItemModelComponentIndex="1" InputExchangeItemId="6-N-Lat-Inf" XPos="-730.708" YPos="-216.15">
                                 <Arguments>
-                                    <Argument ArgumentId="PolynomialOrder" ArgumentIOType="String">
+                                    <Argument Id="PolynomialOrder" ArgumentIOType="String">
                                         <IdBasedArgument Id="PolynomialOrder" Caption="Interpolation polynomial order" IsOptional="False">
     <ValueDefinition Type="Quantity" ValueType="int" MissingValue="" DefaultValue="">
         <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
@@ -188,7 +188,7 @@
                                 <Connections>
                                     <AdaptedOutputExchangeItem AdaptedOutputExchangeItemId="TimeSeriesInterpolator" AdaptedOutputExchangeCaption="Time Series Interpolator" AdaptedOutputFactoryId="TemporalInterpolationFactory" AdaptedOutputFactoryCaption="Temporal Interpolation Factory" InputExchangeItemModelComponentIndex="1" InputExchangeItemId="6-N-Lat-Inf" XPos="-43.7845" YPos="-224.89">
                                         <Arguments>
-                                            <Argument ArgumentId="PolynomialOrder" ArgumentIOType="String">
+                                            <Argument Id="PolynomialOrder" ArgumentIOType="String">
                                                 <IdBasedArgument Id="PolynomialOrder" Caption="Interpolation polynomial order" IsOptional="False">
     <ValueDefinition Type="Quantity" ValueType="int" MissingValue="" DefaultValue="">
         <Unit ConversionFactorToSI="1" OffsetToSI="0"/>

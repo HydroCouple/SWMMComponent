@@ -38,7 +38,7 @@ INCLUDEPATH += .\
                ./../HydroCouple/include \
                ./../HydroCoupleSDK/include
 
-
+       
 HEADERS += ./include/stdafx.h\
            ./include/swmmcomponent_global.h \
            ./include/swmmcomponent.h \
@@ -50,7 +50,7 @@ HEADERS += ./include/stdafx.h\
            ./include/nodewseinput.h \
            ./include/nodepondeddepthinput.h \
            ./include/linkflowoutput.h
-
+          
 SOURCES +=./src/stdafx.cpp \
           ./src/swmmcomponent.cpp \
           ./src/swmmcomponentinfo.cpp \
@@ -193,7 +193,7 @@ CONFIG(debug, debug|release) {
 
 CONFIG(release, debug|release) {
 
-    RELEASE_EXTRAS = ./build/release
+    RELEASE_EXTRAS = ./build/release 
     OBJECTS_DIR = $$RELEASE_EXTRAS/.obj
     MOC_DIR = $$RELEASE_EXTRAS/.moc
     RCC_DIR = $$RELEASE_EXTRAS/.qrc

@@ -233,3 +233,7 @@ Makefile*
 
 # QtCtreator CMake
 CMakeLists.txt.user
+
+# SWMM reports and outputs
+*.rpt
+*.out 

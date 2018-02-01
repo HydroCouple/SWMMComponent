@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ModelComponent Name="SWMM Component 5.1.010" ModelComponentLibrary="../../build/debug/libSWMMComponent.1.0.0.dylib">
+    <Arguments>
+        <Argument Id="Identifiers" ArgumentIOType="String">
+            <IdBasedArgument Id="Identifiers" Caption="Model Identifiers" IsOptional="False">
+                <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="-99999999" DefaultValue="0">
+                    <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
+                </ValueDefinition>
+                <Dimensions>
+                    <Dimension Id="IdentifierDimension" Caption="Dimension for identifiers" Length="3"/>
+                </Dimensions>
+                <Values>
+                    <Value Id="Id">SWMM Test Model1</Value>
+                    <Value Id="Caption">SWMM model for node flooding test</Value>
+                    <Value Id="Description">1d 2d coupling flooding test</Value>
+                </Values>
+            </IdBasedArgument>
+        </Argument>
+        <Argument Id="InputFiles" ArgumentIOType="String">
+            <IdBasedArgument Id="InputFiles" Caption="Model Input Files" IsOptional="False">
+                <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="-99999999" DefaultValue="">
+                    <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
+                </ValueDefinition>
+                <Dimensions>
+                    <Dimension Id="IdDimension" Caption="Dimension for identifiers" Length="3"/>
+                </Dimensions>
+                <Values>
+                    <Value Id="Input File">./overflow_test.inp</Value>
+                    <Value Id="Output File">./overflow_test.out</Value>
+                    <Value Id="Report File">./overflow_test.rpt</Value>
+                </Values>
+            </IdBasedArgument>
+        </Argument>
+        <Argument Id="Node Opening Area" ArgumentIOType="String">
+            <IdBasedArgument Id="Node Opening Area" Caption="Node Opening Area" IsOptional="False">
+                <ValueDefinition Type="Quantity" ValueType="double" MissingValue="-99999999" DefaultValue="1.75">
+                    <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
+                </ValueDefinition>
+                <Dimensions>
+                    <Dimension Id="IdDimension" Caption="Dimension for identifiers" Length="0"/>
+                </Dimensions>
+                <Values/>
+            </IdBasedArgument>
+        </Argument>
+        <Argument Id="Node Opening Perimeter" ArgumentIOType="String">
+            <IdBasedArgument Id="Node Opening Perimeter" Caption="Node Opening Perimeter" IsOptional="False">
+                <ValueDefinition Type="Quantity" ValueType="double" MissingValue="-99999999" DefaultValue="2.75">
+                    <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
+                </ValueDefinition>
+                <Dimensions>
+                    <Dimension Id="IdDimension" Caption="Dimension for identifiers" Length="0"/>
+                </Dimensions>
+                <Values/>
+            </IdBasedArgument>
+        </Argument>
+        <Argument Id="Node Orifice Discharge Coefficient" ArgumentIOType="String">
+            <IdBasedArgument Id="Node Orifice Discharge Coefficient" Caption="Node Orifice Discharge Coefficient" IsOptional="False">
+                <ValueDefinition Type="Quantity" ValueType="double" MissingValue="-99999999" DefaultValue="0.6">
+                    <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
+                </ValueDefinition>
+                <Dimensions>
+                    <Dimension Id="IdDimension" Caption="Dimension for identifiers" Length="0"/>
+                </Dimensions>
+                <Values/>
+            </IdBasedArgument>
+        </Argument>
+    </Arguments>
+</ModelComponent>

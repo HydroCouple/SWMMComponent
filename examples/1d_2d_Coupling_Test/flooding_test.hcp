@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<HydroCoupleProject name="flooding_test.hcp">
+    <ModelComponents>
+        <ModelComponent ModelComponentFile="flooding_test.hcc"/>
+    </ModelComponents>
+    <ModelComponentConnections/>
+</HydroCoupleProject>
