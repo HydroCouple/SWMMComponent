@@ -31,6 +31,7 @@ bool NodeWSEInput::setProvider(HydroCouple::IOutput *provider)
   if(AbstractInput::setProvider(provider))
   {
     ITimeTINComponentDataItem *timeTINComponentDataItem = nullptr;
+
     m_geometryMapping.clear();
 
     if((timeTINComponentDataItem = dynamic_cast<ITimeTINComponentDataItem*>(provider)))
