@@ -1,6 +1,6 @@
 #Author Caleb Amoa Buahin
 #Email caleb.buahin@gmail.com
-#Date 2016
+#Date 2016 - 2018
 #License GNU General Public License (see <http: //www.gnu.org/licenses/> for details).
 #EPA SWMM Model Component
 
@@ -49,7 +49,11 @@ HEADERS += ./include/stdafx.h\
            ./include/nodesurfaceflowoutput.h \
            ./include/nodewseinput.h \
            ./include/nodepondeddepthinput.h \
-           ./include/linkflowoutput.h
+           ./include/linkflowoutput.h \
+           ./include/linkdepthoutput.h \
+           ./include/conduitxsectareaoutput.h \
+           ./include/conduitbankxsectareaoutput.h \
+           ./include/conduittopwidthoutput.h
 
 SOURCES +=./src/stdafx.cpp \
           ./src/swmmcomponent.cpp \
@@ -59,13 +63,23 @@ SOURCES +=./src/stdafx.cpp \
           ./src/nodesurfaceflowoutput.cpp \
           ./src/nodewseinput.cpp \
           ./src/nodepondeddepthinput.cpp \
-          ./src/linkflowoutput.cpp
+          ./src/linkflowoutput.cpp \
+          ./src/main.cpp \
+          ./src/linkdepthoutput.cpp \
+          ./src/conduitxsectareaoutput.cpp \
+          ./src/conduittopwidthoutput.cpp \
+          ./src/conduitbankxsectareaoutput.cpp
 
 
 macx{
 
     INCLUDEPATH += /usr/local \
-                   /usr/local/include
+                   /usr/local/include \
+                   /usr/local/include/gdal
+
+    LIBS += -L/usr/local/lib -lgdal \
+            -L/usr/local/lib -lnetcdf-cxx4
+
 
     contains(DEFINES,USE_OPENMP){
 
@@ -126,8 +140,8 @@ INCLUDEPATH += /usr/include \
 
     contains(DEFINES,USE_OPENMP){
 
-    QMAKE_CFLAGS += -fopenmp
-    QMAKE_LFLAGS += -fopenmp
+    QMAKE_CFLAGS   += -fopenmp
+    QMAKE_LFLAGS   += -fopenmp
     QMAKE_CXXFLAGS += -fopenmp
 
     LIBS += -L/usr/lib/x86_64-linux-gnu -lgomp

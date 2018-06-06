@@ -1,6 +1,6 @@
 # SWMMComponent
 
-A SWMM HydroCouple Component
+A SWMM HydroCouple Component.
 
 ## NOTES
 

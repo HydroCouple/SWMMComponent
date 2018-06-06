@@ -37,7 +37,7 @@ void SWMMNodeWSETimeSeriesOutput::updateValues(HydroCouple::IInput *querySpecifi
     QList<HydroCouple::Temporal::IDateTime*> inpTimes = timeExchangeItem->times();
     HydroCouple::Temporal::IDateTime *lastTime = inpTimes[inpTimes.length() -1];
 
-    while (m_component->currentDateTime()->modifiedJulianDay() < lastTime->modifiedJulianDay() &&
+    while (m_component->currentDateTime()->julianDay() < lastTime->julianDay() &&
            m_component->status() == IModelComponent::Updated)
     {
       m_component->update();
@@ -61,7 +61,7 @@ void SWMMNodeWSETimeSeriesOutput::updateValues()
   SDKTemporal::DateTime *lastTime = ctimes[timeDimLength -1];
   double elev = m_node->invertElev + m_node->newDepth;
 
-  if(m_component->currentDateTime()->modifiedJulianDay() > lastTime->modifiedJulianDay())
+  if(m_component->currentDateTime()->julianDay() > lastTime->julianDay())
   {
     if(timeDimLength > 1)
     {
@@ -76,9 +76,9 @@ void SWMMNodeWSETimeSeriesOutput::updateValues()
       }
     }
     setValues(timeDimLength -1, 1, &elev);
-    lastTime->setModifiedJulianDay(m_component->currentDateTime()->modifiedJulianDay());
+    lastTime->setJulianDay(m_component->currentDateTime()->julianDay());
   }
-  else if(m_component->currentDateTime()->modifiedJulianDay() == lastTime->modifiedJulianDay())
+  else if(m_component->currentDateTime()->julianDay() == lastTime->julianDay())
   {
     setValues(timeDimLength -1, 1, &elev);
   }
@@ -122,7 +122,7 @@ void SWMMNodeWSETimeSeriesInput::retrieveValuesFromProvider()
   std::vector<SDKTemporal::DateTime*> ctimes = timesInternal();
   SDKTemporal::DateTime *lastTime = ctimes[timeDimLength -1];
 
-  if(m_component->currentDateTime()->modifiedJulianDay() > lastTime->modifiedJulianDay())
+  if(m_component->currentDateTime()->julianDay() > lastTime->julianDay())
   {
     if(timeDimLength > 1)
     {
@@ -136,7 +136,7 @@ void SWMMNodeWSETimeSeriesInput::retrieveValuesFromProvider()
       }
     }
 
-    lastTime->setModifiedJulianDay(m_component->currentDateTime()->modifiedJulianDay());
+    lastTime->setJulianDay(m_component->currentDateTime()->julianDay());
   }
 
   provider->updateValues(this);
@@ -200,7 +200,7 @@ void SWMMNodeLatInflowTimeSeriesInput::retrieveValuesFromProvider()
   std::vector<SDKTemporal::DateTime*> ctimes = timesInternal();
   SDKTemporal::DateTime *lastTime = ctimes[timeDimLength -1];
 
-  if(m_component->currentDateTime()->modifiedJulianDay() > lastTime->modifiedJulianDay())
+  if(m_component->currentDateTime()->julianDay() > lastTime->julianDay())
   {
     if(timeDimLength > 1)
     {
@@ -214,7 +214,7 @@ void SWMMNodeLatInflowTimeSeriesInput::retrieveValuesFromProvider()
       }
     }
 
-    lastTime->setModifiedJulianDay(m_component->currentDateTime()->modifiedJulianDay());
+    lastTime->setJulianDay(m_component->currentDateTime()->julianDay());
   }
 
   for(HydroCouple::IOutput* output : inproviders)
@@ -282,7 +282,7 @@ void SWMMLinkDischargeTimeSeriesOutput::updateValues(HydroCouple::IInput *queryS
     QList<HydroCouple::Temporal::IDateTime*> inptimes = timeExchangeItem->times();
     HydroCouple::Temporal::IDateTime *lastTime = inptimes[inptimes.length() -1];
 
-    while (m_component->currentDateTime()->modifiedJulianDay() < lastTime->modifiedJulianDay() &&
+    while (m_component->currentDateTime()->julianDay() < lastTime->julianDay() &&
            m_component->status() == IModelComponent::Updated)
     {
       m_component->update();
@@ -307,7 +307,7 @@ void SWMMLinkDischargeTimeSeriesOutput::updateValues()
   std::vector<SDKTemporal::DateTime*> times = this->timesInternal();
   SDKTemporal::DateTime *lastTime = times[timeDimLength -1];
 
-  if(m_component->currentDateTime()->modifiedJulianDay() > lastTime->modifiedJulianDay())
+  if(m_component->currentDateTime()->julianDay() > lastTime->julianDay())
   {
     if(timeDimLength > 1)
     {
@@ -318,7 +318,7 @@ void SWMMLinkDischargeTimeSeriesOutput::updateValues()
 
       for(int i = 0 ; i < timeDimLength -1; i++)
       {
-        times[i]->setModifiedJulianDay(times[i+1]->modifiedJulianDay());
+        times[i]->setJulianDay(times[i+1]->julianDay());
       }
     }
 
@@ -330,9 +330,9 @@ void SWMMLinkDischargeTimeSeriesOutput::updateValues()
     }
 
     setValues(timeDimLength -1, 1, &flow);
-    lastTime->setModifiedJulianDay(m_component->currentDateTime()->modifiedJulianDay());
+    lastTime->setJulianDay(m_component->currentDateTime()->julianDay());
   }
-  else if(m_component->currentDateTime()->modifiedJulianDay() == lastTime->modifiedJulianDay())
+  else if(m_component->currentDateTime()->julianDay() == lastTime->julianDay())
   {
     setValues(timeDimLength -1, 1, &m_link->newFlow);
   }

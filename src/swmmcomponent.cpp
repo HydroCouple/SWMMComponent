@@ -35,6 +35,10 @@
 #include "nodewseinput.h"
 #include "nodepondeddepthinput.h"
 #include "linkflowoutput.h"
+#include "linkdepthoutput.h"
+#include "conduitxsectareaoutput.h"
+#include "conduittopwidthoutput.h"
+#include "conduitbankxsectareaoutput.h"
 #include "spatial/geometryfactory.h"
 
 
@@ -46,13 +50,29 @@ using namespace HydroCouple::SpatioTemporal;
 
 SWMMComponent::SWMMComponent(const QString &id, SWMMComponentInfo *parent)
   :AbstractTimeModelComponent(id,parent),
+    m_SWMMComponentInfo(parent),
     m_inputFilesArgument(nullptr),
+    m_nodeAreas(nullptr),
+    m_nodePerimeters(nullptr),
+    m_nodeOrificeDischargeCoeffs(nullptr),
     m_SWMMProject(nullptr),
+    m_nodeSurfaceFlowOutput(nullptr),
+    m_linkFlowOutput(nullptr),
+    m_linkDepthOutput(nullptr),
+    m_conduitXSectAreaOutput(nullptr),
+    m_conduitTopWidthOutput(nullptr),
+    m_conduitBankXSectAreaOutput(nullptr),
+    m_pondedAreaInput(nullptr),
+    m_nodeWSEInput(nullptr),
+    m_nodePondedDepth(nullptr),
+    m_idDimension(nullptr),
+    m_geometryDimension(nullptr),
+    m_timeDimension(nullptr),
+    m_inputFile(nullptr),
+    m_reportFile(nullptr),
+    m_outputFile(nullptr),
     m_currentProgress(0)
 {
-  m_startDateTime = new SDKTemporal::DateTime(this);
-  m_endDateTime = new SDKTemporal::DateTime(this);
-  m_currentDateTime = new SDKTemporal::DateTime(this);
 
   createDimensions();
   createArguments();
@@ -60,14 +80,26 @@ SWMMComponent::SWMMComponent(const QString &id, SWMMComponentInfo *parent)
 
 SWMMComponent::SWMMComponent(const QString &id, const QString &caption, SWMMComponentInfo *parent)
   :AbstractTimeModelComponent(id, caption, parent),
+    m_SWMMComponentInfo(parent),
     m_inputFilesArgument(nullptr),
+    m_nodeAreas(nullptr),
+    m_nodePerimeters(nullptr),
+    m_nodeOrificeDischargeCoeffs(nullptr),
     m_SWMMProject(nullptr),
+    m_nodeSurfaceFlowOutput(nullptr),
+    m_linkFlowOutput(nullptr),
+    m_linkDepthOutput(nullptr),
+    m_conduitXSectAreaOutput(nullptr),
+    m_conduitTopWidthOutput(nullptr),
+    m_conduitBankXSectAreaOutput(nullptr),
+    m_pondedAreaInput(nullptr),
+    m_nodeWSEInput(nullptr),
+    m_nodePondedDepth(nullptr),
+    m_idDimension(nullptr),
+    m_geometryDimension(nullptr),
+    m_timeDimension(nullptr),
     m_currentProgress(0)
 {
-  m_startDateTime = new SDKTemporal::DateTime(this);
-  m_endDateTime = new SDKTemporal::DateTime(this);
-  m_currentDateTime = new SDKTemporal::DateTime(this);
-
   createDimensions();
   createArguments();
 }
@@ -75,7 +107,6 @@ SWMMComponent::SWMMComponent(const QString &id, const QString &caption, SWMMComp
 SWMMComponent::~SWMMComponent()
 {
   disposeProject();
-  printf("");
 }
 
 QList<QString> SWMMComponent::validate()
@@ -120,30 +151,30 @@ void SWMMComponent::prepare()
       return;
     }
 
-    QString inputFilePath = (*m_inputFilesArgument)["Input File"];
-    QFileInfo inputFile = getAbsoluteFilePath(inputFilePath);
+    //    QString inputFilePath = (*m_inputFilesArgument)["Input File"];
+    //    QFileInfo inputFile = getAbsoluteFilePath(inputFilePath);
 
-    if(inputFile.exists())
-    {
+    //    if(inputFile.exists())
+    //    {
 
-      if(m_scratchFileIO.isOpen())
-        m_scratchFileIO.close();
+    //      if(m_scratchFileIO.isOpen())
+    //        m_scratchFileIO.close();
 
-      QString scratchFile = inputFile.absoluteFilePath().replace(inputFile.suffix(), "scratch");
-      m_scratchFileIO.setFileName(scratchFile);
+    //      QString scratchFile = inputFile.absoluteFilePath().replace(inputFile.suffix(), "scratch");
+    //      m_scratchFileIO.setFileName(scratchFile);
 
-      if(m_scratchFileIO.open(QIODevice::WriteOnly | QIODevice::Truncate))
-      {
-        m_scratchFileTextStream.setDevice(&m_scratchFileIO);
-        m_scratchFileTextStream.setRealNumberPrecision(10);
-        m_scratchFileTextStream << "IDStartPos" << "\t" << m_SWMMProject->IDStartPos << endl;
-        m_scratchFileTextStream << "InputStartPos" << "\t" << m_SWMMProject->InputStartPos << endl;
-        m_scratchFileTextStream << "OutputStartPos" << "\t" << m_SWMMProject->OutputStartPos << endl;
-        m_scratchFileTextStream.flush();
-      }
-    }
+    //      if(m_scratchFileIO.open(QIODevice::WriteOnly | QIODevice::Truncate))
+    //      {
+    //        m_scratchFileTextStream.setDevice(&m_scratchFileIO);
+    //        m_scratchFileTextStream.setRealNumberPrecision(10);
+    //        m_scratchFileTextStream << "IDStartPos" << "\t" << m_SWMMProject->IDStartPos << endl;
+    //        m_scratchFileTextStream << "InputStartPos" << "\t" << m_SWMMProject->InputStartPos << endl;
+    //        m_scratchFileTextStream << "OutputStartPos" << "\t" << m_SWMMProject->OutputStartPos << endl;
+    //        m_scratchFileTextStream.flush();
+    //      }
+    //    }
 
-    intializeSurfaceInflows();
+    createSurfaceInflows();
     updateOutputValues(QList<HydroCouple::IOutput*>());
 
     setStatus(IModelComponent::Updated ,"Finished preparing model");
@@ -160,10 +191,11 @@ void SWMMComponent::update(const QList<HydroCouple::IOutput *> &requiredOutputs)
 {
   if(status() == IModelComponent::Updated)
   {
+    setStatus(IModelComponent::Updating);
 
     clearDataCache(m_SWMMProject);
-    resetSurfaceInflows();
 
+    resetSurfaceInflows();
     applyInputValues();
 
     DateTime elapsedTime = 0;
@@ -171,27 +203,15 @@ void SWMMComponent::update(const QList<HydroCouple::IOutput *> &requiredOutputs)
 
     m_timeStep = elapsedTime * 86400.0;
 
-    int y, m, d, h, mm, s;
-    DateTime currentDateTime = m_SWMMProject->StartDateTime + m_SWMMProject->ElapsedTime;
-    datetime_decodeDate(currentDateTime, &y,&m,&d);
-    datetime_decodeTime(currentDateTime, &h,&mm,&s);
-
-    m_currentDateTime->setDateTime(QDateTime(QDate(y,m,d),QTime(h,mm,s)));
-    currentDateTimeInternal()->setModifiedJulianDay(m_currentDateTime->modifiedJulianDay());
-    updateOutputValues(QList<IOutput*>({}));
+    currentDateTimeInternal()->setJulianDay(timeHorizonInternal()->julianDay() + elapsedTime);
+    updateOutputValues(requiredOutputs);
 
     QString errMessage;
 
-    //    if(m_scratchFileIO.isOpen() && m_SWMMProject->Nperiods > m_currentNPeriods)
-    //    {
-    //      m_currentNPeriods = m_SWMMProject->Nperiods;
-    //      m_scratchFileTextStream << "NPeriods" << "\t" << m_currentNPeriods << endl;
-    //      m_scratchFileTextStream.flush();
-    //    }
 
     if(elapsedTime <= 0.0 && !m_SWMMProject->ErrorCode)
     {
-      setStatus(IModelComponent::Done , "Simulation finished successfully|  DateTime: " + m_currentDateTime->dateTime().toString(Qt::ISODate),100);
+      setStatus(IModelComponent::Done , "Simulation finished successfully|  DateTime: " + QString::number(currentDateTime()->julianDay()),100);
     }
     else if(hasError(errMessage))
     {
@@ -199,9 +219,9 @@ void SWMMComponent::update(const QList<HydroCouple::IOutput *> &requiredOutputs)
     }
     else
     {
-      if(progressChecker()->performStep(m_currentDateTime->modifiedJulianDay()))
+      if(progressChecker()->performStep(currentDateTime()->julianDay()))
       {
-        setStatus(IModelComponent::Updated , "Simulation performed time-step | DateTime: " + m_currentDateTime->dateTime().toString(Qt::ISODate) , progressChecker()->progress());
+        setStatus(IModelComponent::Updated , "Simulation performed time-step | DateTime: " + QString::number(currentDateTime()->julianDay()) , progressChecker()->progress());
       }
       else
       {
@@ -365,42 +385,40 @@ bool SWMMComponent::initializeInputFilesArguments(QString &message)
     return false;
   }
 
-  char *inpF = new char[inputFile.absoluteFilePath().length() + 1] ;
-  std::strcpy (inpF, inputFile.absoluteFilePath().toStdString().c_str());
-
-  char *inpO = new char[outputFile.absoluteFilePath().length() + 1] ;
-  std::strcpy (inpO, outputFile.absoluteFilePath().toStdString().c_str());
-
-  char *inpR = new char[reportFile.absoluteFilePath().length() + 1] ;
-  std::strcpy (inpR, reportFile.absoluteFilePath().toStdString().c_str());
-
   disposeProject();
+
+
+  m_inputFile = new char[inputFile.absoluteFilePath().length() + 1] ;
+  std::strcpy (m_inputFile, inputFile.absoluteFilePath().toStdString().c_str());
+
+  m_outputFile = new char[outputFile.absoluteFilePath().length() + 1] ;
+  std::strcpy (m_outputFile, outputFile.absoluteFilePath().toStdString().c_str());
+
+  m_reportFile = new char[reportFile.absoluteFilePath().length() + 1] ;
+  std::strcpy (m_reportFile, reportFile.absoluteFilePath().toStdString().c_str());
 
   m_SWMMProject = swmm_createProject();
 
-  if(swmm_open(m_SWMMProject, inpF,inpR,inpO) == 0)
+  QString current = QDir::currentPath();
+  QDir::setCurrent(inputFile.absolutePath());
+
+  if(swmm_open(m_SWMMProject, m_inputFile, m_reportFile, m_outputFile) == 0 && swmm_start(m_SWMMProject, TRUE) == 0)
   {
     int y, m, d, h, mm, s;
     datetime_decodeDate(m_SWMMProject->StartDateTime, &y,&m,&d);
     datetime_decodeTime(m_SWMMProject->StartDateTime, &h,&mm,&s);
-    m_startDateTime->setDateTime(QDateTime(QDate(y,m,d),QTime(h,mm,s)));
-    m_currentDateTime->setDateTime(m_startDateTime->dateTime());
 
-    datetime_decodeDate(m_SWMMProject->EndDateTime, &y,&m,&d);
-    datetime_decodeTime(m_SWMMProject->EndDateTime, &h,&mm,&s);
-    m_endDateTime->setDateTime(QDateTime(QDate(y,m,d),QTime(h,mm,s)));
+    QDateTime dateTime(QDate(y,m,d),QTime(h,mm,s));
 
-    currentDateTimeInternal()->setModifiedJulianDay(m_startDateTime->modifiedJulianDay());
-    timeHorizonInternal()->setModifiedJulianDay(m_startDateTime->modifiedJulianDay());
-    timeHorizonInternal()->setDuration(m_endDateTime->modifiedJulianDay() - m_startDateTime->modifiedJulianDay());
+    SDKTemporal::TimeSpan *timeSpan = timeHorizonInternal();
+    SDKTemporal::DateTime *currentDateTime = currentDateTimeInternal();
 
-    swmm_start(m_SWMMProject, TRUE);
-    progressChecker()->reset(m_startDateTime->modifiedJulianDay(), m_endDateTime->modifiedJulianDay());
+    timeSpan->setDateTime(dateTime);
+    currentDateTime->setJulianDay(timeSpan->julianDay());
 
-    delete[] inpF;
-    delete[] inpO;
-    delete[] inpR;
+    timeSpan->setDuration(m_SWMMProject->EndDateTime - m_SWMMProject->StartDateTime);
 
+    progressChecker()->reset(timeSpan->julianDay(), timeSpan->julianDay() + timeSpan->duration());
 
     QFile file(inputFile.absoluteFilePath());
 
@@ -416,15 +434,15 @@ bool SWMMComponent::initializeInputFilesArguments(QString &message)
 
         if(!line.compare("[POLYGONS]",Qt::CaseInsensitive))
         {
-          initializeSubCatchmentGeometries(streamReader, delimiter);
+          readSubCatchmentGeometries(streamReader, delimiter);
         }
         else if(!line.compare("[COORDINATES]",Qt::CaseInsensitive))
         {
-          initializeNodeGeometries(streamReader, delimiter);
+          readNodeGeometries(streamReader, delimiter);
         }
         else if(!line.compare("[VERTICES]",Qt::CaseInsensitive))
         {
-          initializeLinkGeometries(streamReader, delimiter);
+          readLinkGeometries(streamReader, delimiter);
         }
         else if(!line.compare("[SYMBOLS]",Qt::CaseInsensitive))
         {
@@ -432,6 +450,8 @@ bool SWMMComponent::initializeInputFilesArguments(QString &message)
       }
     }
   }
+
+  QDir::setCurrent(current);
 
   return !hasError(message);
 
@@ -509,7 +529,7 @@ bool SWMMComponent::initializeNodeOrificeDischargeCoeffArguments(QString &messag
   return true;
 }
 
-void SWMMComponent::initializeNodeGeometries(QTextStream &streamReader, const QRegExp &delimiter)
+void SWMMComponent::readNodeGeometries(QTextStream &streamReader, const QRegExp &delimiter)
 {
   double x =  0, y = 0;
   m_sharedNodesGeoms.clear();
@@ -521,18 +541,19 @@ void SWMMComponent::initializeNodeGeometries(QTextStream &streamReader, const QR
     QString id = QString(node.ID);
     QSharedPointer<HCGeometry> pt = QSharedPointer<HCGeometry>(new HCPoint(id));
     pt->setIndex(i);
+    pt->setMarker(i);
     m_sharedNodesGeoms[id] = pt;
   }
 
   while (!streamReader.atEnd())
   {
-    QString line = streamReader.readLine();
+    QString line = streamReader.readLine().trimmed();
 
     if(line.isEmpty() || line.isNull())
     {
       break;
     }
-    else if(line.trimmed()[0] != ';')
+    else if(line[0] != ';')
     {
       QStringList splitted = line.split(delimiter,QString::SkipEmptyParts);
 
@@ -544,7 +565,7 @@ void SWMMComponent::initializeNodeGeometries(QTextStream &streamReader, const QR
 
         if(xok && yok)
         {
-          QString id = splitted[0].trimmed();
+          QString id = splitted[0];
 
           if(m_sharedNodesGeoms.find(id) != m_sharedNodesGeoms.end())
           {
@@ -552,19 +573,14 @@ void SWMMComponent::initializeNodeGeometries(QTextStream &streamReader, const QR
             HCPoint *point  = dynamic_cast<HCPoint*>(geom.data());
             point->setX(x);
             point->setY(y);
-            //            nodes.append(point);
           }
         }
       }
     }
   }
-
-  //  QString message;
-  //  GeometryFactory::writeGeometryToFile(nodes,"Nodes",nodes[0]->geometryType(), "ESRI Shapefile","/Users/calebbuahin/Documents/Projects/Models/1d-2d_coupling/SWMM_Model/GIS/nodes.shp",message);
-
 }
 
-void SWMMComponent::initializeLinkGeometries(QTextStream &streamReader, const QRegExp &delimiter)
+void SWMMComponent::readLinkGeometries(QTextStream &streamReader, const QRegExp &delimiter)
 {
   double x =  0, y = 0;
   m_sharedLinkGeoms.clear();
@@ -575,12 +591,13 @@ void SWMMComponent::initializeLinkGeometries(QTextStream &streamReader, const QR
     QString id = QString(link.ID);
     HCLineString *lineString =  new HCLineString(id);
     lineString->setIndex(i);
+    lineString->setMarker(i);
 
     TNode &node1 = m_SWMMProject->Node[link.node1];
     QString nodeId = QString(node1.ID);
     HCPoint *node1Geom = dynamic_cast<HCPoint*>(m_sharedNodesGeoms[nodeId].data());
 
-    HCPoint *beginP = new HCPoint(node1Geom->x(), node1Geom->y(), node1Geom->id());
+    HCPoint *beginP = new HCPoint(node1Geom->x(), node1Geom->y(), node1Geom->id() , lineString);
     lineString->addPoint(beginP);
 
     m_sharedLinkGeoms[id] = QSharedPointer<HCGeometry>(lineString);
@@ -588,13 +605,13 @@ void SWMMComponent::initializeLinkGeometries(QTextStream &streamReader, const QR
 
   while (!streamReader.atEnd())
   {
-    QString line = streamReader.readLine();
+    QString line = streamReader.readLine().trimmed();
 
     if(line.isEmpty() || line.isNull())
     {
       break;
     }
-    else if(line.trimmed()[0] != ';')
+    else if(line[0] != ';')
     {
       QStringList splitted = line.split(delimiter,QString::SkipEmptyParts);
 
@@ -612,7 +629,7 @@ void SWMMComponent::initializeLinkGeometries(QTextStream &streamReader, const QR
           {
             QSharedPointer<HCGeometry> geom = m_sharedLinkGeoms[id];
             HCLineString *lineString  = dynamic_cast<HCLineString*>(geom.data());
-            HCPoint *point = new HCPoint();
+            HCPoint *point = new HCPoint(id, lineString);
             point->setX(x);
             point->setY(y);
             lineString->addPoint(point);
@@ -622,54 +639,48 @@ void SWMMComponent::initializeLinkGeometries(QTextStream &streamReader, const QR
     }
   }
 
-  //  QList<HCGeometry*> links;
-
   for(int i = 0; i < m_SWMMProject->NumLinks; i++)
   {
     TLink &link = m_SWMMProject->Link[i];
     QString id = QString(link.ID);
+
     HCLineString *lineString = dynamic_cast<HCLineString*>(m_sharedLinkGeoms[id].data());
 
     TNode &node2 = m_SWMMProject->Node[link.node2];
     QString nodeId = QString(node2.ID);
     HCPoint *node2Geom = dynamic_cast<HCPoint*>(m_sharedNodesGeoms[nodeId].data());
 
-    HCPoint *endP = new HCPoint(node2Geom->x(), node2Geom->y(), node2Geom->id());
+    HCPoint *endP = new HCPoint(node2Geom->x(), node2Geom->y(), node2Geom->id(), lineString);
     lineString->addPoint(endP);
-    //    links.append(lineString);
   }
-
-  //  QString message;
-  //  GeometryFactory::writeGeometryToFile(links,"Links",links[0]->geometryType(), "ESRI Shapefile","/Users/calebbuahin/Documents/Projects/Models/1d-2d_coupling/SWMM_Model/GIS/conduits.shp", message);
-
 }
 
-void SWMMComponent::initializeSubCatchmentGeometries(QTextStream &streamReader, const QRegExp &delimiter)
+void SWMMComponent::readSubCatchmentGeometries(QTextStream &streamReader, const QRegExp &delimiter)
 {
 
 }
 
 void SWMMComponent::createInputs()
 {
-  initializeIdBasedNodeWSEInput();
-  initializeIdBasedNodeInflowInput();
-  initializeNodeWSEInput();
-  initializeNodePondedDepthInput();
-  initializeNodeInflowInput();
-  initializePondedAreaInput();
+  createIdBasedNodeWSEInput();
+  createIdBasedNodeInflowInput();
+  createNodeWSEInput();
+  createNodePondedDepthInput();
+  createNodeInflowInput();
+  createPondedAreaInput();
 }
 
-void SWMMComponent::initializeIdBasedNodeWSEInput()
+void SWMMComponent::createIdBasedNodeWSEInput()
 {
 
 }
 
-void SWMMComponent::initializeIdBasedNodeInflowInput()
+void SWMMComponent::createIdBasedNodeInflowInput()
 {
 
 }
 
-void SWMMComponent::initializeNodeWSEInput()
+void SWMMComponent::createNodeWSEInput()
 {
   Quantity *elevQuantity = Quantity::lengthInMeters(this);
   elevQuantity->setCaption("Water Surface Elevation (m)");
@@ -691,15 +702,15 @@ void SWMMComponent::initializeNodeWSEInput()
 
   m_nodeWSEInput->addGeometries(geometries);
 
-  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(m_startDateTime->modifiedJulianDay() - 1.0/10000000000.0, m_nodeWSEInput);
-  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(m_startDateTime->modifiedJulianDay(), m_nodeWSEInput);
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/10000000000.0, m_nodeWSEInput);
+  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_nodeWSEInput);
   m_nodeWSEInput->addTime(dt1);
   m_nodeWSEInput->addTime(dt2);
 
   addInput(m_nodeWSEInput);
 }
 
-void SWMMComponent::initializeNodePondedDepthInput()
+void SWMMComponent::createNodePondedDepthInput()
 {
   Quantity *depthQuantity = Quantity::lengthInMeters(this);
   depthQuantity->setCaption("Depth (m)");
@@ -721,20 +732,21 @@ void SWMMComponent::initializeNodePondedDepthInput()
 
   m_nodePondedDepth->addGeometries(geometries);
 
-  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(m_startDateTime->modifiedJulianDay()- 1.0/10000000000.0, m_nodePondedDepth);
-  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(m_startDateTime->modifiedJulianDay(), m_nodePondedDepth);
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay()- 1.0/10000000000.0, m_nodePondedDepth);
+  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_nodePondedDepth);
+  
   m_nodePondedDepth->addTime(dt1);
   m_nodePondedDepth->addTime(dt2);
 
   addInput(m_nodePondedDepth);
 }
 
-void SWMMComponent::initializeNodeInflowInput()
+void SWMMComponent::createNodeInflowInput()
 {
 
 }
 
-void SWMMComponent::initializePondedAreaInput()
+void SWMMComponent::createPondedAreaInput()
 {
   Quantity *areaValueDefinition = Quantity::areaInSquareMeters(this);
 
@@ -754,7 +766,7 @@ void SWMMComponent::initializePondedAreaInput()
 
 }
 
-void SWMMComponent::intializeSurfaceInflows()
+void SWMMComponent::createSurfaceInflows()
 {
   m_surfaceInflow.clear();
 
@@ -766,29 +778,33 @@ void SWMMComponent::intializeSurfaceInflows()
 
 void SWMMComponent::createOutputs()
 {
-  initializeIdBasedNodeWSEOutput();
-  initializeIdBasedLinkFlowOutput();
-  initializeNodeWSEOutput();
-  initializeNodeFloodingOutput();
-  initializeLinkFlowOutput();
+  createIdBasedNodeWSEOutput();
+  createIdBasedLinkFlowOutput();
+  createNodeWSEOutput();
+  createNodeFloodingOutput();
+  createLinkFlowOutput();
+  createLinkDepthOutput();
+  createConduitXSectAreaOutput();
+  createConduitTopWidthOutput();
+  createConduitBankXSectAreaOutput();
 }
 
-void SWMMComponent::initializeIdBasedNodeWSEOutput()
+void SWMMComponent::createIdBasedNodeWSEOutput()
 {
 
 }
 
-void SWMMComponent::initializeIdBasedLinkFlowOutput()
+void SWMMComponent::createIdBasedLinkFlowOutput()
 {
 
 }
 
-void SWMMComponent::initializeNodeWSEOutput()
+void SWMMComponent::createNodeWSEOutput()
 {
 
 }
 
-void SWMMComponent::initializeNodeFloodingOutput()
+void SWMMComponent::createNodeFloodingOutput()
 {
   Quantity *flowQuantity = Quantity::flowInCMS(this);
 
@@ -809,15 +825,15 @@ void SWMMComponent::initializeNodeFloodingOutput()
 
   m_nodeSurfaceFlowOutput->addGeometries(geometries);
 
-  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(m_startDateTime->modifiedJulianDay() - 1.0/10000000000.0, m_nodeSurfaceFlowOutput);
-  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(m_startDateTime->modifiedJulianDay(), m_nodeSurfaceFlowOutput);
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/10000000000.0, m_nodeSurfaceFlowOutput);
+  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_nodeSurfaceFlowOutput);
   m_nodeSurfaceFlowOutput->addTime(dt1);
   m_nodeSurfaceFlowOutput->addTime(dt2);
 
   addOutput(m_nodeSurfaceFlowOutput);
 }
 
-void SWMMComponent::initializeLinkFlowOutput()
+void SWMMComponent::createLinkFlowOutput()
 {
   Quantity *flowQuantity = Quantity::flowInCMS(this);
 
@@ -838,31 +854,121 @@ void SWMMComponent::initializeLinkFlowOutput()
 
   m_linkFlowOutput->addGeometries(geometries);
 
-  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(m_startDateTime->modifiedJulianDay() - 1.0/10000000000.0, m_linkFlowOutput);
-  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(m_startDateTime->modifiedJulianDay(), m_linkFlowOutput);
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/10000000000.0, m_linkFlowOutput);
+  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_linkFlowOutput);
   m_linkFlowOutput->addTime(dt1);
   m_linkFlowOutput->addTime(dt2);
 
   addOutput(m_linkFlowOutput);
 }
 
+void SWMMComponent::createLinkDepthOutput()
+{
+  Quantity *depthQuantity = Quantity::lengthInMeters(this);
+
+  m_linkDepthOutput = new LinkDepthOutput("LinkDepthOutput",
+                                          m_timeDimension,
+                                          m_geometryDimension,
+                                          depthQuantity,
+                                          this);
+
+  m_linkDepthOutput->setCaption("Depth of water in conduit (m)");
+  m_linkDepthOutput->setDescription("Depth of water in conduit (m)");
+
+  QList<QSharedPointer<HCGeometry>> geometries;
+  for(std::pair<QString, QSharedPointer<HCGeometry>> node : m_sharedLinkGeoms)
+  {
+    geometries.append(node.second);
+  }
+
+  m_linkDepthOutput->addGeometries(geometries);
+
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/10000000000.0, m_linkDepthOutput);
+  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_linkDepthOutput);
+  m_linkDepthOutput->addTime(dt1);
+  m_linkDepthOutput->addTime(dt2);
+
+  addOutput(m_linkDepthOutput);
+}
+
+void SWMMComponent::createConduitXSectAreaOutput()
+{
+  Quantity *areaQuantity = Quantity::areaInSquareMeters(this);
+
+  m_conduitXSectAreaOutput = new ConduitXSectAreaOutput("ConduitCrossSectionAreaOutput",
+                                                        m_timeDimension,
+                                                        m_geometryDimension,
+                                                        areaQuantity,
+                                                        this);
+
+  m_conduitXSectAreaOutput->setCaption("Conduit flow cross section area (m^2)");
+  m_conduitXSectAreaOutput->setDescription("Conduit flow cross section area (m^2)");
+
+  QList<QSharedPointer<HCGeometry>> geometries;
+  for(std::pair<QString, QSharedPointer<HCGeometry>> node : m_sharedLinkGeoms)
+  {
+    geometries.append(node.second);
+  }
+
+  m_conduitXSectAreaOutput->addGeometries(geometries);
+
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/10000000000.0, m_conduitXSectAreaOutput);
+  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_conduitXSectAreaOutput);
+  m_conduitXSectAreaOutput->addTime(dt1);
+  m_conduitXSectAreaOutput->addTime(dt2);
+
+  addOutput(m_conduitXSectAreaOutput);
+}
+
+void SWMMComponent::createConduitTopWidthOutput()
+{
+  Quantity *lengthQuantity = Quantity::lengthInMeters(this);
+
+  m_conduitTopWidthOutput = new ConduitTopWidthOutput("ConduitTopWidthOutput",
+                                                      m_timeDimension,
+                                                      m_geometryDimension,
+                                                      lengthQuantity,
+                                                      this);
+
+  m_conduitTopWidthOutput->setCaption("Conduit top width (m)");
+  m_conduitTopWidthOutput->setDescription("Conduit top width (m)");
+
+  QList<QSharedPointer<HCGeometry>> geometries;
+  for(std::pair<QString, QSharedPointer<HCGeometry>> node : m_sharedLinkGeoms)
+  {
+    geometries.append(node.second);
+  }
+
+  m_conduitTopWidthOutput->addGeometries(geometries);
+
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/10000000000.0, m_conduitTopWidthOutput);
+  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_conduitTopWidthOutput);
+  m_conduitTopWidthOutput->addTime(dt1);
+  m_conduitTopWidthOutput->addTime(dt2);
+
+  addOutput(m_conduitTopWidthOutput);
+}
+
+void SWMMComponent::createConduitBankXSectAreaOutput()
+{
+
+}
+
 bool SWMMComponent::hasError(QString &message)
 {
   message = "";
 
-  int error = m_SWMMProject->ErrorCode;
-
-  //  if(error)
-  //  {
-  //    message = QString(getErrorMsg(m_SWMMProject->ErrorCode)).trimmed();
-  //    return true;
-  //  }
+  if(m_SWMMProject->ErrorCode)
+  {
+    message = QString(m_SWMMProject->ErrorMsg).trimmed();
+    return true;
+  }
 
   return false;
 
 }
 
-void SWMMComponent::intializeFailureCleanUp()
+void SWMMComponent::initializeFailureCleanUp()
 {
   disposeProject();
 }
@@ -873,23 +979,40 @@ void SWMMComponent::disposeProject()
   {
     swmm_end(m_SWMMProject);
 
-    if (m_SWMMProject->Fout.mode == SCRATCH_FILE)
-    {
-      swmm_report(m_SWMMProject);
-    }
+    if(m_SWMMProject->Fout.mode == SCRATCH_FILE)
+    swmm_report(m_SWMMProject);
 
     swmm_close(m_SWMMProject);
+    swmm_deleteProject(m_SWMMProject);
 
     m_SWMMProject = nullptr;
   }
+
+  if(m_inputFile)
+  {
+    delete[] m_inputFile;
+    m_inputFile = nullptr;
+  }
+
+  if(m_reportFile)
+  {
+    delete[] m_reportFile;
+    m_reportFile = nullptr;
+  }
+
+  if(m_outputFile)
+  {
+    delete[] m_outputFile;
+    m_outputFile = nullptr;
+  }
+
 }
 
 void SWMMComponent::resetSurfaceInflows()
 {
-
-#ifdef USE_OPENMP
-#pragma omp parallel for
-#endif
+  //#ifdef USE_OPENMP
+  //#pragma omp parallel for
+  //#endif
   for(size_t i = 0; i < m_surfaceInflow.size() ; i++)
   {
     m_surfaceInflow[i] = 0.0;

@@ -88,7 +88,7 @@ void NodePondedDepthInput::retrieveValuesFromProvider()
 {
   moveDataToPrevTime();
   int currentTimeIndex = m_times.size() - 1;
-  m_times[currentTimeIndex]->setModifiedJulianDay(m_SWMMComponent->currentDateTime()->modifiedJulianDay());
+  m_times[currentTimeIndex]->setJulianDay(m_SWMMComponent->currentDateTime()->julianDay());
 
   provider()->updateValues(this);
 
@@ -110,17 +110,15 @@ void NodePondedDepthInput::applyData()
 {
   int currentTimeIndex = m_times.size() - 1;
 
+
   for(std::pair<int,int> geoMap : m_geometryMapping)
   {
-    IPoint *nodeGeom = dynamic_cast<IPoint*>(geometry(geoMap.first));
+    HCPoint *nodeGeom = dynamic_cast<HCPoint*>(geometry(geoMap.first));
     double pondedDepth = 0;
     getValue(currentTimeIndex, geoMap.first, &pondedDepth);
     pondedDepth /= UCF(m_SWMMComponent->project(), LENGTH);
 
-    char *nodeId = const_cast<char*>(nodeGeom->id().toStdString().c_str());
-    int nodeIndex = project_findObject(m_SWMMComponent->project(),NODE, nodeId);
-
-    TNode &node = m_SWMMComponent->project()->Node[nodeIndex];
+    TNode &node = m_SWMMComponent->project()->Node[nodeGeom->marker()];
 
     //check if surface has any water at all.
     if(pondedDepth >  0.05)
@@ -146,20 +144,20 @@ void NodePondedDepthInput::applyData()
           double maxflowPossible = (pondedDepth * node.pondedArea) / m_SWMMComponent->m_timeStep;
           flow = std::min(maxflowPossible, flow);
 
-          m_SWMMComponent->m_surfaceInflow[nodeIndex] = flow;
-          addNodeLateralInflow(m_SWMMComponent->m_SWMMProject, nodeIndex, flow);
+          m_SWMMComponent->m_surfaceInflow[nodeGeom->marker()] = flow;
+          addNodeLateralInflow(m_SWMMComponent->m_SWMMProject, nodeGeom->marker(), flow);
         }
         //otherwise
         else if(node.newDepth > node.fullDepth)
         {
           double depth = pondedDepth + node.fullDepth;
-          addNodeDepth(m_SWMMComponent->m_SWMMProject, nodeIndex, depth);
+          addNodeDepth(m_SWMMComponent->m_SWMMProject, nodeGeom->marker(), depth);
         }
       }
       else if(pondedDepth > 0.25)
       {
         double depth = pondedDepth;
-        addNodeDepth(m_SWMMComponent->m_SWMMProject, nodeIndex, depth);
+        addNodeDepth(m_SWMMComponent->m_SWMMProject, nodeGeom->marker(), depth);
       }
     }
   }

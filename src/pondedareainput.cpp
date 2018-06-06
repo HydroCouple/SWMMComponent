@@ -3,7 +3,7 @@
 #include "headers.h"
 #include "swmmcomponent.h"
 #include "spatial/octree.h"
-
+#include "spatial/point.h"
 
 using namespace HydroCouple;
 using namespace HydroCouple::Spatial;
@@ -118,9 +118,8 @@ void PondedAreaInput::applyData()
 
           if(value != geomDataItem->valueDefinition()->missingValue().toDouble())
           {
-            char *nodeId = const_cast<char*>(geometry(i)->id().toStdString().c_str());
-            int nodeIndex = project_findObject(m_SWMMComponent->project(),NODE, nodeId);
-            TNode &node = m_SWMMComponent->project()->Node[nodeIndex];
+            HCPoint *nodeGeom = dynamic_cast<HCPoint*>(geometry(i));
+            TNode &node = m_SWMMComponent->project()->Node[nodeGeom->marker()];
             double cf = UCF(m_SWMMComponent->project(), LENGTH);
             node.pondedArea = value / (cf * cf);
           }

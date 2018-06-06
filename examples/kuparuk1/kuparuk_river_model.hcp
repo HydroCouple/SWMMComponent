@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<HydroCoupleProject name="kuparuk_river_model.hcp">
+    <ModelComponents>
+        <ModelComponent Name="Radiative Heat Exchange Model 1.0.0" Caption="Kuparuk river model" Description="" IsTrigger="True" ModelComponentFile="../../../RHEComponent/example/kuparuk_river/kuparuk_river.hcc" XPos="211" YPos="203">
+            <ExchangeItemPositions>
+                <Outputs>
+                    <Output Id="BackwaterLWRadiationOutput" XPos="-164" YPos="620"/>
+                    <Output Id="LandCoverLWRadiationOutput" XPos="-164" YPos="260"/>
+                    <Output Id="NetSWSolarRadiationOutput" XPos="-164" YPos="-100"/>
+                    <Output Id="AtmosphericLWRadiationOutput" XPos="-164" YPos="440"/>
+                    <Output Id="SedNetSWRadiationOutput" XPos="-164" YPos="80"/>
+                </Outputs>
+                <Inputs>
+                    <Input Id="ElementTopWidthInput" XPos="866" YPos="260"/>
+                    <Input Id="ElementDepthInput" XPos="866" YPos="440"/>
+                    <Input Id="ChannelTemperatureInput" XPos="866" YPos="80"/>
+                </Inputs>
+            </ExchangeItemPositions>
+        </ModelComponent>
+    </ModelComponents>
+    <ModelComponentConnections/>
+</HydroCoupleProject>

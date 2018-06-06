@@ -92,7 +92,7 @@ void NodeWSEInput::retrieveValuesFromProvider()
 {
   moveDataToPrevTime();
   int currentTimeIndex = m_times.size() - 1;
-  m_times[currentTimeIndex]->setModifiedJulianDay(m_SWMMComponent->currentDateTime()->modifiedJulianDay());
+  m_times[currentTimeIndex]->setJulianDay(m_SWMMComponent->currentDateTime()->julianDay());
 
   provider()->updateValues(this);
 
@@ -137,15 +137,12 @@ void NodeWSEInput::applyData()
 
   for(std::pair<int,int> geoMap : m_geometryMapping)
   {
-    IPoint *nodeGeom = dynamic_cast<IPoint*>(geometry(geoMap.first));
+    HCPoint *nodeGeom = dynamic_cast<HCPoint*>(geometry(geoMap.first));
     double z = 0;
     getValue(currentTimeIndex, geoMap.first, &z);
     z /= UCF(m_SWMMComponent->project(), LENGTH);
 
-    char *nodeId = const_cast<char*>(nodeGeom->id().toStdString().c_str());
-    int nodeIndex = project_findObject(m_SWMMComponent->project(),NODE, nodeId);
-
-    TNode &node = m_SWMMComponent->project()->Node[nodeIndex];
+    TNode &node = m_SWMMComponent->project()->Node[nodeGeom->marker()];
     double dp = (z - node.invertElev);
     double pondedDepth = dp - node.fullDepth;
 
@@ -171,8 +168,8 @@ void NodeWSEInput::applyData()
         double maxflowPossible = (pondedDepth * node.pondedArea) / m_SWMMComponent->m_timeStep;
         flow = std::min(maxflowPossible, flow);
 
-        m_SWMMComponent->m_surfaceInflow[nodeIndex] = flow;
-        addNodeLateralInflow(m_SWMMComponent->m_SWMMProject, nodeIndex, flow);
+        m_SWMMComponent->m_surfaceInflow[nodeGeom->marker()] = flow;
+        addNodeLateralInflow(m_SWMMComponent->m_SWMMProject, nodeGeom->marker(), flow);
         totalInflow += flow;
 
       }
@@ -180,7 +177,7 @@ void NodeWSEInput::applyData()
       else if(node.newDepth > node.fullDepth)
       {
         double depth = pondedDepth + node.fullDepth;
-        addNodeDepth(m_SWMMComponent->m_SWMMProject, nodeIndex, depth);
+        addNodeDepth(m_SWMMComponent->m_SWMMProject, nodeGeom->marker(), depth);
       }
     }
 

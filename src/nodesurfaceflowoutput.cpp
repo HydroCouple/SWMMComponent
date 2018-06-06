@@ -29,23 +29,28 @@ NodeSurfaceFlowOutput::~NodeSurfaceFlowOutput()
 
 void NodeSurfaceFlowOutput::updateValues(HydroCouple::IInput *querySpecifier)
 {
-  ITimeComponentDataItem* timeExchangeItem = dynamic_cast<ITimeComponentDataItem*>(querySpecifier);
-
-  if(timeExchangeItem)
+  if(!m_SWMMComponent->workflow())
   {
-    double queryTime = timeExchangeItem->time(timeExchangeItem->timeCount() - 1)->modifiedJulianDay();
+    ITimeComponentDataItem* timeExchangeItem = dynamic_cast<ITimeComponentDataItem*>(querySpecifier);
+    QList<IOutput*>updateList;
+    //QList<IOutput*>updateList({this});
 
-    while (m_SWMMComponent->currentDateTime()->modifiedJulianDay() < queryTime &&
-           m_SWMMComponent->status() == IModelComponent::Updated)
+    if(timeExchangeItem)
     {
-      m_SWMMComponent->update(QList<IOutput*>({this}));
+      double queryTime = timeExchangeItem->time(timeExchangeItem->timeCount() - 1)->julianDay();
+
+      while (m_SWMMComponent->currentDateTime()->julianDay() < queryTime &&
+             m_SWMMComponent->status() == IModelComponent::Updated)
+      {
+        m_SWMMComponent->update(updateList);
+      }
     }
-  }
-  else
-  {
-    if(m_SWMMComponent->status() == IModelComponent::Updated)
+    else
     {
-      m_SWMMComponent->update(QList<IOutput*>({this}));
+      if(m_SWMMComponent->status() == IModelComponent::Updated)
+      {
+        m_SWMMComponent->update(updateList);
+      }
     }
   }
 
@@ -57,7 +62,7 @@ void NodeSurfaceFlowOutput::updateValues()
   moveDataToPrevTime();
 
   int currentTimeIndex = timeCount() - 1;
-  m_times[currentTimeIndex]->setModifiedJulianDay(m_SWMMComponent->currentDateTime()->modifiedJulianDay());
+  m_times[currentTimeIndex]->setJulianDay(m_SWMMComponent->currentDateTime()->julianDay());
   resetTimeSpan();
 
   double inflowTotal = 0.0;
@@ -67,9 +72,7 @@ void NodeSurfaceFlowOutput::updateValues()
   for(size_t i = 0 ; i < m_geometries.size() ; i++)
   {
     QSharedPointer<HCGeometry> nodeGeom = m_geometries[i];
-    char *nodeId = const_cast<char*>(nodeGeom->id().toStdString().c_str());
-    int nodeIndex = project_findObject(m_SWMMComponent->project(),NODE, nodeId);
-    TNode &node = m_SWMMComponent->project()->Node[nodeIndex];
+    TNode &node = m_SWMMComponent->project()->Node[nodeGeom->marker()];
 
     double value = 0;
 
@@ -85,8 +88,8 @@ void NodeSurfaceFlowOutput::updateValues()
         {
           if(node.newDepth < node.fullDepth)
           {
-            if(m_SWMMComponent->m_surfaceInflow[nodeIndex])
-              value = -m_SWMMComponent->m_surfaceInflow[nodeIndex];
+            if(m_SWMMComponent->m_surfaceInflow[nodeGeom->marker()])
+              value = -m_SWMMComponent->m_surfaceInflow[nodeGeom->marker()];
           }
           else
           {

@@ -1,3 +1,23 @@
+/*!
+ * \file swmmcomponent.h
+ * \author  Caleb Amoa Buahin <caleb.buahin@gmail.com>
+ * \version 1.0.0
+ * \description
+ * \license
+ * This file and its associated files, and libraries are free software.
+ * You can redistribute it and/or modify it under the terms of the
+ * Lesser GNU General Public License as published by the Free Software Foundation;
+ * either version 3 of the License, or (at your option) any later version.
+ * This file and its associated files is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.(see <http://www.gnu.org/licenses/> for details)
+ * \copyright Copyright 2014-2018, Caleb Buahin, All rights reserved.
+ * \date 2014-2018
+ * \pre
+ * \bug
+ * \warning
+ * \todo
+ */
+
 #ifndef SWMMCOMPONENT_H
 #define SWMMCOMPONENT_H
 #include "swmmcomponent_global.h"
@@ -25,6 +45,11 @@ class NodeWSEInput;
 class NodePondedDepthInput;
 class IdBasedArgumentDouble;
 class LinkFlowOutput;
+class LinkDepthOutput;
+class ConduitXSectAreaOutput;
+class ConduitTopWidthOutput;
+class ConduitBankXSectAreaOutput;
+
 typedef struct Project Project;
 
 class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractTimeModelComponent
@@ -77,43 +102,51 @@ class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractTimeModelComponent
 
     bool initializeNodeOrificeDischargeCoeffArguments(QString &message);
 
-    void initializeNodeGeometries(QTextStream &streamReader, const QRegExp &delimiter);
+    void readNodeGeometries(QTextStream &streamReader, const QRegExp &delimiter);
 
-    void initializeLinkGeometries(QTextStream &streamReader, const QRegExp &delimiter);
+    void readLinkGeometries(QTextStream &streamReader, const QRegExp &delimiter);
 
-    void initializeSubCatchmentGeometries(QTextStream &streamReader, const QRegExp &delimiter);
+    void readSubCatchmentGeometries(QTextStream &streamReader, const QRegExp &delimiter);
 
     void createInputs() override;
 
-    void initializeIdBasedNodeWSEInput();
+    void createIdBasedNodeWSEInput();
 
-    void initializeIdBasedNodeInflowInput();
+    void createIdBasedNodeInflowInput();
 
-    void initializeNodeWSEInput();
+    void createNodeWSEInput();
 
-    void initializeNodePondedDepthInput();
+    void createNodePondedDepthInput();
 
-    void initializeNodeInflowInput();
+    void createNodeInflowInput();
 
-    void initializePondedAreaInput();
+    void createPondedAreaInput();
 
-    void intializeSurfaceInflows();
+    void createSurfaceInflows();
 
     void createOutputs() override;
 
-    void initializeIdBasedNodeWSEOutput();
+    void createIdBasedNodeWSEOutput();
 
-    void initializeIdBasedLinkFlowOutput();
+    void createIdBasedLinkFlowOutput();
 
-    void initializeNodeWSEOutput();
+    void createNodeWSEOutput();
 
-    void initializeNodeFloodingOutput();
+    void createNodeFloodingOutput();
 
-    void initializeLinkFlowOutput();
+    void createLinkFlowOutput();
+
+    void createLinkDepthOutput();
+
+    void createConduitXSectAreaOutput();
+
+    void createConduitTopWidthOutput();
+
+    void createConduitBankXSectAreaOutput();
 
     bool hasError(QString &message);
 
-    void intializeFailureCleanUp() override;
+    void initializeFailureCleanUp() override;
 
     void disposeProject();
 
@@ -125,32 +158,33 @@ class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractTimeModelComponent
     std::map<QString, QSharedPointer<HCGeometry> > m_sharedLinkGeoms;
 
     std::map<int,double> m_surfaceInflow;
-    SWMMComponentInfo *m_SWMMComponentInfo = nullptr;
-    IdBasedArgumentString *m_inputFilesArgument = nullptr;
-    IdBasedArgumentDouble *m_nodeAreas = nullptr;
-    IdBasedArgumentDouble *m_nodePerimeters = nullptr;
-    IdBasedArgumentDouble *m_nodeOrificeDischargeCoeffs = nullptr;
-    Project* m_SWMMProject = nullptr;
+    SWMMComponentInfo *m_SWMMComponentInfo;
+    IdBasedArgumentString *m_inputFilesArgument;
+    IdBasedArgumentDouble *m_nodeAreas;
+    IdBasedArgumentDouble *m_nodePerimeters;
+    IdBasedArgumentDouble *m_nodeOrificeDischargeCoeffs;
+    Project* m_SWMMProject;
 
-    NodeSurfaceFlowOutput *m_nodeSurfaceFlowOutput = nullptr;
-    LinkFlowOutput *m_linkFlowOutput = nullptr;
+    NodeSurfaceFlowOutput *m_nodeSurfaceFlowOutput;
+    LinkFlowOutput *m_linkFlowOutput;
+    LinkDepthOutput *m_linkDepthOutput;
+    ConduitXSectAreaOutput *m_conduitXSectAreaOutput;
+    ConduitTopWidthOutput *m_conduitTopWidthOutput;
+    ConduitBankXSectAreaOutput *m_conduitBankXSectAreaOutput;
 
-    PondedAreaInput *m_pondedAreaInput = nullptr;
-    NodeWSEInput *m_nodeWSEInput = nullptr;
-    NodePondedDepthInput *m_nodePondedDepth = nullptr;
+    PondedAreaInput *m_pondedAreaInput;
+    NodeWSEInput *m_nodeWSEInput;
+    NodePondedDepthInput *m_nodePondedDepth;
 
-    Dimension *m_idDimension = nullptr,
-              *m_geometryDimension = nullptr,
-              *m_timeDimension = nullptr;
+    Dimension *m_idDimension,
+    *m_geometryDimension,
+    *m_timeDimension;
 
     std::map<QString,QFileInfo> m_inputFiles;
-    SDKTemporal::DateTime *m_startDateTime = nullptr,
-    *m_endDateTime = nullptr,
-    *m_currentDateTime = nullptr;
 
-    QTextStream m_scratchFileTextStream;
-    QFile m_scratchFileIO;
-    int m_currentNPeriods = -1000;
+    char *m_inputFile,
+    *m_reportFile,
+    *m_outputFile;
 
     double m_timeStep = 0.001;
 

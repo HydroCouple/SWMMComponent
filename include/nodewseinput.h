@@ -8,12 +8,12 @@
 class SWMMComponent;
 
 
-class SWMMCOMPONENT_EXPORT NodeWSEInput :
-    public TimeGeometryInputDouble
+class SWMMCOMPONENT_EXPORT NodeWSEInput : public TimeGeometryInputDouble
 {
     Q_OBJECT
 
   public:
+
     NodeWSEInput(const QString &id,
                  Dimension *timeDimension,
                  Dimension *geometryDimension,

@@ -9,8 +9,7 @@
 class SWMMComponent;
 
 
-class SWMMCOMPONENT_EXPORT NodePondedDepthInput:
-    public TimeGeometryInputDouble
+class SWMMCOMPONENT_EXPORT NodePondedDepthInput: public TimeGeometryInputDouble
 {
     Q_OBJECT
 
@@ -20,7 +19,6 @@ class SWMMCOMPONENT_EXPORT NodePondedDepthInput:
                          Dimension *geometryDimension,
                          ValueDefinition *valueDefinition,
                          SWMMComponent *modelComponent);
-
 
     bool setProvider(HydroCouple::IOutput *provider) override;
 

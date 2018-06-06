@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<HydroCoupleProject name="kuparuk_river_model_swmm_no_hts.hcp">
+    <ModelComponents>
+        <ModelComponent Name="Radiative Heat Exchange Model 1.0.0" Caption="Kuparuk river model RHE" Description="" ModelComponentFile="../../../RHEComponent/example/kuparuk_river/kuparuk_river.hcc" XPos="1470.48" YPos="2056.43">
+            <ExchangeItemPositions>
+                <Outputs>
+                    <Output Id="LandCoverLWRadiationOutput" XPos="2002.18" YPos="1909.51"/>
+                    <Output Id="AtmosphericLWRadiationOutput" XPos="2002.18" YPos="2460.66"/>
+                    <Output Id="NetSWSolarRadiationOutput" XPos="2002.18" YPos="1633.94"/>
+                    <Output Id="SedNetSWRadiationOutput" XPos="2006.14" YPos="2817.92"/>
+                    <Output Id="BackLWRadiationOutput" XPos="2002.18" YPos="2185.09"/>
+                </Outputs>
+                <Inputs>
+                    <Input Id="ChannelTemperatureInput" XPos="2006.14" YPos="2615.51"/>
+                    <Input Id="ElementDepthInput" XPos="1380.89" YPos="1962.33"/>
+                    <Input Id="ElementTopWidthInput" XPos="1773.06" YPos="2831.32"/>
+                </Inputs>
+            </ExchangeItemPositions>
+        </ModelComponent>
+        <ModelComponent Name="SWMM Component 5.1.010" Caption="Kuparuk River SWMM Model" Description="" ModelComponentLibrary="../../build/debug/libSWMMComponent.1.0.dylib" XPos="396.709" YPos="2274.16">
+            <ComputeResourceAllocations>
+                <ComputeResourceAllocation MPI_Process="0" GPU_Platform="-1" GPU_Device="-1" Maximum_Number_GPU_Blocks_Or_Workgroups="0"/>
+            </ComputeResourceAllocations>
+            <Arguments>
+                <Argument Id="Identifiers" ArgumentIOType="String">
+                    <IdBasedArgument Id="Identifiers" Caption="Model Identifiers" IsOptional="False">
+    <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="-99999999" DefaultValue="0">
+        <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
+    </ValueDefinition>
+    <Dimensions>
+        <Dimension Id="IdentifierDimension" Caption="Dimension for identifiers" Length="3"/>
+    </Dimensions>
+    <Values>
+        <Value Id="Id">kuparuk_river_swmm</Value>
+        <Value Id="Caption">Kuparuk River SWMM Model</Value>
+        <Value Id="Description"/>
+    </Values>
+</IdBasedArgument>
+                </Argument>
+                <Argument Id="InputFiles" ArgumentIOType="String">
+                    <IdBasedArgument Id="InputFiles" Caption="Model Input Files" IsOptional="False">
+    <ValueDefinition Type="Quantity" ValueType="QString" MissingValue="" DefaultValue="">
+        <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
+    </ValueDefinition>
+    <Dimensions>
+        <Dimension Id="IdDimension" Caption="Dimension for identifiers" Length="3"/>
+    </Dimensions>
+    <Values>
+        <Value Id="Input File">./kuparuk_river_model.inp</Value>
+        <Value Id="Output File">./kuparuk_river_model.out</Value>
+        <Value Id="Report File">./kuparuk_river_model.rpt</Value>
+    </Values>
+</IdBasedArgument>
+                </Argument>
+                <Argument Id="Node Opening Area" ArgumentIOType="String">
+                    <IdBasedArgument Id="Node Opening Area" Caption="Node Opening Area" IsOptional="False">
+    <ValueDefinition Type="Quantity" ValueType="double" MissingValue="-99999999" DefaultValue="1.75">
+        <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
+    </ValueDefinition>
+    <Dimensions>
+        <Dimension Id="IdDimension" Caption="Dimension for identifiers" Length="0"/>
+    </Dimensions>
+    <Values/>
+</IdBasedArgument>
+                </Argument>
+                <Argument Id="Node Opening Perimeter" ArgumentIOType="String">
+                    <IdBasedArgument Id="Node Opening Perimeter" Caption="Node Opening Perimeter" IsOptional="False">
+    <ValueDefinition Type="Quantity" ValueType="double" MissingValue="-99999999" DefaultValue="2.75">
+        <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
+    </ValueDefinition>
+    <Dimensions>
+        <Dimension Id="IdDimension" Caption="Dimension for identifiers" Length="0"/>
+    </Dimensions>
+    <Values/>
+</IdBasedArgument>
+                </Argument>
+                <Argument Id="Node Orifice Discharge Coefficient" ArgumentIOType="String">
+                    <IdBasedArgument Id="Node Orifice Discharge Coefficient" Caption="Node Orifice Discharge Coefficient" IsOptional="False">
+    <ValueDefinition Type="Quantity" ValueType="double" MissingValue="-99999999" DefaultValue="0.6">
+        <Unit ConversionFactorToSI="1" OffsetToSI="0"/>
+    </ValueDefinition>
+    <Dimensions>
+        <Dimension Id="IdDimension" Caption="Dimension for identifiers" Length="0"/>
+    </Dimensions>
+    <Values/>
+</IdBasedArgument>
+                </Argument>
+            </Arguments>
+            <ExchangeItemPositions>
+                <Outputs>
+                    <Output Id="ConduitCrossSectionAreaOutput" XPos="1769.1" YPos="3253.41"/>
+                    <Output Id="LinkDepthOutput" XPos="894.701" YPos="1956.34"/>
+                    <Output Id="NodeSurfaceFlow" XPos="21.709" YPos="2523.16"/>
+                    <Output Id="LinkFlowOutput" XPos="1769.1" YPos="3429.18"/>
+                    <Output Id="ConduitTopWidthOutput" XPos="1769.1" YPos="3066.67"/>
+                </Outputs>
+                <Inputs>
+                    <Input Id="NodePondedDepthInput" XPos="1051.71" YPos="2343.16"/>
+                    <Input Id="Ponded Area" XPos="1051.71" YPos="2163.16"/>
+                    <Input Id="NodeWSEInput" XPos="1051.71" YPos="2523.16"/>
+                </Inputs>
+            </ExchangeItemPositions>
+        </ModelComponent>
+        <ModelComponent Name="Stream Temperature Model 1.0.0" Caption="Kuparuk River Stream Temperature Model" Description="" IsTrigger="True" ModelComponentFile="../../../STMComponent/examples/kuparuk_river/kuparuk_river.hcc" XPos="4080.67" YPos="2433">
+            <ExchangeItemPositions>
+                <Outputs>
+                    <Output Id="TemperatureOutput" XPos="3730.07" YPos="2676.5"/>
+                </Outputs>
+                <Inputs>
+                    <Input Id="ElementXSectionAreaInput" XPos="3730.07" YPos="3241.91"/>
+                    <Input Id="RadiationFluxInput" XPos="2338.44" YPos="2076.49"/>
+                    <Input Id="ElementFlowInput" XPos="3730.07" YPos="3430.39"/>
+                    <Input Id="HeatFluxInput" XPos="3730.07" YPos="2864.97"/>
+                    <Input Id="ElementDepthInput" XPos="1608.99" YPos="1414.71"/>
+                    <Input Id="ElementTopWidthInput" XPos="3730.07" YPos="3053.44"/>
+                </Inputs>
+            </ExchangeItemPositions>
+        </ModelComponent>
+    </ModelComponents>
+    <ModelComponentConnections>
+        <ModelComponentConnection SourceModelComponentIndex="0">
+            <OutputExchangeItem OutputExchangeItemId="LandCoverLWRadiationOutput" OutputExchangeItemCaption="Landcover Longwave Radiation (W/m^2)" XPos="2002.18" YPos="1909.51">
+                <Connections>
+                    <InputExchangeItem ModelComponentIndex="2" InputExchangeItemId="RadiationFluxInput" InputExchangeItemCaption="External Radiation Flux (W/m^2)" XPos="2338.44" YPos="2076.49"/>
+                </Connections>
+            </OutputExchangeItem>
+            <OutputExchangeItem OutputExchangeItemId="AtmosphericLWRadiationOutput" OutputExchangeItemCaption="Atmospheric Longwave Radiation (W/m^2)" XPos="2002.18" YPos="2460.66">
+                <Connections>
+                    <InputExchangeItem ModelComponentIndex="2" InputExchangeItemId="RadiationFluxInput" InputExchangeItemCaption="External Radiation Flux (W/m^2)" XPos="2338.44" YPos="2076.49"/>
+                </Connections>
+            </OutputExchangeItem>
+            <OutputExchangeItem OutputExchangeItemId="NetSWSolarRadiationOutput" OutputExchangeItemCaption="Net Shortwave Solar Radiation (W/m^2)" XPos="2002.18" YPos="1633.94">
+                <Connections>
+                    <InputExchangeItem ModelComponentIndex="2" InputExchangeItemId="RadiationFluxInput" InputExchangeItemCaption="External Radiation Flux (W/m^2)" XPos="2338.44" YPos="2076.49"/>
+                </Connections>
+            </OutputExchangeItem>
+            <OutputExchangeItem OutputExchangeItemId="BackLWRadiationOutput" OutputExchangeItemCaption="Back Longwave Radiation (W/m^2)" XPos="2002.18" YPos="2185.09">
+                <Connections>
+                    <InputExchangeItem ModelComponentIndex="2" InputExchangeItemId="RadiationFluxInput" InputExchangeItemCaption="External Radiation Flux (W/m^2)" XPos="2338.44" YPos="2076.49"/>
+                </Connections>
+            </OutputExchangeItem>
+        </ModelComponentConnection>
+        <ModelComponentConnection SourceModelComponentIndex="1">
+            <OutputExchangeItem OutputExchangeItemId="ConduitCrossSectionAreaOutput" OutputExchangeItemCaption="Conduit flow cross section area (m^2)" XPos="1769.1" YPos="3253.41">
+                <Connections>
+                    <InputExchangeItem ModelComponentIndex="2" InputExchangeItemId="ElementXSectionAreaInput" InputExchangeItemCaption="Element Cross-Section Area (m^2)" XPos="3730.07" YPos="3241.91"/>
+                </Connections>
+            </OutputExchangeItem>
+            <OutputExchangeItem OutputExchangeItemId="LinkDepthOutput" OutputExchangeItemCaption="Depth of water in conduit (m)" XPos="894.701" YPos="1956.34">
+                <Connections>
+                    <InputExchangeItem ModelComponentIndex="0" InputExchangeItemId="ElementDepthInput" InputExchangeItemCaption="Element Depth (m)" XPos="1380.89" YPos="1962.33"/>
+                    <InputExchangeItem ModelComponentIndex="2" InputExchangeItemId="ElementDepthInput" InputExchangeItemCaption="Element Depth (m)" XPos="1608.99" YPos="1414.71"/>
+                </Connections>
+            </OutputExchangeItem>
+            <OutputExchangeItem OutputExchangeItemId="LinkFlowOutput" OutputExchangeItemCaption="Flow through conduit (m^3/s)" XPos="1769.1" YPos="3429.18">
+                <Connections>
+                    <InputExchangeItem ModelComponentIndex="2" InputExchangeItemId="ElementFlowInput" InputExchangeItemCaption="Element Flow Input (m^3/s)" XPos="3730.07" YPos="3430.39"/>
+                </Connections>
+            </OutputExchangeItem>
+            <OutputExchangeItem OutputExchangeItemId="ConduitTopWidthOutput" OutputExchangeItemCaption="Conduit top width (m)" XPos="1769.1" YPos="3066.67">
+                <Connections>
+                    <InputExchangeItem ModelComponentIndex="2" InputExchangeItemId="ElementTopWidthInput" InputExchangeItemCaption="Element Top Width (m)" XPos="3730.07" YPos="3053.44"/>
+                    <InputExchangeItem ModelComponentIndex="0" InputExchangeItemId="ElementTopWidthInput" InputExchangeItemCaption="Element Top Width (m)" XPos="1773.06" YPos="2831.32"/>
+                </Connections>
+            </OutputExchangeItem>
+        </ModelComponentConnection>
+        <ModelComponentConnection SourceModelComponentIndex="2">
+            <OutputExchangeItem OutputExchangeItemId="TemperatureOutput" OutputExchangeItemCaption="Element Temperature (°C)" XPos="3730.07" YPos="2676.5">
+                <Connections>
+                    <InputExchangeItem ModelComponentIndex="0" InputExchangeItemId="ChannelTemperatureInput" InputExchangeItemCaption="Channel Temperature Input (°C)" XPos="2006.14" YPos="2615.51"/>
+                </Connections>
+            </OutputExchangeItem>
+        </ModelComponentConnection>
+    </ModelComponentConnections>
+</HydroCoupleProject>
