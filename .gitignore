@@ -238,3 +238,5 @@ CMakeLists.txt.user
 *.rpt
 *.out 
 *.testing
+*.lib
+*.exp
