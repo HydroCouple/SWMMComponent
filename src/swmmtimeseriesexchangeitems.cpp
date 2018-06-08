@@ -65,7 +65,7 @@ void SWMMNodeWSETimeSeriesOutput::updateValues()
   {
     if(timeDimLength > 1)
     {
-      double values[timeDimLength -1];
+      double *values = new double[timeDimLength -1];
 
       getValues(1,timeDimLength - 1,values);
       setValues(0,timeDimLength - 1,values);
@@ -74,7 +74,10 @@ void SWMMNodeWSETimeSeriesOutput::updateValues()
       {
         ctimes[i]->setDateTime(ctimes[i+1]->dateTime());
       }
+
+      delete[] values;
     }
+
     setValues(timeDimLength -1, 1, &elev);
     lastTime->setJulianDay(m_component->currentDateTime()->julianDay());
   }
@@ -126,7 +129,7 @@ void SWMMNodeWSETimeSeriesInput::retrieveValuesFromProvider()
   {
     if(timeDimLength > 1)
     {
-      double values[timeDimLength -1];
+      double *values = new double[timeDimLength -1];
       getValues(1,timeDimLength - 1,values);
       setValues(0,timeDimLength - 1,values);
 
@@ -134,6 +137,8 @@ void SWMMNodeWSETimeSeriesInput::retrieveValuesFromProvider()
       {
         ctimes[i]->setDateTime(ctimes[i+1]->dateTime());
       }
+
+      delete[] values;
     }
 
     lastTime->setJulianDay(m_component->currentDateTime()->julianDay());
@@ -204,7 +209,7 @@ void SWMMNodeLatInflowTimeSeriesInput::retrieveValuesFromProvider()
   {
     if(timeDimLength > 1)
     {
-      double values[timeDimLength -1];
+      double *values = new double[timeDimLength -1];
       getValues(1,timeDimLength - 1,values);
       setValues(0,timeDimLength - 1,values);
 
@@ -212,6 +217,8 @@ void SWMMNodeLatInflowTimeSeriesInput::retrieveValuesFromProvider()
       {
         ctimes[i]->setDateTime(ctimes[i+1]->dateTime());
       }
+
+      delete[] values;
     }
 
     lastTime->setJulianDay(m_component->currentDateTime()->julianDay());
@@ -311,7 +318,7 @@ void SWMMLinkDischargeTimeSeriesOutput::updateValues()
   {
     if(timeDimLength > 1)
     {
-      double values[timeDimLength -1];
+      double *values = new double[timeDimLength -1];
 
       getValues(1,timeDimLength - 1,values);
       setValues(0,timeDimLength - 1,values);
@@ -320,6 +327,8 @@ void SWMMLinkDischargeTimeSeriesOutput::updateValues()
       {
         times[i]->setJulianDay(times[i+1]->julianDay());
       }
+
+      delete[] values;
     }
 
     double flow = m_link->newFlow;

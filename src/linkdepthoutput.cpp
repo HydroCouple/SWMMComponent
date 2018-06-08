@@ -90,7 +90,7 @@ void LinkDepthOutput::updateValues()
 #ifdef USE_OPENMP
 #pragma omp parallel for
 #endif
-  for(size_t i = 0 ; i < m_geometries.size() ; i++)
+  for(int i = 0 ; i < (int)m_geometries.size() ; i++)
   {
     QSharedPointer<HCGeometry> &linkGeom = m_geometries[i];
     TLink &link = m_SWMMComponent->project()->Link[linkGeom->marker()];

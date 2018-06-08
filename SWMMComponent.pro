@@ -13,6 +13,8 @@ DEFINES += SWMMCOMPONENT_LIBRARY
 DEFINES += USE_OPENMP
 DEFINES += USE_MPI
 SWMM_VERSION = 5.1.012
+CONFIG += c++11
+CONFIG += debug_and_release
 
 contains(DEFINES,SWMMCOMPONENT_LIBRARY){
   TEMPLATE = lib
@@ -23,10 +25,13 @@ contains(DEFINES,SWMMCOMPONENT_LIBRARY){
   message("Compiling as application")
 }
 
-CONFIG += c++11
+*msvc* { # visual studio spec filter
+      QMAKE_CXXFLAGS += /MP /O2
+  }
 
-linux{
-CONFIG += debug_and_release
+win32{
+  INCLUDEPATH += $$PWD/graphviz/win32/include \
+                 $$(MSMPI_INC)/
 }
 
 PRECOMPILED_HEADER = ./include/stdafx.h
@@ -169,6 +174,42 @@ INCLUDEPATH += /usr/include \
     }
 }
 
+win32{
+
+#Windows vspkg package manager installation path
+VSPKGDIR = C:/vcpkg/installed/x64-windows
+
+INCLUDEPATH += $${VSPKGDIR}/include \
+               $${VSPKGDIR}/include/gdal
+
+   CONFIG(debug, debug|release) {
+    LIBS += -L$${VSPKGDIR}/debug/lib -lgdald
+     } else {
+   LIBS += -L$${VSPKGDIR}/lib -lgdal
+   }
+
+    contains(DEFINES,USE_OPENMP){
+
+        QMAKE_CFLAGS += /openmp
+        #QMAKE_LFLAGS += /openmp
+        QMAKE_CXXFLAGS += /openmp
+        QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CXXFLAGS /MD
+        QMAKE_CXXFLAGS_DEBUG = $$QMAKE_CXXFLAGS /MDd
+        message("OpenMP enabled")
+     } else {
+
+      message("OpenMP disabled")
+     }
+
+    contains(DEFINES,USE_MPI){
+       LIBS += -L$$(MSMPI_LIB64)/ -lmsmpi
+       message("MPI enabled")
+     } else {
+      message("MPI disabled")
+     }
+}
+
+
 CONFIG(debug, debug|release) {
 
    DESTDIR = ./build/debug
@@ -197,11 +238,11 @@ CONFIG(debug, debug|release) {
 
    win32{
 
-   QMAKE_POST_LINK += "copy ./../HydroCoupleSDK/build/debug/*HydroCoupleSDK.* ./build/debug/";
-   QMAKE_POST_LINK += "copy ./../SWMM/build/debug/*SWMM.* ./build/debug/";
+    QMAKE_POST_LINK += "copy /B .\..\HydroCoupleSDK\build\debug\HydroCoupleSDK* .\build\debug &&"
+    QMAKE_POST_LINK += "copy /B .\..\SWMM\build\debug\SWMM* .\build\debug"
 
     LIBS += -L./../HydroCoupleSDK/build/debug -lHydroCoupleSDK1
-    LIBS += -L./../SWMM/build/debug -lSWMM$$SWMM_VERSION
+    LIBS += -L./../SWMM/build/debug -lSWMM5
     }
 }
 
@@ -225,7 +266,7 @@ CONFIG(release, debug|release) {
 
    win32{
     LIBS += -L./../HydroCoupleSDK/lib/win32 -lHydroCoupleSDK1
-    LIBS += -L./../SWMM/lib/win32 -lSWMM$$SWMM_VERSION
+    LIBS += -L./../SWMM/lib/win32 -lSWMM5
     }
 
      contains(DEFINES,SWMMCOMPONENT_LIBRARY){
@@ -246,8 +287,8 @@ CONFIG(release, debug|release) {
          #Windows
          win32{
              DESTDIR = lib/win32
-             QMAKE_POST_LINK += "copy ./../HydroCoupleSDK/lib/win32/*HydroCoupleSDK* ./lib/win32/";
-             QMAKE_POST_LINK += "copy ./../SWMM/lib/win32/*SWMM* ./lib/win32/";
+             QMAKE_POST_LINK += "copy /B .\..\HydroCoupleSDK\lib\win32\HydroCoupleSDK* .\lib\win32 &&"
+             QMAKE_POST_LINK += "copy /B .\..\SWMM\lib\win32\SWMM* .\lib\win32"
         }
     } else {
          #MacOS
@@ -267,8 +308,8 @@ CONFIG(release, debug|release) {
          #Windows
          win32{
              DESTDIR = bin/win32
-             QMAKE_POST_LINK += "copy ./../HydroCoupleSDK/lib/win32/*HydroCoupleSDK* ./bin/win32/";
-             QMAKE_POST_LINK += "copy ./../SWMM/lib/win32/*SWMM* ./bin/win32/";
+             QMAKE_POST_LINK += "copy /B .\..\HydroCoupleSDK\lib\win32\HydroCoupleSDK* .\bin\win32 &&"
+             QMAKE_POST_LINK += "copy /B .\..\SWMM\lib\win32\SWMM* .\bin\win32"
         }
     }
 }
