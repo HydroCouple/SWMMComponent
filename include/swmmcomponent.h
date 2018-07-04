@@ -21,7 +21,6 @@
 #ifndef SWMMCOMPONENT_H
 #define SWMMCOMPONENT_H
 
-
 #include "swmmcomponent_global.h"
 #include "temporal/abstracttimemodelcomponent.h"
 
@@ -54,8 +53,12 @@ class ConduitBankXSectAreaOutput;
 
 typedef struct Project Project;
 
-class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractTimeModelComponent
+class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractTimeModelComponent,
+    public virtual HydroCouple::ICloneableModelComponent
 {
+
+    Q_INTERFACES(HydroCouple::ICloneableModelComponent)
+
     friend class NodeWSEInput;
     friend class NodePondedDepthInput;
     friend class NodeSurfaceFlowOutput;
@@ -78,7 +81,17 @@ class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractTimeModelComponent
 
     void finish() override;
 
+    HydroCouple::ICloneableModelComponent* parent() const override;
+
+    HydroCouple::ICloneableModelComponent* clone() override;
+
+    QList<HydroCouple::ICloneableModelComponent*> clones() const override;
+
     Project* project() const;
+
+  protected:
+
+    bool removeClone(SWMMComponent *component);
 
   private:
 
@@ -184,13 +197,16 @@ class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractTimeModelComponent
 
     std::map<QString,QFileInfo> m_inputFiles;
 
-    char *m_inputFile,
-    *m_reportFile,
-    *m_outputFile;
+    //    char *m_inputFile,
+    //    *m_reportFile,
+    //    *m_outputFile;
 
     double m_timeStep = 0.001;
 
     int m_currentProgress;
+
+    SWMMComponent *m_parent;
+    QList<HydroCouple::ICloneableModelComponent*> m_clones;
 };
 
 Q_DECLARE_METATYPE(SWMMComponent*)

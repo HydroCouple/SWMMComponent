@@ -4,15 +4,16 @@
 #include <QDir>
 #include <cstring>
 #include <QString>
+#include <QUuid>
 
 #ifdef USE_OPENMP
 #include <omp.h>
 #endif
 
-#include "core/idbasedexchangeitems.h"
+#include "core/idbasedinputs.h"
 #include "core/dimension.h"
 #include "core/valuedefinition.h"
-#include "core/idbasedexchangeitems.h"
+#include "core/idbasedinputs.h"
 #include "core/componentstatuschangeeventargs.h"
 #include "core/unit.h"
 #include "swmm5.h"
@@ -68,9 +69,6 @@ SWMMComponent::SWMMComponent(const QString &id, SWMMComponentInfo *parent)
     m_idDimension(nullptr),
     m_geometryDimension(nullptr),
     m_timeDimension(nullptr),
-    m_inputFile(nullptr),
-    m_reportFile(nullptr),
-    m_outputFile(nullptr),
     m_currentProgress(0)
 {
 
@@ -98,7 +96,8 @@ SWMMComponent::SWMMComponent(const QString &id, const QString &caption, SWMMComp
     m_idDimension(nullptr),
     m_geometryDimension(nullptr),
     m_timeDimension(nullptr),
-    m_currentProgress(0)
+    m_currentProgress(0),
+    m_parent(nullptr)
 {
   createDimensions();
   createArguments();
@@ -107,6 +106,18 @@ SWMMComponent::SWMMComponent(const QString &id, const QString &caption, SWMMComp
 SWMMComponent::~SWMMComponent()
 {
   disposeProject();
+
+  if(m_parent)
+  {
+    m_parent->removeClone(this);
+  }
+
+  while (m_clones.size())
+  {
+    SWMMComponent *clone = dynamic_cast<SWMMComponent*>(m_clones.first());
+    removeClone(clone);
+    delete clone;
+  }
 }
 
 QList<QString> SWMMComponent::validate()
@@ -198,16 +209,16 @@ void SWMMComponent::update(const QList<HydroCouple::IOutput *> &requiredOutputs)
     resetSurfaceInflows();
     applyInputValues();
 
-    DateTime elapsedTime = 0;
+    double elapsedTime = 0;
     swmm_step(m_SWMMProject, &elapsedTime);
 
     m_timeStep = elapsedTime * 86400.0;
 
     currentDateTimeInternal()->setJulianDay(timeHorizonInternal()->julianDay() + elapsedTime);
+
     updateOutputValues(requiredOutputs);
 
     QString errMessage;
-
 
     if(elapsedTime <= 0.0 && !m_SWMMProject->ErrorCode)
     {
@@ -248,9 +259,107 @@ void SWMMComponent::finish()
   }
 }
 
+HydroCouple::ICloneableModelComponent* SWMMComponent::parent() const
+{
+  return m_parent;
+}
+
+HydroCouple::ICloneableModelComponent* SWMMComponent::clone()
+{
+  if(isInitialized())
+  {
+    SWMMComponent *cloneComponent = dynamic_cast<SWMMComponent*>(m_SWMMComponentInfo->createComponentInstance());
+    cloneComponent->setReferenceDirectory(referenceDirectory());
+
+    IdBasedArgumentString *identifierArg = identifierArgument();
+    IdBasedArgumentString *cloneIndentifierArg = cloneComponent->identifierArgument();
+
+    (*cloneIndentifierArg)["Id"] = QString((*identifierArg)["Id"]);
+    (*cloneIndentifierArg)["Caption"] = QString((*identifierArg)["Caption"]);
+    (*cloneIndentifierArg)["Description"] = QString((*identifierArg)["Description"]);
+
+    QString appendName = "_clone_" + QString::number(m_clones.size()) + "_" + QUuid::createUuid().toString().replace("{","").replace("}","");
+
+    //(*cloneComponent->m_inputFilesArgument)["Input File"] = QString((*m_inputFilesArgument)["Input File"]);
+
+    QString inputFilePath = QString((*m_inputFilesArgument)["Input File"]);
+    QFileInfo inputFile = getAbsoluteFilePath(inputFilePath);
+
+    if(inputFile.absoluteDir().exists())
+    {
+      QString suffix = "." + inputFile.completeSuffix();
+      inputFilePath = inputFile.absoluteFilePath().replace(suffix,"") + appendName + suffix;
+      QFile::copy(inputFile.absoluteFilePath(), inputFilePath);
+      (*cloneComponent->m_inputFilesArgument)["Input File"] = inputFilePath;
+    }
+
+    QString outputFilePath = QString((*m_inputFilesArgument)["Output File"]);
+    QFileInfo outputFile = getAbsoluteFilePath(outputFilePath);
+
+    if(outputFile.absoluteDir().exists())
+    {
+      QString suffix = "." + outputFile.completeSuffix();
+      outputFilePath = outputFile.absoluteFilePath().replace(suffix,"") + appendName + suffix;
+      (*cloneComponent->m_inputFilesArgument)["Output File"] = outputFilePath;
+    }
+
+    QString reportFilePath = QString((*m_inputFilesArgument)["Report File"]);
+    QFileInfo reportFile = getAbsoluteFilePath(reportFilePath);
+
+    if(!reportFilePath.isEmpty() && reportFile.absoluteDir().exists())
+    {
+      QString suffix = "." + reportFile.completeSuffix();
+      reportFilePath = reportFile.absoluteFilePath().replace(suffix,"") + appendName + suffix;
+      (*cloneComponent->m_inputFilesArgument)["Report File"] = reportFilePath;
+    }
+
+    cloneComponent->m_parent = this;
+    m_clones.append(cloneComponent);
+
+    emit propertyChanged("Clones");
+
+#ifdef USE_OPENMP
+#pragma omp critical
+#endif
+    {
+      cloneComponent->initialize();
+    }
+
+    return cloneComponent;
+  }
+
+  return nullptr;
+}
+
+QList<HydroCouple::ICloneableModelComponent*> SWMMComponent::clones() const
+{
+  return m_clones;
+}
+
 Project *SWMMComponent::project() const
 {
   return m_SWMMProject;
+}
+
+bool SWMMComponent::removeClone(SWMMComponent *component)
+{
+  int removed;
+
+#ifdef USE_OPENMP
+#pragma omp critical
+#endif
+  {
+    removed = m_clones.removeAll(component);
+  }
+
+
+  if(removed)
+  {
+    component->m_parent = nullptr;
+    emit propertyChanged("Clones");
+  }
+
+  return removed;
 }
 
 void SWMMComponent::createDimensions()
@@ -375,7 +484,7 @@ bool SWMMComponent::initializeInputFilesArguments(QString &message)
   QString reportFilePath = (*m_inputFilesArgument)["Report File"];
   QFileInfo reportFile = getAbsoluteFilePath(reportFilePath);
 
-  if(reportFile.absoluteDir().exists())
+  if(!reportFilePath.isEmpty() && reportFile.absoluteDir().exists())
   {
     m_inputFiles["ReportFile"] = reportFile;
   }
@@ -387,17 +496,26 @@ bool SWMMComponent::initializeInputFilesArguments(QString &message)
 
   disposeProject();
 
+  char *m_inputFile = nullptr;
+  char *m_reportFile = nullptr;
+  char *m_outputFile = nullptr;
 
   m_inputFile = new char[inputFile.absoluteFilePath().length() + 1] ;
   std::strcpy (m_inputFile, inputFile.absoluteFilePath().toStdString().c_str());
 
-  m_outputFile = new char[outputFile.absoluteFilePath().length() + 1] ;
-  std::strcpy (m_outputFile, outputFile.absoluteFilePath().toStdString().c_str());
+  if(outputFile.dir().exists())
+  {
+    m_outputFile = new char[outputFile.absoluteFilePath().length() + 1] ;
+    std::strcpy (m_outputFile, outputFile.absoluteFilePath().toStdString().c_str());
+  }
 
-  m_reportFile = new char[reportFile.absoluteFilePath().length() + 1] ;
-  std::strcpy (m_reportFile, reportFile.absoluteFilePath().toStdString().c_str());
+  if(reportFile.dir().exists())
+  {
+    m_reportFile = new char[reportFile.absoluteFilePath().length() + 1] ;
+    std::strcpy (m_reportFile, reportFile.absoluteFilePath().toStdString().c_str());
+  }
 
-  m_SWMMProject = swmm_createProject();
+  swmm_createProject(&m_SWMMProject);
 
   QString current = QDir::currentPath();
   QDir::setCurrent(inputFile.absolutePath());
@@ -450,6 +568,15 @@ bool SWMMComponent::initializeInputFilesArguments(QString &message)
       }
     }
   }
+
+  if(m_inputFile)
+    delete[] m_inputFile;
+
+  if(m_reportFile)
+    delete[] m_reportFile;
+
+  if(m_outputFile)
+    delete[] m_outputFile;
 
   QDir::setCurrent(current);
 
@@ -702,7 +829,7 @@ void SWMMComponent::createNodeWSEInput()
 
   m_nodeWSEInput->addGeometries(geometries);
 
-  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/10000000000.0, m_nodeWSEInput);
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/1000000.0, m_nodeWSEInput);
   SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_nodeWSEInput);
   m_nodeWSEInput->addTime(dt1);
   m_nodeWSEInput->addTime(dt2);
@@ -732,7 +859,7 @@ void SWMMComponent::createNodePondedDepthInput()
 
   m_nodePondedDepth->addGeometries(geometries);
 
-  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay()- 1.0/10000000000.0, m_nodePondedDepth);
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay()- 1.0/1000000.0, m_nodePondedDepth);
   SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_nodePondedDepth);
   
   m_nodePondedDepth->addTime(dt1);
@@ -825,7 +952,7 @@ void SWMMComponent::createNodeFloodingOutput()
 
   m_nodeSurfaceFlowOutput->addGeometries(geometries);
 
-  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/10000000000.0, m_nodeSurfaceFlowOutput);
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/1000000.0, m_nodeSurfaceFlowOutput);
   SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_nodeSurfaceFlowOutput);
   m_nodeSurfaceFlowOutput->addTime(dt1);
   m_nodeSurfaceFlowOutput->addTime(dt2);
@@ -854,7 +981,7 @@ void SWMMComponent::createLinkFlowOutput()
 
   m_linkFlowOutput->addGeometries(geometries);
 
-  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/10000000000.0, m_linkFlowOutput);
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/1000000.0, m_linkFlowOutput);
   SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_linkFlowOutput);
   m_linkFlowOutput->addTime(dt1);
   m_linkFlowOutput->addTime(dt2);
@@ -883,7 +1010,7 @@ void SWMMComponent::createLinkDepthOutput()
 
   m_linkDepthOutput->addGeometries(geometries);
 
-  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/10000000000.0, m_linkDepthOutput);
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/1000000.0, m_linkDepthOutput);
   SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_linkDepthOutput);
   m_linkDepthOutput->addTime(dt1);
   m_linkDepthOutput->addTime(dt2);
@@ -912,7 +1039,7 @@ void SWMMComponent::createConduitXSectAreaOutput()
 
   m_conduitXSectAreaOutput->addGeometries(geometries);
 
-  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/10000000000.0, m_conduitXSectAreaOutput);
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/1000000.0, m_conduitXSectAreaOutput);
   SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_conduitXSectAreaOutput);
   m_conduitXSectAreaOutput->addTime(dt1);
   m_conduitXSectAreaOutput->addTime(dt2);
@@ -941,7 +1068,7 @@ void SWMMComponent::createConduitTopWidthOutput()
 
   m_conduitTopWidthOutput->addGeometries(geometries);
 
-  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/10000000000.0, m_conduitTopWidthOutput);
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/1000000.0, m_conduitTopWidthOutput);
   SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_conduitTopWidthOutput);
   m_conduitTopWidthOutput->addTime(dt1);
   m_conduitTopWidthOutput->addTime(dt2);
@@ -977,35 +1104,18 @@ void SWMMComponent::disposeProject()
 {
   if(m_SWMMProject)
   {
+    clearDataCache(m_SWMMProject);
+
     swmm_end(m_SWMMProject);
 
     if(m_SWMMProject->Fout.mode == SCRATCH_FILE)
-    swmm_report(m_SWMMProject);
+      swmm_report(m_SWMMProject);
 
     swmm_close(m_SWMMProject);
     swmm_deleteProject(m_SWMMProject);
 
     m_SWMMProject = nullptr;
   }
-
-  if(m_inputFile)
-  {
-    delete[] m_inputFile;
-    m_inputFile = nullptr;
-  }
-
-  if(m_reportFile)
-  {
-    delete[] m_reportFile;
-    m_reportFile = nullptr;
-  }
-
-  if(m_outputFile)
-  {
-    delete[] m_outputFile;
-    m_outputFile = nullptr;
-  }
-
 }
 
 void SWMMComponent::resetSurfaceInflows()
