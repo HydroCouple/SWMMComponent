@@ -238,29 +238,29 @@ CONFIG(debug, debug|release) {
 
    macx{
 
-   QMAKE_POST_LINK += "cp -a ./../HydroCoupleSDK/build/debug/*HydroCoupleSDK.* ./build/debug/";
-   QMAKE_POST_LINK += "cp -a ./../SWMM/build/debug/*SWMM.* ./build/debug/";
+       QMAKE_POST_LINK += "cp -a ./../HydroCoupleSDK/build/debug/*HydroCoupleSDK.* ./build/debug/";
+       QMAKE_POST_LINK += "cp -a ./../SWMM/build/debug/*SWMM.* ./build/debug/";
 
-    LIBS += -L./../HydroCoupleSDK/build/debug -lHydroCoupleSDK.1.0.0
-    LIBS += -L./../SWMM/build/debug -lSWMM.$$SWMM_VERSION
+       LIBS += -L./../HydroCoupleSDK/build/debug -lHydroCoupleSDK.1.0.0
+       LIBS += -L./../SWMM/build/debug -lSWMM.$$SWMM_VERSION
     }
 
    linux{
 
-   QMAKE_POST_LINK += "cp -a ./../HydroCoupleSDK/build/debug/*HydroCoupleSDK.* ./build/debug/";
-   QMAKE_POST_LINK += "cp -a ./../SWMM/build/debug/*SWMM.* ./build/debug/";
+       QMAKE_POST_LINK += "cp -a ./../HydroCoupleSDK/build/debug/*HydroCoupleSDK.* ./build/debug/";
+       QMAKE_POST_LINK += "cp -a ./../SWMM/build/debug/*SWMM.* ./build/debug/";
 
-    LIBS += -L./../HydroCoupleSDK/build/debug -lHydroCoupleSDK.so.1.0.0
-    LIBS += -L./../SWMM/build/debug -lSWMM.so.$$SWMM_VERSION
+       LIBS += -L./../HydroCoupleSDK/build/debug -lHydroCoupleSDK.so.1.0.0
+       LIBS += -L./../SWMM/build/debug -lSWMM.so.$$SWMM_VERSION
     }
 
    win32{
 
-    QMAKE_POST_LINK += "copy /B .\..\HydroCoupleSDK\build\debug\HydroCoupleSDK* .\build\debug &&"
-    QMAKE_POST_LINK += "copy /B .\..\SWMM\build\debug\SWMM* .\build\debug"
+       QMAKE_POST_LINK += "copy /B .\..\HydroCoupleSDK\build\debug\HydroCoupleSDK* .\build\debug &&"
+       QMAKE_POST_LINK += "copy /B .\..\SWMM\build\debug\SWMM* .\build\debug"
 
-    LIBS += -L./../HydroCoupleSDK/build/debug -lHydroCoupleSDK1
-    LIBS += -L./../SWMM/build/debug -lSWMM5
+       LIBS += -L./../HydroCoupleSDK/build/debug -lHydroCoupleSDK1
+       LIBS += -L./../SWMM/build/debug -lSWMM5
     }
 }
 
@@ -273,18 +273,18 @@ CONFIG(release, debug|release) {
     UI_DIR = $$RELEASE_EXTRAS/.ui
 
    macx{
-    LIBS += -L./../HydroCoupleSDK/lib/macx -lHydroCoupleSDK.1.0.0
-    LIBS += -L./../SWMM/lib/macx -lSWMM.$$SWMM_VERSION
+        LIBS += -L./../HydroCoupleSDK/lib/macx -lHydroCoupleSDK.1.0.0
+        LIBS += -L./../SWMM/lib/macx -lSWMM.$$SWMM_VERSION
     }
 
    linux{
-    LIBS += -L./../HydroCoupleSDK/lib/linux -lHydroCoupleSDK.so.1.0.0
-    LIBS += -L./../SWMM/lib/linux -lSWMM.so.$$SWMM_VERSION
+        LIBS += -L./../HydroCoupleSDK/lib/linux -lHydroCoupleSDK.so.1.0.0
+        LIBS += -L./../SWMM/lib/linux -lSWMM.so.$$SWMM_VERSION
     }
 
    win32{
-    LIBS += -L./../HydroCoupleSDK/lib/win32 -lHydroCoupleSDK1
-    LIBS += -L./../SWMM/lib/win32 -lSWMM5
+        LIBS += -L./../HydroCoupleSDK/lib/win32 -lHydroCoupleSDK1
+        LIBS += -L./../SWMM/lib/win32 -lSWMM5
     }
 
      contains(DEFINES,SWMMCOMPONENT_LIBRARY){

@@ -204,17 +204,24 @@ void SWMMComponent::update(const QList<HydroCouple::IOutput *> &requiredOutputs)
   {
     setStatus(IModelComponent::Updating);
 
-    clearDataCache(m_SWMMProject);
-
-    resetSurfaceInflows();
-    applyInputValues();
+    double minConsumerTime = std::max(currentDateTimeInternal()->julianDay(), getMinimumConsumerTime());
 
     double elapsedTime = 0;
-    swmm_step(m_SWMMProject, &elapsedTime);
 
-    m_timeStep = elapsedTime * 86400.0;
+    while(currentDateTimeInternal()->julianDay() <= minConsumerTime)
+    {
+      clearDataCache(m_SWMMProject);
+      resetSurfaceInflows();
+      applyInputValues();
 
-    currentDateTimeInternal()->setJulianDay(timeHorizonInternal()->julianDay() + elapsedTime);
+      elapsedTime = 0;
+
+      swmm_step(m_SWMMProject, &elapsedTime);
+
+      m_timeStep = elapsedTime * 86400.0;
+
+      currentDateTimeInternal()->setJulianDay(timeHorizonInternal()->julianDay() + elapsedTime);
+    }
 
     updateOutputValues(requiredOutputs);
 
@@ -536,7 +543,7 @@ bool SWMMComponent::initializeInputFilesArguments(QString &message)
 
     timeSpan->setDuration(m_SWMMProject->EndDateTime - m_SWMMProject->StartDateTime);
 
-    progressChecker()->reset(timeSpan->julianDay(), timeSpan->julianDay() + timeSpan->duration());
+    progressChecker()->reset(timeSpan->julianDay(), timeSpan->endDateTime());
 
     QFile file(inputFile.absoluteFilePath());
 
