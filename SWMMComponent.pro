@@ -1,7 +1,7 @@
 #Author Caleb Amoa Buahin
 #Email caleb.buahin@gmail.com
 #Date 2016 - 2018
-#License GNU General Public License (see <http: //www.gnu.org/licenses/> for details).
+#License GNU Lesser General Public License (see <http: //www.gnu.org/licenses/> for details).
 #EPA SWMM Model Component
 
 TEMPLATE = lib
@@ -13,9 +13,12 @@ DEFINES += SWMMCOMPONENT_LIBRARY
 DEFINES += USE_OPENMP
 DEFINES += USE_MPI
 SWMM_VERSION = 5.1.012
+#DEFINES += QT_NO_VERSION_TAGGING
 
 CONFIG += c++11
 CONFIG += debug_and_release
+CONFIG += optimize_full
+
 
 contains(DEFINES,SWMMCOMPONENT_LIBRARY){
   TEMPLATE = lib
@@ -25,10 +28,6 @@ contains(DEFINES,SWMMCOMPONENT_LIBRARY){
   CONFIG-=app_bundle
   message("Compiling as application")
 }
-
-*msvc* { # visual studio spec filter
-      QMAKE_CXXFLAGS += /MP /O2
-  }
 
 win32{
   INCLUDEPATH += $$PWD/graphviz/win32/include \
@@ -112,9 +111,9 @@ macx{
         QMAKE_CXX = /usr/local/bin/mpicxx
         QMAKE_LINK = /usr/local/bin/mpicxx
 
-        QMAKE_CFLAGS += $$system(mpicc --showme:compile)
-        QMAKE_CXXFLAGS += $$system(mpic++ --showme:compile)
-        QMAKE_LFLAGS += $$system(mpic++ --showme:link)
+        QMAKE_CFLAGS += $$system(/usr/local/bin/mpicc --showme:compile)
+        QMAKE_CXXFLAGS += $$system(/usr/local/bin/mpic++ --showme:compile)
+        QMAKE_LFLAGS += $$system(/usr/local/bin/mpic++ --showme:link)
 
         LIBS += -L/usr/local/lib/ -lmpi
 
@@ -126,20 +125,19 @@ macx{
 
 linux{
 
-INCLUDEPATH += /usr/include \
-               ../gdal/include
+    INCLUDEPATH += /usr/include \
+                   ../gdal/include
 
     contains(DEFINES,UTAH_CHPC){
 
          INCLUDEPATH += /uufs/chpc.utah.edu/sys/installdir/hdf5/1.8.17-c7/include \
                         /uufs/chpc.utah.edu/sys/installdir/netcdf-c/4.3.3.1/include \
-                        /uufs/chpc.utah.edu/sys/installdir/netcdf-cxx/4.3.0-c7/include \
-                        ../hypre/build/include
+                        /uufs/chpc.utah.edu/sys/installdir/netcdf-cxx/4.3.0-c7/include
 
 
-         LIBS += -L/uufs/chpc.utah.edu/sys/installdir/hdf5/1.8.17-c7/lib -lhdf5 \
-                 -L/uufs/chpc.utah.edu/sys/installdir/netcdf-cxx/4.3.0-c7/lib -lnetcdf_c++4 \
-                 -L../hypre/build/lib -lHYPRE
+         LIBS += -L/uufs/chpc.utah.edu/sys/installdir/hdf5/1.8.17-c7/lib -l:libhdf5.so.10.2.0 \
+                 -L/uufs/chpc.utah.edu/sys/installdir/netcdf-c/4.4.1/lib -l:libnetcdf.so.11.0.3 \
+                 -L/uufs/chpc.utah.edu/sys/installdir/netcdf-cxx/4.3.0-c7/lib -l:libnetcdf_c++4.so.1.0.3
 
          message("Compiling on CHPC")
     }
@@ -182,8 +180,6 @@ win32{
         QMAKE_CFLAGS += /openmp
         #QMAKE_LFLAGS += /openmp
         QMAKE_CXXFLAGS += /openmp
-        QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CXXFLAGS /MD
-        QMAKE_CXXFLAGS_DEBUG = $$QMAKE_CXXFLAGS  /MDd
         message("OpenMP enabled")
 
     } else {
@@ -225,10 +221,27 @@ win32{
               message("MPI disabled")
             }
     }
+
+    QMAKE_CXXFLAGS += /MP
 }
 
 
 CONFIG(debug, debug|release) {
+
+    win32 {
+       QMAKE_CXXFLAGS_DEBUG = $$QMAKE_CXXFLAGS /MDd  /O2
+    }
+
+    macx {
+     QMAKE_CFLAGS_DEBUG = $$QMAKE_CFLAGS -g -O3
+     QMAKE_CXXFLAGS_DEBUG = $$QMAKE_CXXFLAGS -g -O3
+    }
+
+    linux {
+     QMAKE_CFLAGS_DEBUG = $$QMAKE_CFLAGS -g -O3
+     QMAKE_CXXFLAGS_DEBUG = $$QMAKE_CXXFLAGS -g -O3
+    }
+
 
    DESTDIR = ./build/debug
    OBJECTS_DIR = $$DESTDIR/.obj
@@ -250,8 +263,8 @@ CONFIG(debug, debug|release) {
        QMAKE_POST_LINK += "cp -a ./../HydroCoupleSDK/build/debug/*HydroCoupleSDK.* ./build/debug/";
        QMAKE_POST_LINK += "cp -a ./../SWMM/build/debug/*SWMM.* ./build/debug/";
 
-       LIBS += -L./../HydroCoupleSDK/build/debug -lHydroCoupleSDK.so.1.0.0
-       LIBS += -L./../SWMM/build/debug -lSWMM.so.$$SWMM_VERSION
+       LIBS += -L./../HydroCoupleSDK/build/debug -l:libHydroCoupleSDK.so.1.0.0
+       LIBS += -L./../SWMM/build/debug -l:libSWMM.so.$$SWMM_VERSION
     }
 
    win32{
@@ -272,14 +285,19 @@ CONFIG(release, debug|release) {
     RCC_DIR = $$RELEASE_EXTRAS/.qrc
     UI_DIR = $$RELEASE_EXTRAS/.ui
 
+
+   win32 {
+    QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CXXFLAGS /MD
+   }
+
    macx{
         LIBS += -L./../HydroCoupleSDK/lib/macx -lHydroCoupleSDK.1.0.0
         LIBS += -L./../SWMM/lib/macx -lSWMM.$$SWMM_VERSION
     }
 
    linux{
-        LIBS += -L./../HydroCoupleSDK/lib/linux -lHydroCoupleSDK.so.1.0.0
-        LIBS += -L./../SWMM/lib/linux -lSWMM.so.$$SWMM_VERSION
+        LIBS += -L./../HydroCoupleSDK/lib/linux -l:libHydroCoupleSDK.so.1.0.0
+        LIBS += -L./../SWMM/lib/linux -l:libSWMM.so.$$SWMM_VERSION
     }
 
    win32{

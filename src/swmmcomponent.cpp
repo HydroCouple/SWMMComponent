@@ -107,17 +107,20 @@ SWMMComponent::~SWMMComponent()
 {
   disposeProject();
 
-  if(m_parent)
-  {
-    m_parent->removeClone(this);
-  }
-
   while (m_clones.size())
   {
     SWMMComponent *clone = dynamic_cast<SWMMComponent*>(m_clones.first());
     removeClone(clone);
     delete clone;
   }
+
+  if(m_parent)
+  {
+    m_parent->removeClone(this);
+    m_parent = nullptr;
+  }
+
+
 }
 
 QList<QString> SWMMComponent::validate()
@@ -204,23 +207,31 @@ void SWMMComponent::update(const QList<HydroCouple::IOutput *> &requiredOutputs)
   {
     setStatus(IModelComponent::Updating);
 
-    double minConsumerTime = std::max(currentDateTimeInternal()->julianDay(), getMinimumConsumerTime());
+    double minConsumerTime = std::max(currentDateTime()->julianDay(), getMinimumConsumerTime());
 
     double elapsedTime = 0;
 
-    while(currentDateTimeInternal()->julianDay() <= minConsumerTime)
+    while(currentDateTime()->julianDay() <= minConsumerTime)
     {
       clearDataCache(m_SWMMProject);
       resetSurfaceInflows();
       applyInputValues();
 
-      elapsedTime = 0;
-
       swmm_step(m_SWMMProject, &elapsedTime);
 
-      m_timeStep = elapsedTime * 86400.0;
+      m_timeStep = (elapsedTime - (currentDateTime()->julianDay() - timeHorizon()->julianDay())) * 86400.0;
 
-      currentDateTimeInternal()->setJulianDay(timeHorizonInternal()->julianDay() + elapsedTime);
+      double newDateTime = timeHorizon()->julianDay() + elapsedTime;
+      currentDateTimeInternal()->setJulianDay(newDateTime);
+
+      if(elapsedTime == 0.0)
+      {
+        break;
+      }
+      else if(progressChecker()->performStep(currentDateTime()->julianDay()))
+      {
+        setStatus(IModelComponent::Updated , "Simulation performed time-step | DateTime: " + QString::number(currentDateTime()->julianDay(), 'f') , progressChecker()->progress());
+      }
     }
 
     updateOutputValues(requiredOutputs);
@@ -229,7 +240,7 @@ void SWMMComponent::update(const QList<HydroCouple::IOutput *> &requiredOutputs)
 
     if(elapsedTime <= 0.0 && !m_SWMMProject->ErrorCode)
     {
-      setStatus(IModelComponent::Done , "Simulation finished successfully|  DateTime: " + QString::number(currentDateTime()->julianDay()),100);
+      setStatus(IModelComponent::Done , "Simulation finished successfully|  DateTime: " + QString::number(currentDateTime()->julianDay(), 'f'),100);
     }
     else if(hasError(errMessage))
     {
@@ -239,7 +250,7 @@ void SWMMComponent::update(const QList<HydroCouple::IOutput *> &requiredOutputs)
     {
       if(progressChecker()->performStep(currentDateTime()->julianDay()))
       {
-        setStatus(IModelComponent::Updated , "Simulation performed time-step | DateTime: " + QString::number(currentDateTime()->julianDay()) , progressChecker()->progress());
+        setStatus(IModelComponent::Updated , "Simulation performed time-step | DateTime: " + QString::number(currentDateTime()->julianDay(), 'f') , progressChecker()->progress());
       }
       else
       {
@@ -326,7 +337,7 @@ HydroCouple::ICloneableModelComponent* SWMMComponent::clone()
     emit propertyChanged("Clones");
 
 #ifdef USE_OPENMP
-#pragma omp critical
+#pragma omp critical (SWMMComponent)
 #endif
     {
       cloneComponent->initialize();
@@ -353,7 +364,7 @@ bool SWMMComponent::removeClone(SWMMComponent *component)
   int removed;
 
 #ifdef USE_OPENMP
-#pragma omp critical
+#pragma omp critical (SWMMComponent)
 #endif
   {
     removed = m_clones.removeAll(component);
@@ -447,9 +458,9 @@ bool SWMMComponent::initializeArguments(QString &message)
   if(mpiProcessRank() == 0)
   {
     return initializeInputFilesArguments(message) &&
-        initializeNodeAreasArguments(message) &&
-        initializeNodePerimetersArguments(message) &&
-        initializeNodeOrificeDischargeCoeffArguments(message);
+           initializeNodeAreasArguments(message) &&
+           initializeNodePerimetersArguments(message) &&
+           initializeNodeOrificeDischargeCoeffArguments(message);
   }
   else
   {
@@ -538,9 +549,8 @@ bool SWMMComponent::initializeInputFilesArguments(QString &message)
     SDKTemporal::TimeSpan *timeSpan = timeHorizonInternal();
     SDKTemporal::DateTime *currentDateTime = currentDateTimeInternal();
 
-    timeSpan->setDateTime(dateTime);
-    currentDateTime->setJulianDay(timeSpan->julianDay());
-
+    currentDateTime->setDateTime(dateTime);
+    timeSpan->setJulianDay(currentDateTime->julianDay());
     timeSpan->setDuration(m_SWMMProject->EndDateTime - m_SWMMProject->StartDateTime);
 
     progressChecker()->reset(timeSpan->julianDay(), timeSpan->endDateTime());
