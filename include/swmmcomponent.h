@@ -172,7 +172,7 @@ class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractTimeModelComponent,
     std::map<QString, QSharedPointer<HCGeometry> > m_sharedNodesGeoms;
     std::map<QString, QSharedPointer<HCGeometry> > m_sharedLinkGeoms;
 
-    std::map<int,double> m_surfaceInflow;
+    std::vector<double> m_surfaceInflow;
     SWMMComponentInfo *m_SWMMComponentInfo;
     IdBasedArgumentString *m_inputFilesArgument;
     IdBasedArgumentDouble *m_nodeAreas;

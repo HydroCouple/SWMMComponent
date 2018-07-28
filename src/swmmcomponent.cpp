@@ -69,7 +69,8 @@ SWMMComponent::SWMMComponent(const QString &id, SWMMComponentInfo *parent)
     m_idDimension(nullptr),
     m_geometryDimension(nullptr),
     m_timeDimension(nullptr),
-    m_currentProgress(0)
+    m_currentProgress(0),
+    m_parent(nullptr)
 {
 
   createDimensions();
@@ -912,12 +913,7 @@ void SWMMComponent::createPondedAreaInput()
 
 void SWMMComponent::createSurfaceInflows()
 {
-  m_surfaceInflow.clear();
-
-  for(int i = 0; i < m_SWMMProject->NumNodes ; i++)
-  {
-    m_surfaceInflow[i] = 0.0;
-  }
+  m_surfaceInflow.resize(m_SWMMProject->NumNodes , 0.0);
 }
 
 void SWMMComponent::createOutputs()

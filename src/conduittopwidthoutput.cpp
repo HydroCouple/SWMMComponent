@@ -88,9 +88,9 @@ void ConduitTopWidthOutput::updateValues()
   m_times[currentTimeIndex]->setJulianDay(m_SWMMComponent->currentDateTime()->julianDay());
   resetTimeSpan();
 
-#ifdef USE_OPENMP
-#pragma omp parallel for
-#endif
+  //#ifdef USE_OPENMP
+  //#pragma omp parallel for
+  //#endif
   for(int i = 0 ; i < (int)m_geometries.size() ; i++)
   {
     QSharedPointer<HCGeometry> &linkGeom = m_geometries[i];

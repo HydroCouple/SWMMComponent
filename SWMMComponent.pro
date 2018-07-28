@@ -161,9 +161,9 @@ linux{
         QMAKE_CXX = mpic++
         QMAKE_LINK = mpic++
 
-        QMAKE_CFLAGS += $$system(mpicc --showme:compile)
-        QMAKE_CXXFLAGS += $$system(mpic++ --showme:compile)
-        QMAKE_LFLAGS += $$system(mpic++ --showme:link)
+        QMAKE_CFLAGS += $$system(/usr/local/bin/mpicc --showme:compile)
+        QMAKE_CXXFLAGS += $$system(/usr/local/bin/mpic++ --showme:compile)
+        QMAKE_LFLAGS += $$system(/usr/local/bin/mpic++ --showme:link)
 
         LIBS += -L/usr/local/lib/ -lmpi
 
@@ -178,7 +178,6 @@ win32{
     contains(DEFINES,USE_OPENMP){
 
         QMAKE_CFLAGS += /openmp
-        #QMAKE_LFLAGS += /openmp
         QMAKE_CXXFLAGS += /openmp
         message("OpenMP enabled")
 
@@ -188,21 +187,21 @@ win32{
     }
 
     #Windows vspkg package manager installation path
-    VSPKGDIR = C:/vcpkg/installed/x64-windows
+    #VCPKGDIR = C:/vcpkg/installed/x64-windows
 
-    INCLUDEPATH += $${VSPKGDIR}/include \
-                   $${VSPKGDIR}/include/gdal
+    INCLUDEPATH += $${VCPKGDIR}/include \
+                   $${VCPKGDIR}/include/gdal
 
-    message ($$(VSPKGDIR))
+    message ($$(VCPKGDIR))
 
     CONFIG(debug, debug|release) {
 
-    LIBS += -L$${VSPKGDIR}/debug/lib -lgdald \
-            -L$${VSPKGDIR}/debug/lib -lnetcdf \
-            -L$${VSPKGDIR}/debug/lib -lnetcdf-cxx4
+    LIBS += -L$${VCPKGDIR}/debug/lib -lgdald \
+            -L$${VCPKGDIR}/debug/lib -lnetcdf \
+            -L$${VCPKGDIR}/debug/lib -lnetcdf-cxx4
 
             contains(DEFINES,USE_MPI){
-               LIBS += -L$${VSPKGDIR}/debug/lib -lmsmpi
+               LIBS += -L$${VCPKGDIR}/debug/lib -lmsmpi
                message("MPI enabled")
             } else {
               message("MPI disabled")
@@ -210,12 +209,12 @@ win32{
 
         } else {
 
-    LIBS += -L$${VSPKGDIR}/lib -lgdal \
-            -L$${VSPKGDIR}/lib -lnetcdf \
-            -L$${VSPKGDIR}/lib -lnetcdf-cxx4
+    LIBS += -L$${VCPKGDIR}/lib -lgdal \
+            -L$${VCPKGDIR}/lib -lnetcdf \
+            -L$${VCPKGDIR}/lib -lnetcdf-cxx4
 
             contains(DEFINES,USE_MPI){
-               LIBS += -L$${VSPKGDIR}/lib -lmsmpi
+               LIBS += -L$${VCPKGDIR}/lib -lmsmpi
                message("MPI enabled")
             } else {
               message("MPI disabled")
@@ -223,23 +222,22 @@ win32{
     }
 
     QMAKE_CXXFLAGS += /MP
+    QMAKE_LFLAGS += /MP /incremental /debug:fastlink
 }
 
 
 CONFIG(debug, debug|release) {
 
     win32 {
-       QMAKE_CXXFLAGS_DEBUG = $$QMAKE_CXXFLAGS /MDd  /O2
+       QMAKE_CXXFLAGS += /MDd /O2
     }
 
     macx {
-     QMAKE_CFLAGS_DEBUG = $$QMAKE_CFLAGS -g -O3
-     QMAKE_CXXFLAGS_DEBUG = $$QMAKE_CXXFLAGS -g -O3
+       QMAKE_CXXFLAGS += -O3
     }
 
     linux {
-     QMAKE_CFLAGS_DEBUG = $$QMAKE_CFLAGS -g -O3
-     QMAKE_CXXFLAGS_DEBUG = $$QMAKE_CXXFLAGS -g -O3
+       QMAKE_CXXFLAGS += -O3
     }
 
 
@@ -287,7 +285,7 @@ CONFIG(release, debug|release) {
 
 
    win32 {
-    QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CXXFLAGS /MD
+     QMAKE_CXXFLAGS += /MD
    }
 
    macx{
