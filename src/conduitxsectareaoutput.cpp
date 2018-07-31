@@ -94,7 +94,8 @@ void ConduitXSectAreaOutput::updateValues()
   {
     QSharedPointer<HCGeometry> &linkGeom = m_geometries[i];
     TLink &link = m_SWMMComponent->project()->Link[linkGeom->marker()];
-    double value = xsect_getAofY(m_SWMMComponent->project(), &link.xsect, link.newDepth);
+
+    double value = m_SWMMComponent->project()->Conduit[link.subIndex].a1;
     double convFactor = UCF(m_SWMMComponent->project(), LENGTH);
     value *= convFactor * convFactor;
     setValue(currentTimeIndex,i,&value);

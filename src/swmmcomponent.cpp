@@ -459,9 +459,9 @@ bool SWMMComponent::initializeArguments(QString &message)
   if(mpiProcessRank() == 0)
   {
     return initializeInputFilesArguments(message) &&
-           initializeNodeAreasArguments(message) &&
-           initializeNodePerimetersArguments(message) &&
-           initializeNodeOrificeDischargeCoeffArguments(message);
+        initializeNodeAreasArguments(message) &&
+        initializeNodePerimetersArguments(message) &&
+        initializeNodeOrificeDischargeCoeffArguments(message);
   }
   else
   {

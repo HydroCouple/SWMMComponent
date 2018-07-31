@@ -233,7 +233,7 @@ CONFIG(debug, debug|release) {
     }
 
     macx {
-       QMAKE_CXXFLAGS += -O3
+#       QMAKE_CXXFLAGS += -O3
     }
 
     linux {

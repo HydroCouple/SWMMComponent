@@ -33,7 +33,7 @@ struct PrjLink
     HCLineString *lineString;
 };
 
-bool compare(HCPoint *p1, HCPoint *p2, double eps = 1e-6)
+bool compare(HCPoint *p1, HCPoint *p2, double eps = 1e-3)
 {
   double diff = hypot(p1->x() - p2->x(), p1->y() - p2->y());
 
@@ -42,8 +42,8 @@ bool compare(HCPoint *p1, HCPoint *p2, double eps = 1e-6)
 
 void createSWMMProject(int argc, char*argv[])
 {
-  //Nodes
   //Links
+  //Nodes
   //Cross-sections
 
   if(argc > 4)
