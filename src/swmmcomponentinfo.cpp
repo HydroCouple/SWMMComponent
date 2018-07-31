@@ -13,7 +13,13 @@ SWMMComponentInfo::SWMMComponentInfo(QObject *parent)
 
   setId("SWMM Component 5.1.010");
   setCaption("SWMM 5.1.010");
+
+#ifdef QT_DEBUG
   setIconFilePath("./../../resources/images/Epaswmm5_Icon7.ico");
+#else
+  setIconFilePath("./Epaswmm5_Icon7.ico");
+#endif
+
   setDescription("EPA SWMM Model Component Library developed from the SWMM Version 5.1.010 with Low Impact Development(LID) controls");
   setCategory("Hydrology\\Urban Stormwater");
   setCopyright("");
