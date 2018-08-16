@@ -458,10 +458,15 @@ bool SWMMComponent::initializeArguments(QString &message)
 {
   if(mpiProcessRank() == 0)
   {
-    return initializeInputFilesArguments(message) &&
-        initializeNodeAreasArguments(message) &&
-        initializeNodePerimetersArguments(message) &&
-        initializeNodeOrificeDischargeCoeffArguments(message);
+    bool initialized = initializeInputFilesArguments(message) &&
+                    initializeNodeAreasArguments(message) &&
+                    initializeNodePerimetersArguments(message) &&
+                    initializeNodeOrificeDischargeCoeffArguments(message);
+
+
+    return initialized;
+
+
   }
   else
   {
@@ -598,7 +603,9 @@ bool SWMMComponent::initializeInputFilesArguments(QString &message)
 
   QDir::setCurrent(current);
 
-  return !hasError(message);
+  bool error = !hasError(message);
+
+  return error;
 
 }
 
