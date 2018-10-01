@@ -347,3 +347,6 @@ CONFIG(release, debug|release) {
         }
     }
 }
+
+RESOURCES += \
+    resources/swmmcomponent.qrc

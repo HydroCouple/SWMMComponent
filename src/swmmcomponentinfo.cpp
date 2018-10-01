@@ -11,22 +11,16 @@ SWMMComponentInfo::SWMMComponentInfo(QObject *parent)
 {
   GeometryFactory::registerGDAL();
 
-  setId("SWMM Component 5.1.010");
-  setCaption("SWMM 5.1.010");
-
-#ifdef QT_DEBUG
-  setIconFilePath("./../../resources/images/Epaswmm5_Icon7.ico");
-#else
-  setIconFilePath("./Epaswmm5_Icon7.ico");
-#endif
-
+  setId("SWMM Component 5.1.012");
+  setCaption("SWMM 5.1.012");
+  setIconFilePath(":/SWMMComponent/swmmcomponenticon");
   setDescription("EPA SWMM Model Component Library developed from the SWMM Version 5.1.010 with Low Impact Development(LID) controls");
   setCategory("Hydrology\\Urban Stormwater");
   setCopyright("");
   setVendor("United States Environmental Protection Agency (USEPA)");
   setUrl("https://www.epa.gov/water-research/storm-water-management-model-swmm");
   setEmail("tryby.michael@epa.gov");
-  setVersion("5.1.010");
+  setVersion("5.1.012");
 
   QStringList documentation;
 

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/SWMMComponent">
+        <file alias="swmmcomponenticon">images/Epaswmm5_Icon7.ico</file>
+    </qresource>
+</RCC>
