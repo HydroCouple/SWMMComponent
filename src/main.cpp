@@ -460,10 +460,67 @@ void thinXSections(int argc, char*argv[])
   }
 }
 
+void readWriteXSections(int argc, char *argv[])
+{
+  if(argc > 1)
+  {
+    GDALAllRegister();
+
+    QDir dir(QDir::currentPath());
+
+    QFileInfo inputXSectionFile(argv[1]);
+
+    if(inputXSectionFile.isRelative())
+      inputXSectionFile = QFileInfo(dir.absoluteFilePath(inputXSectionFile.filePath()));
+
+    QList<HCGeometry*> xsections;
+    QString error;
+    Envelope envp;
+
+    GeometryFactory::readGeometryFromFile(inputXSectionFile.absoluteFilePath(), xsections, envp, error);
+
+
+    for(int i = 0; i < xsections.size(); i++)
+    {
+      HCLineString *lineString  = dynamic_cast<HCLineString*>(xsections[i]);
+
+      QString outFilePath = inputXSectionFile.absoluteDir().absolutePath() + "/XS_" + QString::number(i) + ".csv";
+
+      QFile outFile(outFilePath);
+
+      double distance = 0;
+
+      if(outFile.open(QIODevice::WriteOnly| QIODevice::Truncate))
+      {
+        QTextStream outStream(&outFile);
+
+        outStream << "Distance, XS_" << i << endl;
+        outStream << 0 << ", " << lineString->point(0)->z() << endl;
+
+        for(int j = 1 ; j < lineString->pointCount(); j++)
+        {
+          HCPoint *p1 = lineString->pointInternal(j - 1);
+          HCPoint *p2 = lineString->pointInternal(j);
+
+          double xd = p1->x() - p2->x();
+          double yd = p1->y() - p2->y();
+
+          distance += sqrt(xd*xd + yd*yd);
+
+          outStream << distance << ", " <<  p2->z() << endl;
+        }
+
+        outFile.close();
+      }
+    }
+  }
+}
+
 int main(int argc, char* argv[])
 {
-   createSWMMProject(argc, argv);
+  // createSWMMProject(argc, argv);
   // thinXSections(argc, argv);
+  readWriteXSections(argc, argv);
 
   return 0;
 }

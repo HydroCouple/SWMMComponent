@@ -19,29 +19,42 @@
  * \todo
  */
 
-#ifndef NODEPONDEDDEPTHINPUT_H
-#define NODEPONDEDDEPTHINPUT_H
-
+#ifndef LINKINPUT_H
+#define LINKINPUT_H
 
 #include "swmmcomponent_global.h"
-#include "spatiotemporal/timegeometryinput.h"
+#include "spatiotemporal/timegeometrymultiinput.h"
+
 #include <unordered_map>
 
 class SWMMComponent;
 
-
-class SWMMCOMPONENT_EXPORT NodePondedDepthInput: public TimeGeometryInputDouble
+class SWMMCOMPONENT_EXPORT LinkInput : public TimeGeometryMultiInputDouble
 {
     Q_OBJECT
 
   public:
-    NodePondedDepthInput(const QString &id,
-                         Dimension *timeDimension,
-                         Dimension *geometryDimension,
-                         ValueDefinition *valueDefinition,
-                         SWMMComponent *modelComponent);
 
-    bool setProvider(HydroCouple::IOutput *provider) override;
+    enum LinkVariable
+    {
+      Roughness,
+      LateralInflow,
+      SeepageLossRate,
+      EvaporationLossRate
+    };
+
+    LinkInput(const QString &id,
+              Dimension *timeDimension,
+              Dimension *geometryDimension,
+              ValueDefinition *valueDefinition,
+              LinkVariable linkInputVariable,
+              SWMMComponent *modelComponent);
+
+    virtual ~LinkInput();
+
+    bool addProvider(HydroCouple::IOutput *provider) override;
+
+    bool removeProvider(HydroCouple::IOutput *provider) override;
 
     bool canConsume(HydroCouple::IOutput *provider, QString &message) const override;
 
@@ -51,11 +64,11 @@ class SWMMCOMPONENT_EXPORT NodePondedDepthInput: public TimeGeometryInputDouble
 
   private:
 
+    LinkVariable m_linkVariable;
     SWMMComponent *m_SWMMComponent;
-    std::unordered_map<int,int> m_geometryMapping;
-    int m_printTracker;
+    std::unordered_map<HydroCouple::IOutput*, std::unordered_map<int,int>> m_geometryMapping;
+    std::unordered_map<int, double> m_sumInflow;
 
 };
 
-
-#endif // NODEPONDEDDEPTHINPUT_H
+#endif // LINKINPUT_H

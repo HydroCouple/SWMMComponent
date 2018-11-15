@@ -54,11 +54,9 @@ HEADERS += ./include/stdafx.h\
            ./include/nodesurfaceflowoutput.h \
            ./include/nodewseinput.h \
            ./include/nodepondeddepthinput.h \
-           ./include/linkflowoutput.h \
-           ./include/linkdepthoutput.h \
-           ./include/conduitxsectareaoutput.h \
            ./include/conduitbankxsectareaoutput.h \
-           ./include/conduittopwidthoutput.h
+           ./include/linkoutput.h \
+    include/linkinput.h
 
 SOURCES +=./src/stdafx.cpp \
           ./src/swmmcomponent.cpp \
@@ -68,12 +66,10 @@ SOURCES +=./src/stdafx.cpp \
           ./src/nodesurfaceflowoutput.cpp \
           ./src/nodewseinput.cpp \
           ./src/nodepondeddepthinput.cpp \
-          ./src/linkflowoutput.cpp \
           ./src/main.cpp \
-          ./src/linkdepthoutput.cpp \
-          ./src/conduitxsectareaoutput.cpp \
-          ./src/conduittopwidthoutput.cpp \
-          ./src/conduitbankxsectareaoutput.cpp
+          ./src/conduitbankxsectareaoutput.cpp \
+          ./src/linkoutput.cpp \
+    src/linkinput.cpp
 
 
 macx{
@@ -233,7 +229,7 @@ CONFIG(debug, debug|release) {
     }
 
     macx {
-#       QMAKE_CXXFLAGS += -O3
+       QMAKE_CXXFLAGS += -O3
     }
 
     linux {

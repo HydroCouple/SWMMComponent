@@ -35,10 +35,8 @@
 #include "nodesurfaceflowoutput.h"
 #include "nodewseinput.h"
 #include "nodepondeddepthinput.h"
-#include "linkflowoutput.h"
-#include "linkdepthoutput.h"
-#include "conduitxsectareaoutput.h"
-#include "conduittopwidthoutput.h"
+#include "linkoutput.h"
+#include "linkinput.h"
 #include "conduitbankxsectareaoutput.h"
 #include "spatial/geometryfactory.h"
 
@@ -189,7 +187,6 @@ void SWMMComponent::prepare()
     //      }
     //    }
 
-    createSurfaceInflows();
     updateOutputValues(QList<HydroCouple::IOutput*>());
 
     setStatus(IModelComponent::Updated ,"Finished preparing model");
@@ -215,7 +212,7 @@ void SWMMComponent::update(const QList<HydroCouple::IOutput *> &requiredOutputs)
     while(currentDateTime()->julianDay() <= minConsumerTime)
     {
       clearDataCache(m_SWMMProject);
-      resetSurfaceInflows();
+      resetInflows();
       applyInputValues();
 
       swmm_step(m_SWMMProject, &elapsedTime);
@@ -459,9 +456,9 @@ bool SWMMComponent::initializeArguments(QString &message)
   if(mpiProcessRank() == 0)
   {
     bool initialized = initializeInputFilesArguments(message) &&
-                    initializeNodeAreasArguments(message) &&
-                    initializeNodePerimetersArguments(message) &&
-                    initializeNodeOrificeDischargeCoeffArguments(message);
+                       initializeNodeAreasArguments(message) &&
+                       initializeNodePerimetersArguments(message) &&
+                       initializeNodeOrificeDischargeCoeffArguments(message);
 
 
     return initialized;
@@ -820,6 +817,10 @@ void SWMMComponent::createInputs()
   createNodePondedDepthInput();
   createNodeInflowInput();
   createPondedAreaInput();
+  createConduitRoughnessInput();
+  createConduitLateralInflow();
+  createConduitSeepageLossRate();
+  createConduitEvapLossRate();
 }
 
 void SWMMComponent::createIdBasedNodeWSEInput()
@@ -918,9 +919,124 @@ void SWMMComponent::createPondedAreaInput()
 
 }
 
-void SWMMComponent::createSurfaceInflows()
+void SWMMComponent::createConduitRoughnessInput()
 {
-  m_surfaceInflow.resize(m_SWMMProject->NumNodes , 0.0);
+  Quantity *unitlessQuantity = Quantity::unitLessValues("Unitless", QVariant::Double, this);
+
+  m_linkRoughnessInput = new LinkInput("LinkRoughnessInput",
+                                       m_timeDimension,
+                                       m_geometryDimension,
+                                       unitlessQuantity,
+                                       LinkInput::LinkVariable::Roughness,
+                                       this);
+
+  m_linkRoughnessInput->setCaption("Mannings Roughness");
+  m_linkRoughnessInput->setDescription("Mannings Roughness");
+
+  QList<QSharedPointer<HCGeometry>> geometries;
+  for(std::pair<QString, QSharedPointer<HCGeometry>> node : m_sharedLinkGeoms)
+  {
+    geometries.append(node.second);
+  }
+
+  m_linkRoughnessInput->addGeometries(geometries);
+
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/1000000.0, m_linkRoughnessInput);
+  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_linkRoughnessInput);
+  m_linkRoughnessInput->addTime(dt1);
+  m_linkRoughnessInput->addTime(dt2);
+
+  addInput(m_linkRoughnessInput);
+}
+
+void SWMMComponent::createConduitLateralInflow()
+{
+  Quantity *flowQuantity = Quantity::flowInCMS(this);
+
+  m_linkLateralInflowInput = new LinkInput("LinkLateralInflowInput",
+                                           m_timeDimension,
+                                           m_geometryDimension,
+                                           flowQuantity,
+                                           LinkInput::LinkVariable::LateralInflow,
+                                           this);
+
+  m_linkLateralInflowInput->setCaption("Lateral Inflow (m^3/s)");
+  m_linkLateralInflowInput->setDescription("Lateral Inflow (m^3/s)");
+
+  QList<QSharedPointer<HCGeometry>> geometries;
+  for(std::pair<QString, QSharedPointer<HCGeometry>> node : m_sharedLinkGeoms)
+  {
+    geometries.append(node.second);
+  }
+
+  m_linkLateralInflowInput->addGeometries(geometries);
+
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/1000000.0, m_linkLateralInflowInput);
+  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_linkLateralInflowInput);
+  m_linkLateralInflowInput->addTime(dt1);
+  m_linkLateralInflowInput->addTime(dt2);
+
+  addInput(m_linkLateralInflowInput);
+}
+
+void SWMMComponent::createConduitSeepageLossRate()
+{
+  Quantity *flowQuantity = Quantity::flowInCMS(this);
+
+  m_conduitSeepageLossRateInput = new LinkInput("ConduitSeepageLossRateInput",
+                                                m_timeDimension,
+                                                m_geometryDimension,
+                                                flowQuantity,
+                                                LinkInput::LinkVariable::SeepageLossRate,
+                                                this);
+
+  m_conduitSeepageLossRateInput->setCaption("Conduit Seepage Loss Rate (m^3/s)");
+  m_conduitSeepageLossRateInput->setDescription("Conduit Seepage Loss Rate (m^3/s)");
+
+  QList<QSharedPointer<HCGeometry>> geometries;
+  for(std::pair<QString, QSharedPointer<HCGeometry>> node : m_sharedLinkGeoms)
+  {
+    geometries.append(node.second);
+  }
+
+  m_conduitSeepageLossRateInput->addGeometries(geometries);
+
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/1000000.0, m_conduitSeepageLossRateInput);
+  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_conduitSeepageLossRateInput);
+  m_conduitSeepageLossRateInput->addTime(dt1);
+  m_conduitSeepageLossRateInput->addTime(dt2);
+
+  addInput(m_conduitSeepageLossRateInput);
+}
+
+void SWMMComponent::createConduitEvapLossRate()
+{
+  Quantity *flowQuantity = Quantity::flowInCMS(this);
+
+  m_conduitEvaporationLossRateInput = new LinkInput("ConduitEvapLossRateInput",
+                                                m_timeDimension,
+                                                m_geometryDimension,
+                                                flowQuantity,
+                                                LinkInput::LinkVariable::SeepageLossRate,
+                                                this);
+
+  m_conduitEvaporationLossRateInput->setCaption("Conduit Evaporation Loss Rate (m^3/s)");
+  m_conduitEvaporationLossRateInput->setDescription("Conduit Evaporation Loss Rate (m^3/s)");
+
+  QList<QSharedPointer<HCGeometry>> geometries;
+  for(std::pair<QString, QSharedPointer<HCGeometry>> node : m_sharedLinkGeoms)
+  {
+    geometries.append(node.second);
+  }
+
+  m_conduitEvaporationLossRateInput->addGeometries(geometries);
+
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/1000000.0, m_conduitEvaporationLossRateInput);
+  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_conduitEvaporationLossRateInput);
+  m_conduitEvaporationLossRateInput->addTime(dt1);
+  m_conduitEvaporationLossRateInput->addTime(dt2);
+
+  addInput(m_conduitEvaporationLossRateInput);
 }
 
 void SWMMComponent::createOutputs()
@@ -934,6 +1050,7 @@ void SWMMComponent::createOutputs()
   createConduitXSectAreaOutput();
   createConduitTopWidthOutput();
   createConduitBankXSectAreaOutput();
+  createLinkWSEOutput();
 }
 
 void SWMMComponent::createIdBasedNodeWSEOutput()
@@ -984,11 +1101,12 @@ void SWMMComponent::createLinkFlowOutput()
 {
   Quantity *flowQuantity = Quantity::flowInCMS(this);
 
-  m_linkFlowOutput = new LinkFlowOutput("LinkFlowOutput",
-                                        m_timeDimension,
-                                        m_geometryDimension,
-                                        flowQuantity,
-                                        this);
+  m_linkFlowOutput = new LinkOutput("LinkFlowOutput",
+                                    m_timeDimension,
+                                    m_geometryDimension,
+                                    flowQuantity,
+                                    LinkOutput::LinkVariable::Flow,
+                                    this);
 
   m_linkFlowOutput->setCaption("Flow through conduit (m^3/s)");
   m_linkFlowOutput->setDescription("May be positive or negative");
@@ -1013,11 +1131,12 @@ void SWMMComponent::createLinkDepthOutput()
 {
   Quantity *depthQuantity = Quantity::lengthInMeters(this);
 
-  m_linkDepthOutput = new LinkDepthOutput("LinkDepthOutput",
-                                          m_timeDimension,
-                                          m_geometryDimension,
-                                          depthQuantity,
-                                          this);
+  m_linkDepthOutput = new LinkOutput("LinkDepthOutput",
+                                     m_timeDimension,
+                                     m_geometryDimension,
+                                     depthQuantity,
+                                     LinkOutput::LinkVariable::Depth,
+                                     this);
 
   m_linkDepthOutput->setCaption("Depth of water in conduit (m)");
   m_linkDepthOutput->setDescription("Depth of water in conduit (m)");
@@ -1042,11 +1161,12 @@ void SWMMComponent::createConduitXSectAreaOutput()
 {
   Quantity *areaQuantity = Quantity::areaInSquareMeters(this);
 
-  m_conduitXSectAreaOutput = new ConduitXSectAreaOutput("ConduitCrossSectionAreaOutput",
-                                                        m_timeDimension,
-                                                        m_geometryDimension,
-                                                        areaQuantity,
-                                                        this);
+  m_conduitXSectAreaOutput = new LinkOutput("ConduitCrossSectionAreaOutput",
+                                            m_timeDimension,
+                                            m_geometryDimension,
+                                            areaQuantity,
+                                            LinkOutput::LinkVariable::XsectionArea,
+                                            this);
 
   m_conduitXSectAreaOutput->setCaption("Conduit flow cross section area (m^2)");
   m_conduitXSectAreaOutput->setDescription("Conduit flow cross section area (m^2)");
@@ -1071,11 +1191,12 @@ void SWMMComponent::createConduitTopWidthOutput()
 {
   Quantity *lengthQuantity = Quantity::lengthInMeters(this);
 
-  m_conduitTopWidthOutput = new ConduitTopWidthOutput("ConduitTopWidthOutput",
-                                                      m_timeDimension,
-                                                      m_geometryDimension,
-                                                      lengthQuantity,
-                                                      this);
+  m_conduitTopWidthOutput = new LinkOutput("ConduitTopWidthOutput",
+                                           m_timeDimension,
+                                           m_geometryDimension,
+                                           lengthQuantity,
+                                           LinkOutput::LinkVariable::TopWidth,
+                                           this);
 
   m_conduitTopWidthOutput->setCaption("Conduit top width (m)");
   m_conduitTopWidthOutput->setDescription("Conduit top width (m)");
@@ -1099,6 +1220,36 @@ void SWMMComponent::createConduitTopWidthOutput()
 void SWMMComponent::createConduitBankXSectAreaOutput()
 {
 
+}
+
+void SWMMComponent::createLinkWSEOutput()
+{
+  Quantity *lengthQuantity = Quantity::lengthInMeters(this);
+
+  m_linkWSEOutput = new LinkOutput("LinkWSEOutput",
+                                   m_timeDimension,
+                                   m_geometryDimension,
+                                   lengthQuantity,
+                                   LinkOutput::LinkVariable::WaterSurfaceElevation,
+                                   this);
+
+  m_linkWSEOutput->setCaption("Link Water Surface Elevation (m)");
+  m_linkWSEOutput->setDescription("Link Water Surface Elevation (m)");
+
+  QList<QSharedPointer<HCGeometry>> geometries;
+  for(std::pair<QString, QSharedPointer<HCGeometry>> node : m_sharedLinkGeoms)
+  {
+    geometries.append(node.second);
+  }
+
+  m_linkWSEOutput->addGeometries(geometries);
+
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/1000000.0, m_linkWSEOutput);
+  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_linkWSEOutput);
+  m_linkWSEOutput->addTime(dt1);
+  m_linkWSEOutput->addTime(dt2);
+
+  addOutput(m_linkWSEOutput);
 }
 
 bool SWMMComponent::hasError(QString &message)
@@ -1138,14 +1289,8 @@ void SWMMComponent::disposeProject()
   }
 }
 
-void SWMMComponent::resetSurfaceInflows()
+void SWMMComponent::resetInflows()
 {
-  //#ifdef USE_OPENMP
-  //#pragma omp parallel for
-  //#endif
-  for(size_t i = 0; i < m_surfaceInflow.size() ; i++)
-  {
-    m_surfaceInflow[i] = 0.0;
-  }
+  m_nodeSurfaceInflow.clear();
 }
 

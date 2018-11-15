@@ -88,8 +88,9 @@ void NodeSurfaceFlowOutput::updateValues()
         {
           if(node.newDepth < node.fullDepth)
           {
-            if(m_SWMMComponent->m_surfaceInflow[nodeGeom->marker()])
-              value = -m_SWMMComponent->m_surfaceInflow[nodeGeom->marker()];
+            if(m_SWMMComponent->m_nodeSurfaceInflow.find(nodeGeom->marker()) != m_SWMMComponent->m_nodeSurfaceInflow.end() &&
+               m_SWMMComponent->m_nodeSurfaceInflow[nodeGeom->marker()])
+              value = -m_SWMMComponent->m_nodeSurfaceInflow[nodeGeom->marker()];
           }
           else
           {

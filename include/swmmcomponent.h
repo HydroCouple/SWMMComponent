@@ -27,6 +27,8 @@
 #include <QFileInfo>
 #include <QTextStream>
 #include <map>
+#include <unordered_map>
+
 
 namespace SDKTemporal
 {
@@ -45,10 +47,8 @@ class Dimension;
 class NodeWSEInput;
 class NodePondedDepthInput;
 class IdBasedArgumentDouble;
-class LinkFlowOutput;
-class LinkDepthOutput;
-class ConduitXSectAreaOutput;
-class ConduitTopWidthOutput;
+class LinkOutput;
+class LinkInput;
 class ConduitBankXSectAreaOutput;
 
 typedef struct Project Project;
@@ -137,7 +137,13 @@ class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractTimeModelComponent,
 
     void createPondedAreaInput();
 
-    void createSurfaceInflows();
+    void createConduitRoughnessInput();
+
+    void createConduitLateralInflow();
+
+    void createConduitSeepageLossRate();
+
+    void createConduitEvapLossRate();
 
     void createOutputs() override;
 
@@ -159,20 +165,23 @@ class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractTimeModelComponent,
 
     void createConduitBankXSectAreaOutput();
 
+    void createLinkWSEOutput();
+
     bool hasError(QString &message);
 
     void initializeFailureCleanUp() override;
 
     void disposeProject();
 
-    void resetSurfaceInflows();
+    void resetInflows();
 
   private:
 
     std::map<QString, QSharedPointer<HCGeometry> > m_sharedNodesGeoms;
     std::map<QString, QSharedPointer<HCGeometry> > m_sharedLinkGeoms;
 
-    std::vector<double> m_surfaceInflow;
+    std::unordered_map<int, double> m_nodeSurfaceInflow;
+
     SWMMComponentInfo *m_SWMMComponentInfo;
     IdBasedArgumentString *m_inputFilesArgument;
     IdBasedArgumentDouble *m_nodeAreas;
@@ -181,15 +190,21 @@ class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractTimeModelComponent,
     Project* m_SWMMProject;
 
     NodeSurfaceFlowOutput *m_nodeSurfaceFlowOutput;
-    LinkFlowOutput *m_linkFlowOutput;
-    LinkDepthOutput *m_linkDepthOutput;
-    ConduitXSectAreaOutput *m_conduitXSectAreaOutput;
-    ConduitTopWidthOutput *m_conduitTopWidthOutput;
+    LinkOutput *m_linkFlowOutput,
+               *m_linkDepthOutput,
+               *m_conduitXSectAreaOutput,
+               *m_conduitTopWidthOutput,
+               *m_linkWSEOutput;
+
     ConduitBankXSectAreaOutput *m_conduitBankXSectAreaOutput;
 
     PondedAreaInput *m_pondedAreaInput;
     NodeWSEInput *m_nodeWSEInput;
     NodePondedDepthInput *m_nodePondedDepth;
+    LinkInput *m_linkRoughnessInput,
+              *m_linkLateralInflowInput,
+              *m_conduitSeepageLossRateInput,
+              *m_conduitEvaporationLossRateInput;
 
     Dimension *m_idDimension,
     *m_geometryDimension,

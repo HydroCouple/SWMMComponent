@@ -168,7 +168,7 @@ void NodeWSEInput::applyData()
         double maxflowPossible = (pondedDepth * node.pondedArea) / m_SWMMComponent->m_timeStep;
         flow = std::min(maxflowPossible, flow);
 
-        m_SWMMComponent->m_surfaceInflow[nodeGeom->marker()] = flow;
+        m_SWMMComponent->m_nodeSurfaceInflow[nodeGeom->marker()] = flow;
         addNodeLateralInflow(m_SWMMComponent->m_SWMMProject, nodeGeom->marker(), flow);
         totalInflow += flow;
 
