@@ -45,7 +45,7 @@ LinkInput::LinkInput(const QString &id,
                                  timeDimension, geometryDimension,
                                  valueDefinition, modelComponent),
     m_linkVariable(linkInputVariable),
-    m_SWMMComponent()
+    m_SWMMComponent(modelComponent)
 {
 
 }
@@ -155,8 +155,8 @@ bool LinkInput::canConsume(IOutput *provider, QString &message) const
 void LinkInput::retrieveValuesFromProvider()
 {
   moveDataToPrevTime();
-  int currentTimeIndex = m_times.size() - 1;
-  m_times[currentTimeIndex]->setJulianDay(m_SWMMComponent->currentDateTime()->julianDay());
+  m_times[m_times.size() - 1]->setJulianDay(m_SWMMComponent->currentDateTime()->julianDay());
+  resetTimeSpan();
 
   for(IOutput *provider : m_providers)
   {
@@ -168,7 +168,10 @@ void LinkInput::applyData()
 {
   double currentTime = m_SWMMComponent->currentDateTime()->julianDay();
 
-  m_sumInflow.clear();
+  for(int i = 0; i < geometryCount(); i++)
+  {
+    m_sumInflow[i] = 0.0;
+  }
 
   for(IOutput *provider : m_providers)
   {
@@ -180,7 +183,7 @@ void LinkInput::applyData()
     if((timeGeometryDataItem = dynamic_cast<ITimeGeometryComponentDataItem*>(provider)))
     {
       int currentTimeIndex = timeGeometryDataItem->timeCount() - 1;
-      int previousTimeIndex = std::max(0 , timeGeometryDataItem->timeCount() - 2);
+      int previousTimeIndex = std::max(0, timeGeometryDataItem->timeCount() - 2);
 
       double providerCurrentTime = timeGeometryDataItem->time(currentTimeIndex)->julianDay();
       double providerPreviousTime = timeGeometryDataItem->time(previousTimeIndex)->julianDay();
@@ -208,7 +211,7 @@ void LinkInput::applyData()
                 timeGeometryDataItem->getValue(currentTimeIndex,it.second, &value1);
                 timeGeometryDataItem->getValue(previousTimeIndex,it.second, &value2);
 
-                TLink &link = m_SWMMComponent->project()->Link[it.first];
+                TLink &link = m_SWMMComponent->project()->Link[m_geometries[it.first]->marker()];
 
                 if(link.type == CONDUIT)
                 {
@@ -230,15 +233,7 @@ void LinkInput::applyData()
                 timeGeometryDataItem->getValue(currentTimeIndex,it.second, &value1);
                 timeGeometryDataItem->getValue(previousTimeIndex,it.second, &value2);
 
-
-                if(m_sumInflow.find(it.first) != m_sumInflow.end())
-                {
-                  m_sumInflow[it.first] += value2 + factor *(value1 - value2);
-                }
-                else
-                {
-                  m_sumInflow[it.first] = value2 + factor *(value1 - value2);
-                }
+                m_sumInflow[m_geometries[it.first]->marker()] += value2 + factor *(value1 - value2);
               }
             }
             break;
@@ -254,7 +249,8 @@ void LinkInput::applyData()
               {
                 double value = 0;
                 timeGeometryDataItem->getValue(currentTimeIndex,it.second, &value);
-                TLink &link = m_SWMMComponent->project()->Link[it.first];
+
+                TLink &link = m_SWMMComponent->project()->Link[m_geometries[it.first]->marker()];
 
                 if(link.type == CONDUIT)
                 {
@@ -272,15 +268,7 @@ void LinkInput::applyData()
               {
                 double value = 0;
                 timeGeometryDataItem->getValue(currentTimeIndex,it.second, &value);
-
-                if(m_sumInflow.find(it.first) != m_sumInflow.end())
-                {
-                  m_sumInflow[it.first] += value;
-                }
-                else
-                {
-                  m_sumInflow[it.first] = value;
-                }
+                m_sumInflow[m_geometries[it.first]->marker()] += value;
               }
             }
             break;
@@ -298,7 +286,7 @@ void LinkInput::applyData()
               double value = 0;
               geometryDataItem->getValue(it.second, &value);
 
-              TLink &link = m_SWMMComponent->project()->Link[it.first];
+              TLink &link = m_SWMMComponent->project()->Link[m_geometries[it.first]->marker()];
 
               if(link.type == CONDUIT)
               {
@@ -317,15 +305,7 @@ void LinkInput::applyData()
             {
               double value = 0;
               geometryDataItem->getValue(it.second, &value);
-
-              if(m_sumInflow.find(it.first) != m_sumInflow.end())
-              {
-                m_sumInflow[it.first] += value;
-              }
-              else
-              {
-                m_sumInflow[it.first] = value;
-              }
+              m_sumInflow[m_geometries[it.first]->marker()] += value;
             }
           }
           break;
@@ -339,16 +319,20 @@ void LinkInput::applyData()
       {
         for(const auto &it : m_sumInflow)
         {
-          TLink &link = m_SWMMComponent->project()->Link[it.first];
-          // TConduit &conduit = m_SWMMComponent->project()->Conduit[link.subIndex];
+          double value = it.second / UCF(m_SWMMComponent->project(), FLOW);
 
-          if(link.newFlow >= 0)
+          if(value)
           {
-            addNodeLateralInflow(m_SWMMComponent->project(), link.node1, it.second /  UCF(m_SWMMComponent->project(), FLOW));
-          }
-          else
-          {
-            addNodeLateralInflow(m_SWMMComponent->project(), link.node2, it.second /  UCF(m_SWMMComponent->project(), FLOW));
+            TLink &link = m_SWMMComponent->project()->Link[it.first];
+
+            if(link.newFlow >= 0.0)
+            {
+              addNodeLateralInflow(m_SWMMComponent->project(), link.node1, value);
+            }
+            else
+            {
+              addNodeLateralInflow(m_SWMMComponent->project(), link.node2, value);
+            }
           }
         }
       }

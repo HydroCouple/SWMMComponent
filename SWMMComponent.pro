@@ -56,7 +56,7 @@ HEADERS += ./include/stdafx.h\
            ./include/nodepondeddepthinput.h \
            ./include/conduitbankxsectareaoutput.h \
            ./include/linkoutput.h \
-    include/linkinput.h
+           ./include/linkinput.h
 
 SOURCES +=./src/stdafx.cpp \
           ./src/swmmcomponent.cpp \
@@ -69,7 +69,7 @@ SOURCES +=./src/stdafx.cpp \
           ./src/main.cpp \
           ./src/conduitbankxsectareaoutput.cpp \
           ./src/linkoutput.cpp \
-    src/linkinput.cpp
+          ./src/linkinput.cpp
 
 
 macx{

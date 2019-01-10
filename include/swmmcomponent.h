@@ -87,6 +87,8 @@ class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractTimeModelComponent,
 
     QList<HydroCouple::ICloneableModelComponent*> clones() const override;
 
+    double currentTimeStep() const;
+
     Project* project() const;
 
   protected:
@@ -167,6 +169,8 @@ class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractTimeModelComponent,
 
     void createLinkWSEOutput();
 
+    void createLinkDVDtOutput();
+
     bool hasError(QString &message);
 
     void initializeFailureCleanUp() override;
@@ -194,7 +198,8 @@ class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractTimeModelComponent,
                *m_linkDepthOutput,
                *m_conduitXSectAreaOutput,
                *m_conduitTopWidthOutput,
-               *m_linkWSEOutput;
+               *m_linkWSEOutput,
+               *m_linkDVDtOutput;
 
     ConduitBankXSectAreaOutput *m_conduitBankXSectAreaOutput;
 

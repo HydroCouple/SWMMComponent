@@ -352,6 +352,11 @@ QList<HydroCouple::ICloneableModelComponent*> SWMMComponent::clones() const
   return m_clones;
 }
 
+double SWMMComponent::currentTimeStep() const
+{
+  return m_timeStep;
+}
+
 Project *SWMMComponent::project() const
 {
   return m_SWMMProject;
@@ -541,7 +546,8 @@ bool SWMMComponent::initializeInputFilesArguments(QString &message)
   QString current = QDir::currentPath();
   QDir::setCurrent(inputFile.absolutePath());
 
-  if(swmm_open(m_SWMMProject, m_inputFile, m_reportFile, m_outputFile) == 0 && swmm_start(m_SWMMProject, TRUE) == 0)
+  if(swmm_open(m_SWMMProject, m_inputFile, m_reportFile, m_outputFile) == 0 &&
+     swmm_start(m_SWMMProject, TRUE) == 0)
   {
     int y, m, d, h, mm, s;
     datetime_decodeDate(m_SWMMProject->StartDateTime, &y,&m,&d);
@@ -1014,11 +1020,11 @@ void SWMMComponent::createConduitEvapLossRate()
   Quantity *flowQuantity = Quantity::flowInCMS(this);
 
   m_conduitEvaporationLossRateInput = new LinkInput("ConduitEvapLossRateInput",
-                                                m_timeDimension,
-                                                m_geometryDimension,
-                                                flowQuantity,
-                                                LinkInput::LinkVariable::SeepageLossRate,
-                                                this);
+                                                    m_timeDimension,
+                                                    m_geometryDimension,
+                                                    flowQuantity,
+                                                    LinkInput::LinkVariable::SeepageLossRate,
+                                                    this);
 
   m_conduitEvaporationLossRateInput->setCaption("Conduit Evaporation Loss Rate (m^3/s)");
   m_conduitEvaporationLossRateInput->setDescription("Conduit Evaporation Loss Rate (m^3/s)");
@@ -1051,6 +1057,7 @@ void SWMMComponent::createOutputs()
   createConduitTopWidthOutput();
   createConduitBankXSectAreaOutput();
   createLinkWSEOutput();
+  createLinkDVDtOutput();
 }
 
 void SWMMComponent::createIdBasedNodeWSEOutput()
@@ -1252,13 +1259,49 @@ void SWMMComponent::createLinkWSEOutput()
   addOutput(m_linkWSEOutput);
 }
 
+void SWMMComponent::createLinkDVDtOutput()
+{
+  Quantity *flowQuantity = Quantity::flowInCMS(this);
+
+  m_linkDVDtOutput = new LinkOutput("LinkVolumeTimeDerivativeOutput",
+                                   m_timeDimension,
+                                   m_geometryDimension,
+                                   flowQuantity,
+                                   LinkOutput::LinkVariable::DVolumeDTime,
+                                   this);
+
+  m_linkDVDtOutput->setCaption("Link Volume Time Derivative (m^3/s)");
+  m_linkDVDtOutput->setDescription("Link Volume Time Derivative (m^3/s)");
+
+  QList<QSharedPointer<HCGeometry>> geometries;
+  for(std::pair<QString, QSharedPointer<HCGeometry>> node : m_sharedLinkGeoms)
+  {
+    geometries.append(node.second);
+  }
+
+  m_linkDVDtOutput->addGeometries(geometries);
+
+  SDKTemporal::DateTime *dt1 = new SDKTemporal::DateTime(timeHorizon()->julianDay() - 1.0/1000000.0, m_linkDVDtOutput);
+  SDKTemporal::DateTime *dt2 = new SDKTemporal::DateTime(timeHorizon()->julianDay(), m_linkDVDtOutput);
+  m_linkDVDtOutput->addTime(dt1);
+  m_linkDVDtOutput->addTime(dt2);
+
+  addOutput(m_linkDVDtOutput);
+}
+
 bool SWMMComponent::hasError(QString &message)
 {
   message = "";
 
   if(m_SWMMProject->ErrorCode)
   {
-    message = QString(m_SWMMProject->ErrorMsg).trimmed();
+    message = QString(m_SWMMProject->ErrorMsg);
+
+    if(message.isEmpty() || message.isNull())
+    {
+      message = QString(error_getMsg(m_SWMMProject->ErrorCode));
+    }
+
     return true;
   }
 

@@ -20,6 +20,7 @@ class SWMMCOMPONENT_EXPORT LinkOutput: public TimeGeometryOutputDouble
       TopWidth,
       Perimeter,
       Flow,
+      DVolumeDTime,
     };
 
     LinkOutput(const QString &id,

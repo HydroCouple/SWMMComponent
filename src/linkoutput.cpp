@@ -166,6 +166,23 @@ void LinkOutput::updateValues()
         }
       }
       break;
+    case LinkVariable::DVolumeDTime:
+      {
+#ifdef USE_OPENMP
+#pragma omp parallel for
+#endif
+        for(int i = 0 ; i < (int)m_geometries.size() ; i++)
+        {
+          QSharedPointer<HCGeometry> &linkGeom = m_geometries[i];
+          TLink &link = m_SWMMComponent->project()->Link[linkGeom->marker()];
+
+          double value = (link.newVolume - link.oldVolume) * UCF(m_SWMMComponent->project(), FLOW)
+                         / m_SWMMComponent->currentTimeStep();
+
+          setValue(currentTimeIndex,i,&value);
+        }
+      }
+      break;
   }
 
 
