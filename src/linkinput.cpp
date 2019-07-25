@@ -31,6 +31,7 @@
 using namespace HydroCouple;
 using namespace HydroCouple::Spatial;
 using namespace HydroCouple::SpatioTemporal;
+using namespace HydroCouple::Temporal;
 
 using namespace std;
 
@@ -59,54 +60,153 @@ bool LinkInput::addProvider(IOutput *provider)
 {
   if(AbstractMultiInput::addProvider(provider))
   {
-    ITimeGeometryComponentDataItem *timeGeometryDataItem = dynamic_cast<ITimeGeometryComponentDataItem*>(provider);
+    ITimeGeometryComponentDataItem *timeGeometryDataItem = nullptr;
+    IGeometryComponentDataItem *geometryDataItem = nullptr;
+    IIdBasedComponentDataItem *idbasedDataItem = nullptr;
+    ITimeIdBasedComponentDataItem *timeIdBasedDataItem = nullptr;
 
-    std::unordered_map<int, int> geometryMapping;
-
-    if(timeGeometryDataItem->geometryCount())
+    if((timeGeometryDataItem = dynamic_cast<ITimeGeometryComponentDataItem*>(provider)))
     {
-      std::vector<bool> mapped(timeGeometryDataItem->geometryCount(), false);
+      std::unordered_map<int, int> geometryMapping;
 
-      for(int i = 0; i < geometryCount() ; i++)
+      if(timeGeometryDataItem->geometryCount())
       {
-        HCLineString *lineString = dynamic_cast<HCLineString*>(getGeometry(i));
+        std::vector<bool> mapped(timeGeometryDataItem->geometryCount(), false);
 
-        if(lineString->pointCount())
+        for(int i = 0; i < geometryCount() ; i++)
         {
-          HCPoint *p1 = lineString->pointInternal(0);
-          HCPoint *p2 = lineString->pointInternal(lineString->pointCount() - 1);
+          HCLineString *lineString = dynamic_cast<HCLineString*>(getGeometry(i));
 
-          for(int j = 0; j < timeGeometryDataItem->geometryCount() ; j++)
+          if(lineString->pointCount())
           {
-            if(!mapped[j])
+            HCPoint *p1 = lineString->pointInternal(0);
+            HCPoint *p2 = lineString->pointInternal(lineString->pointCount() - 1);
+
+            for(int j = 0; j < timeGeometryDataItem->geometryCount() ; j++)
             {
-              ILineString *lineStringProvider = dynamic_cast<ILineString*>(timeGeometryDataItem->geometry(j));
-
-              IPoint *pp1 = lineStringProvider->point(0);
-              IPoint *pp2 = lineStringProvider->point(lineStringProvider->pointCount() - 1);
-
-
-              if(hypot(p1->x() - pp1->x() , p1->y() - pp1->y()) < 1e-3 && hypot(p2->x() - pp2->x() , p2->y() - pp2->y()) < 1e-3)
+              if(!mapped[j])
               {
-                geometryMapping[i] = j;
-                mapped[j] = true;
-                break;
-              }
-              else if(hypot(p1->x() - pp2->x() , p1->y() - pp2->y()) < 1e-3 && hypot(p2->x() - pp1->x() , p2->y() - pp1->y()) < 1e-3)
-              {
-                geometryMapping[i] = j;
-                mapped[j] = true;
-                break;
+                ILineString *lineStringProvider = dynamic_cast<ILineString*>(timeGeometryDataItem->geometry(j));
+
+                IPoint *pp1 = lineStringProvider->point(0);
+                IPoint *pp2 = lineStringProvider->point(lineStringProvider->pointCount() - 1);
+
+
+                if(hypot(p1->x() - pp1->x() , p1->y() - pp1->y()) < 1e-3 && hypot(p2->x() - pp2->x() , p2->y() - pp2->y()) < 1e-3)
+                {
+                  geometryMapping[i] = j;
+                  mapped[j] = true;
+                  break;
+                }
+                else if(hypot(p1->x() - pp2->x() , p1->y() - pp2->y()) < 1e-3 && hypot(p2->x() - pp1->x() , p2->y() - pp1->y()) < 1e-3)
+                {
+                  geometryMapping[i] = j;
+                  mapped[j] = true;
+                  break;
+                }
               }
             }
           }
         }
       }
+
+      m_geometryMapping[provider] = geometryMapping;
+
+      return true;
     }
+    else if((geometryDataItem = dynamic_cast<IGeometryComponentDataItem*>(provider)))
+    {
+      std::unordered_map<int, int> geometryMapping;
 
-    m_geometryMapping[provider] = geometryMapping;
+      if(geometryDataItem->geometryCount())
+      {
+        std::vector<bool> mapped(geometryDataItem->geometryCount(), false);
 
-    return true;
+        for(int i = 0; i < geometryCount() ; i++)
+        {
+          HCLineString *lineString = dynamic_cast<HCLineString*>(getGeometry(i));
+
+          if(lineString->pointCount())
+          {
+            HCPoint *p1 = lineString->pointInternal(0);
+            HCPoint *p2 = lineString->pointInternal(lineString->pointCount() - 1);
+
+            for(int j = 0; j < geometryDataItem->geometryCount() ; j++)
+            {
+              if(!mapped[j])
+              {
+                ILineString *lineStringProvider = dynamic_cast<ILineString*>(geometryDataItem->geometry(j));
+
+                IPoint *pp1 = lineStringProvider->point(0);
+                IPoint *pp2 = lineStringProvider->point(lineStringProvider->pointCount() - 1);
+
+
+                if(hypot(p1->x() - pp1->x() , p1->y() - pp1->y()) < 1e-3 && hypot(p2->x() - pp2->x() , p2->y() - pp2->y()) < 1e-3)
+                {
+                  geometryMapping[i] = j;
+                  mapped[j] = true;
+                  break;
+                }
+                else if(hypot(p1->x() - pp2->x() , p1->y() - pp2->y()) < 1e-3 && hypot(p2->x() - pp1->x() , p2->y() - pp1->y()) < 1e-3)
+                {
+                  geometryMapping[i] = j;
+                  mapped[j] = true;
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      m_geometryMapping[provider] = geometryMapping;
+
+      return true;
+    }
+    else if((idbasedDataItem = dynamic_cast<IIdBasedComponentDataItem*>(provider)))
+    {
+      std::unordered_map<int, int> geometryMapping;
+
+      for(int j = 0; j < idbasedDataItem->identifiers().size(); j++)
+      {
+        for(int i = 0; i < geometryCount() ; i++)
+        {
+          HCLineString *lineString = dynamic_cast<HCLineString*>(getGeometry(i));
+
+          if(!QString::compare(idbasedDataItem->identifiers()[j], lineString->id()))
+          {
+            geometryMapping[i] = j;
+            break;
+          }
+        }
+      }
+
+      m_geometryMapping[provider] = geometryMapping;
+
+      return true;
+    }
+    else if((timeIdBasedDataItem = dynamic_cast<ITimeIdBasedComponentDataItem*>(provider)))
+    {
+      std::unordered_map<int, int> geometryMapping;
+
+      for(int j = 0; j < timeIdBasedDataItem->identifiers().size(); j++)
+      {
+        for(int i = 0; i < geometryCount() ; i++)
+        {
+          HCLineString *lineString = dynamic_cast<HCLineString*>(getGeometry(i));
+
+          if(!QString::compare(timeIdBasedDataItem->identifiers()[j], lineString->id()))
+          {
+            geometryMapping[i] = j;
+            break;
+          }
+        }
+      }
+
+      m_geometryMapping[provider] = geometryMapping;
+
+      return true;
+    }
   }
 
   return false;
@@ -127,6 +227,8 @@ bool LinkInput::canConsume(IOutput *provider, QString &message) const
 {
   ITimeGeometryComponentDataItem *timeGeometryDataItem = nullptr;
   IGeometryComponentDataItem *geometryDataItem = nullptr;
+  IIdBasedComponentDataItem *idbasedDataItem = nullptr;
+  ITimeIdBasedComponentDataItem *timeIdBasedDataItem = nullptr;
 
   if((timeGeometryDataItem = dynamic_cast<ITimeGeometryComponentDataItem*>(provider)) &&
      (timeGeometryDataItem->geometryType() == IGeometry::LineString ||
@@ -141,6 +243,18 @@ bool LinkInput::canConsume(IOutput *provider, QString &message) const
           (geometryDataItem->geometryType() == IGeometry::LineString ||
            geometryDataItem->geometryType() == IGeometry::LineStringZ ||
            geometryDataItem->geometryType() == IGeometry::LineStringZM) &&
+          (provider->valueDefinition()->type() == QVariant::Double ||
+           provider->valueDefinition()->type() == QVariant::Int))
+  {
+    return true;
+  }
+  else if((idbasedDataItem = dynamic_cast<IIdBasedComponentDataItem*>(provider)) &&
+          (provider->valueDefinition()->type() == QVariant::Double ||
+           provider->valueDefinition()->type() == QVariant::Int))
+  {
+    return true;
+  }
+  else if((timeIdBasedDataItem = dynamic_cast<ITimeIdBasedComponentDataItem*>(provider)) &&
           (provider->valueDefinition()->type() == QVariant::Double ||
            provider->valueDefinition()->type() == QVariant::Int))
   {
@@ -179,6 +293,8 @@ void LinkInput::applyData()
 
     ITimeGeometryComponentDataItem *timeGeometryDataItem = nullptr;
     IGeometryComponentDataItem *geometryDataItem = nullptr;
+    IIdBasedComponentDataItem *idbasedDataItem = nullptr;
+    ITimeIdBasedComponentDataItem *timeIdBasedDataItem = nullptr;
 
     if((timeGeometryDataItem = dynamic_cast<ITimeGeometryComponentDataItem*>(provider)))
     {
@@ -305,6 +421,137 @@ void LinkInput::applyData()
             {
               double value = 0;
               geometryDataItem->getValue(it.second, &value);
+              m_sumInflow[m_geometries[it.first]->marker()] += value;
+            }
+          }
+          break;
+      }
+    }
+    else if((timeIdBasedDataItem = dynamic_cast<ITimeIdBasedComponentDataItem*>(provider)))
+    {
+      int currentTimeIndex = timeIdBasedDataItem->timeCount() - 1;
+      int previousTimeIndex = std::max(0, timeIdBasedDataItem->timeCount() - 2);
+
+      double providerCurrentTime = timeIdBasedDataItem->time(currentTimeIndex)->julianDay();
+      double providerPreviousTime = timeIdBasedDataItem->time(previousTimeIndex)->julianDay();
+
+      if(currentTime >=  providerPreviousTime && currentTime <= providerCurrentTime)
+      {
+        double factor = 0.0;
+
+        if(providerCurrentTime > providerPreviousTime)
+        {
+          double denom = providerCurrentTime - providerPreviousTime;
+          double numer = currentTime - providerPreviousTime;
+          factor = numer / denom;
+        }
+
+        switch (m_linkVariable)
+        {
+          case Roughness:
+            {
+              for(auto it : geometryMapping)
+              {
+                double value1 = 0;
+                double value2 = 0;
+
+                timeIdBasedDataItem->getValue(currentTimeIndex,it.second, &value1);
+                timeIdBasedDataItem->getValue(previousTimeIndex,it.second, &value2);
+
+                TLink &link = m_SWMMComponent->project()->Link[m_geometries[it.first]->marker()];
+
+                if(link.type == CONDUIT)
+                {
+                  TConduit &conduit = m_SWMMComponent->project()->Conduit[link.subIndex];
+                  conduit.roughness = value2 + factor *(value1 - value2);
+                }
+              }
+            }
+            break;
+          case LateralInflow:
+          case SeepageLossRate:
+          case EvaporationLossRate:
+            {
+              for(auto it : geometryMapping)
+              {
+                double value1 = 0;
+                double value2 = 0;
+
+                timeIdBasedDataItem->getValue(currentTimeIndex,it.second, &value1);
+                timeIdBasedDataItem->getValue(previousTimeIndex,it.second, &value2);
+
+                m_sumInflow[m_geometries[it.first]->marker()] += value2 + factor *(value1 - value2);
+              }
+            }
+            break;
+        }
+      }
+      else
+      {
+        switch (m_linkVariable)
+        {
+          case Roughness:
+            {
+              for(auto it : geometryMapping)
+              {
+                double value = 0;
+                timeIdBasedDataItem->getValue(currentTimeIndex,it.second, &value);
+
+                TLink &link = m_SWMMComponent->project()->Link[m_geometries[it.first]->marker()];
+
+                if(link.type == CONDUIT)
+                {
+                  TConduit &conduit = m_SWMMComponent->project()->Conduit[link.subIndex];
+                  conduit.roughness = value;
+                }
+              }
+            }
+            break;
+          case LateralInflow:
+          case SeepageLossRate:
+          case EvaporationLossRate:
+            {
+              for(auto it : geometryMapping)
+              {
+                double value = 0;
+                timeIdBasedDataItem->getValue(currentTimeIndex,it.second, &value);
+                m_sumInflow[m_geometries[it.first]->marker()] += value;
+              }
+            }
+            break;
+        }
+      }
+    }
+    else if((idbasedDataItem = dynamic_cast<IIdBasedComponentDataItem*>(provider)))
+    {
+      switch (m_linkVariable)
+      {
+        case Roughness:
+          {
+            for(auto it : geometryMapping)
+            {
+              double value = 0;
+              idbasedDataItem->getValue(it.second, &value);
+
+              TLink &link = m_SWMMComponent->project()->Link[m_geometries[it.first]->marker()];
+
+              if(link.type == CONDUIT)
+              {
+                TConduit &conduit = m_SWMMComponent->project()->Conduit[link.subIndex];
+                conduit.roughness = value;
+              }
+
+            }
+          }
+          break;
+        case LateralInflow:
+        case SeepageLossRate:
+        case EvaporationLossRate:
+          {
+            for(auto it : geometryMapping)
+            {
+              double value = 0;
+              idbasedDataItem->getValue(it.second, &value);
               m_sumInflow[m_geometries[it.first]->marker()] += value;
             }
           }

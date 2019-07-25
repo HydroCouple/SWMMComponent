@@ -56,17 +56,17 @@ void createSWMMProject(int argc, char*argv[])
     QFileInfo inputXSectionFile(argv[3]);
     QFileInfo outputFileXSection(argv[4]);
 
-    if(inputAlignmentFile.isRelative())
-      inputAlignmentFile = QFileInfo(dir.absoluteFilePath(inputAlignmentFile.filePath()));
+    //    if(inputAlignmentFile.isRelative())
+    //      inputAlignmentFile = QFileInfo(dir.absoluteFilePath(inputAlignmentFile.filePath()));
 
-    if(inputNodesFile.isRelative())
-      inputNodesFile = QFileInfo(dir.absoluteFilePath(inputNodesFile.filePath()));
+    //    if(inputNodesFile.isRelative())
+    //      inputNodesFile = QFileInfo(dir.absoluteFilePath(inputNodesFile.filePath()));
 
-    if(inputXSectionFile.isRelative())
-      inputXSectionFile = QFileInfo(dir.absoluteFilePath(inputXSectionFile.filePath()));
+    //    if(inputXSectionFile.isRelative())
+    //      inputXSectionFile = QFileInfo(dir.absoluteFilePath(inputXSectionFile.filePath()));
 
-    if(outputFileXSection.isRelative())
-      outputFileXSection = QFileInfo(dir.absoluteFilePath(outputFileXSection.filePath()));
+    //    if(outputFileXSection.isRelative())
+    //      outputFileXSection = QFileInfo(dir.absoluteFilePath(outputFileXSection.filePath()));
 
 
     if(inputAlignmentFile.isFile() && inputAlignmentFile.exists() &&
@@ -518,9 +518,9 @@ void readWriteXSections(int argc, char *argv[])
 
 int main(int argc, char* argv[])
 {
-  // createSWMMProject(argc, argv);
+   createSWMMProject(argc, argv);
   // thinXSections(argc, argv);
-  readWriteXSections(argc, argv);
+//  readWriteXSections(argc, argv);
 
   return 0;
 }

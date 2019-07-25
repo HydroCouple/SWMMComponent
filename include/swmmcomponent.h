@@ -71,7 +71,7 @@ class SWMMCOMPONENT_EXPORT SWMMComponent : public AbstractTimeModelComponent,
 
     SWMMComponent(const QString &id, const QString &caption, SWMMComponentInfo* parent = nullptr);
 
-    virtual ~SWMMComponent();
+    virtual ~SWMMComponent() override;
 
     QList<QString> validate() override;
 

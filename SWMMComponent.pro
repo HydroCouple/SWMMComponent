@@ -1,6 +1,6 @@
 #Author Caleb Amoa Buahin
 #Email caleb.buahin@gmail.com
-#Date 2016 - 2018
+#Date 2016 - 2019
 #License GNU Lesser General Public License (see <http: //www.gnu.org/licenses/> for details).
 #EPA SWMM Model Component
 
@@ -18,7 +18,6 @@ SWMM_VERSION = 5.1.012
 CONFIG += c++11
 CONFIG += debug_and_release
 CONFIG += optimize_full
-
 
 contains(DEFINES,SWMMCOMPONENT_LIBRARY){
   TEMPLATE = lib
@@ -229,7 +228,7 @@ CONFIG(debug, debug|release) {
     }
 
     macx {
-       QMAKE_CXXFLAGS += -O3
+       QMAKE_CXXFLAGS += -O1
     }
 
     linux {

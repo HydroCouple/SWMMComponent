@@ -12,7 +12,7 @@ class SWMMCOMPONENT_EXPORT SWMMComponentInfo : public AbstractModelComponentInfo
    public:
       SWMMComponentInfo(QObject *parent = nullptr);
 
-      virtual ~SWMMComponentInfo();
+      virtual ~SWMMComponentInfo() override;
 
       HydroCouple::IModelComponent* createComponentInstance() override;
 
